@@ -32,18 +32,18 @@ const stats = [
   },
 ];
 
-const CountUp = ({ end, suffix = "", prefix = "", decimal = false }) => {
+const CountUp = ({
+  end,
+  suffix = "",
+  prefix = "",
+  decimal = false,
+  start = false,
+}) => {
   const [count, setCount] = useState(decimal ? "0.0" : 0);
-  const ref = useRef(null);
   const frameRef = useRef(null);
 
-  const isInView = useInView(ref, {
-    once: true,
-    margin: "-80px",
-  });
-
   useEffect(() => {
-    if (!isInView) return;
+    if (!start) return;
 
     const duration = 1600;
     const startTime = performance.now();
@@ -73,10 +73,10 @@ const CountUp = ({ end, suffix = "", prefix = "", decimal = false }) => {
         cancelAnimationFrame(frameRef.current);
       }
     };
-  }, [isInView, end, decimal]);
+  }, [start, end, decimal]);
 
   return (
-    <span ref={ref}>
+    <span>
       {prefix}
       {count}
       {suffix}
@@ -85,8 +85,18 @@ const CountUp = ({ end, suffix = "", prefix = "", decimal = false }) => {
 };
 
 const StatsStrip = () => {
+  const sectionRef = useRef(null);
+
+  const isInView = useInView(sectionRef, {
+    once: true,
+    amount: 0.2,
+  });
+
   return (
-    <section className="relative z-20 -mt-8 px-4 sm:px-5 md:-mt-12">
+    <section
+      ref={sectionRef}
+      className="relative z-20 -mt-8 px-4 sm:px-5 md:-mt-12"
+    >
       <div className="mx-auto max-w-7xl rounded-4xl border border-white/70 bg-white/90 p-4 shadow-2xl shadow-slate-900/10 backdrop-blur-xl sm:p-5 md:rounded-[2.5rem]">
         <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           {stats.map((item, index) => {
@@ -97,7 +107,7 @@ const StatsStrip = () => {
                 key={item.label}
                 initial={{ opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
+                viewport={{ once: true, amount: 0.25 }}
                 transition={{
                   duration: 0.45,
                   delay: index * 0.08,
@@ -111,6 +121,7 @@ const StatsStrip = () => {
 
                 <h3 className="text-2xl font-black leading-none text-[#102A43] sm:text-3xl md:text-4xl">
                   <CountUp
+                    start={isInView}
                     end={item.number}
                     suffix={item.suffix}
                     decimal={item.decimal}
