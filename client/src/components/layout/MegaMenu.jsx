@@ -72,6 +72,7 @@ const normalizeCategory = (service = {}) => {
   }`.toLowerCase();
 
   if (text.includes("online")) return "Online Consultation";
+
   if (
     text.includes("adult") ||
     text.includes("couple") ||
@@ -79,7 +80,9 @@ const normalizeCategory = (service = {}) => {
   ) {
     return "Adults";
   }
+
   if (text.includes("assessment")) return "Assessment";
+
   if (
     text.includes("internship") ||
     text.includes("workshop") ||
@@ -165,6 +168,7 @@ export default function MegaMenu({ onNavigate }) {
       if (!acc[category]) acc[category] = [];
 
       acc[category].push(service);
+
       return acc;
     }, {});
   }, [activeServices]);
@@ -181,7 +185,7 @@ export default function MegaMenu({ onNavigate }) {
   }, [groupedServices]);
 
   return (
-    <div className="fixed top-84px z-999 hidden w-[min(980px,calc(100vw-32px))] -translate-x-1/2 lg:block">
+    <div className="fixed left-1/2 top-26 z-9999 hidden w-[min(940px,calc(100vw-40px))] -translate-x-1/2 lg:block">
       <div className="relative overflow-hidden rounded-[26px] border border-[#D8F0EE] bg-white shadow-2xl shadow-slate-900/20 ring-1 ring-slate-100">
         <button
           type="button"
@@ -192,15 +196,16 @@ export default function MegaMenu({ onNavigate }) {
           <X size={17} />
         </button>
 
-        <div className="grid max-h-[calc(100vh-110px)] grid-cols-[260px_1fr] overflow-hidden">
-          <div className="relative overflow-hidden bg-linear-to-br from-[#0F3D5E] via-[#126B73] to-[#2CB1A6] p-6 text-white">
+        <div className="grid max-h-[calc(100vh-130px)] grid-cols-[250px_1fr] overflow-hidden">
+          {/* Left Premium Panel */}
+          <div className="relative overflow-hidden bg-linear-to-br from-[#0F3D5E] via-[#126B73] to-[#2CB1A6] p-5 text-white">
             <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-white/10 blur-2xl" />
             <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-[#F4B183]/20 blur-3xl" />
 
             <div className="relative">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-[11px] font-black text-white">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 text-[11px] font-black text-white">
                 <Sparkles size={14} className="text-[#F4B183]" />
-                Urjasvini CDC Services
+                Urjasvini CDC
               </div>
 
               <h3 className="text-2xl font-black leading-tight">
@@ -218,7 +223,7 @@ export default function MegaMenu({ onNavigate }) {
                   onClick={onNavigate}
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-[#0F3D5E] transition hover:-translate-y-1"
                 >
-                  View All Services
+                  View All
                   <ArrowRight size={16} />
                 </a>
 
@@ -227,12 +232,12 @@ export default function MegaMenu({ onNavigate }) {
                   onClick={onNavigate}
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:-translate-y-1 hover:bg-white/15"
                 >
-                  Book Consultation
+                  Book
                   <PhoneCall size={16} />
                 </a>
               </div>
 
-              <div className="mt-7 grid grid-cols-3 gap-2">
+              <div className="mt-6 grid grid-cols-3 gap-2">
                 <div className="rounded-2xl bg-white/10 p-2 text-center">
                   <p className="text-sm font-black">2013</p>
                   <p className="mt-1 text-[9px] font-bold text-white/65">
@@ -241,7 +246,7 @@ export default function MegaMenu({ onNavigate }) {
                 </div>
 
                 <div className="rounded-2xl bg-white/10 p-2 text-center">
-                  <p className="text-sm font-black">5,000+</p>
+                  <p className="text-sm font-black">5K+</p>
                   <p className="mt-1 text-[9px] font-bold text-white/65">
                     Families
                   </p>
@@ -257,6 +262,7 @@ export default function MegaMenu({ onNavigate }) {
             </div>
           </div>
 
+          {/* Backend Services */}
           <div className="overflow-y-auto bg-[#F8FEFD] p-4">
             {loading ? (
               <div className="flex min-h-80 items-center justify-center rounded-3xl bg-white">

@@ -92,7 +92,9 @@ const normalizeCategory = (service = {}) => {
   }`.toLowerCase();
 
   if (text.includes("online")) return "Online Consultation";
+
   if (text.includes("assessment")) return "Assessment";
+
   if (
     text.includes("internship") ||
     text.includes("workshop") ||
@@ -101,6 +103,7 @@ const normalizeCategory = (service = {}) => {
   ) {
     return "Training";
   }
+
   if (
     text.includes("adult") ||
     text.includes("couple") ||
@@ -154,8 +157,9 @@ const getServiceHref = (service = {}) => {
   if (!service.slug) return "/services";
 
   if (service.slug === "online-consultation") return "/online-consultation";
-  if (service.slug === "psychology-internship-indore")
+  if (service.slug === "psychology-internship-indore") {
     return "/psychology-internship-indore";
+  }
   if (service.slug === "workshops-and-courses") return "/workshops-and-courses";
   if (service.slug === "success-stories") return "/success-stories";
 
@@ -168,6 +172,8 @@ const Header = () => {
   const [openMega, setOpenMega] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+
+  const closeMega = () => setOpenMega(false);
 
   const closeMobileMenu = () => {
     setMobileOpen(false);
@@ -192,6 +198,16 @@ const Header = () => {
 
   useEffect(() => {
     fetchServices();
+  }, []);
+
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.key === "Escape") closeMega();
+    };
+
+    window.addEventListener("keydown", handleEsc);
+
+    return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
   const activeServices = useMemo(() => {
@@ -220,7 +236,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-[#D8F0EE] bg-[#F8FEFD]/92 shadow-sm shadow-teal-900/5 backdrop-blur-2xl">
+      <header className="sticky top-0 z-50 border-b border-[#D8F0EE] bg-[#F8FEFD]/95 shadow-sm shadow-teal-900/5 backdrop-blur-2xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 sm:px-5">
           <a href="/" className="flex shrink-0 items-center">
             <Image
@@ -240,11 +256,8 @@ const Header = () => {
               </a>
             ))}
 
-            <div
-              className="relative"
-              onMouseEnter={() => setOpenMega(true)}
-              // onMouseLeave={() => setOpenMega(false)}
-            >
+            {/* Services Button */}
+            <div className="relative">
               <button
                 type="button"
                 onClick={() => setOpenMega((prev) => !prev)}
@@ -256,167 +269,6 @@ const Header = () => {
                   className={`transition ${openMega ? "rotate-180" : ""}`}
                 />
               </button>
-
-              {openMega && (
-                <div className="absolute left-2/2 top-full z-100 mt-4 w-260 -translate-x-1/2">
-                  <div className="overflow-hidden rounded-4xl border border-white/80 bg-white shadow-2xl shadow-slate-900/15 ring-1 ring-slate-100">
-                    <div className="grid grid-cols-[320px_1fr]">
-                      <div className="relative overflow-hidden bg-linear-to-br from-[#0F3D5E] via-[#126B73] to-[#2CB1A6] p-7 text-white">
-                        <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-white/10 blur-2xl" />
-                        <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-[#F4B183]/20 blur-3xl" />
-
-                        <div className="relative">
-                          <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-black text-white">
-                            <Sparkles size={15} className="text-[#F4B183]" />
-                            Urjasvini CDC Services
-                          </div>
-
-                          <h3 className="text-3xl font-black leading-tight">
-                            Clinical support for children, parents and families.
-                          </h3>
-
-                          <p className="mt-4 text-sm font-semibold leading-7 text-white/75">
-                            Therapy, counselling, assessments and online
-                            consultation by Dr. Vini Jhariya.
-                          </p>
-
-                          <div className="mt-7 grid gap-3">
-                            <a
-                              href="/services"
-                              className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-[#0F3D5E] transition hover:-translate-y-1"
-                            >
-                              View All Services
-                              <ArrowRight size={16} />
-                            </a>
-
-                            <a
-                              href="/contact-us"
-                              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:-translate-y-1 hover:bg-white/15"
-                            >
-                              Book Consultation
-                              <CalendarCheck size={16} />
-                            </a>
-                          </div>
-
-                          <div className="mt-8 grid grid-cols-3 gap-3">
-                            <div className="rounded-2xl bg-white/10 p-3 text-center">
-                              <p className="text-lg font-black">2013</p>
-                              <p className="mt-1 text-[10px] font-bold text-white/65">
-                                Since
-                              </p>
-                            </div>
-
-                            <div className="rounded-2xl bg-white/10 p-3 text-center">
-                              <p className="text-lg font-black">5,000+</p>
-                              <p className="mt-1 text-[10px] font-bold text-white/65">
-                                Families
-                              </p>
-                            </div>
-
-                            <div className="rounded-2xl bg-white/10 p-3 text-center">
-                              <p className="text-lg font-black">4.9★</p>
-                              <p className="mt-1 text-[10px] font-bold text-white/65">
-                                Rating
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="bg-[#F8FEFD] p-5">
-                        {servicesLoading ? (
-                          <div className="flex min-h-90 items-center justify-center rounded-3xl bg-white">
-                            <div className="text-center">
-                              <Loader2 className="mx-auto mb-3 animate-spin text-[#0F3D5E]" />
-                              <p className="text-sm font-bold text-slate-500">
-                                Loading services...
-                              </p>
-                            </div>
-                          </div>
-                        ) : activeServices.length === 0 ? (
-                          <div className="flex min-h-90 items-center justify-center rounded-3xl bg-white p-8 text-center">
-                            <div>
-                              <HeartHandshake className="mx-auto mb-4 text-[#0F3D5E]" />
-                              <h4 className="text-xl font-black text-[#102A43]">
-                                Services are coming soon
-                              </h4>
-                              <p className="mx-auto mt-2 max-w-md text-sm font-semibold leading-6 text-slate-500">
-                                Services will appear here automatically once
-                                active services are added from the admin
-                                dashboard.
-                              </p>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="grid max-h-130 grid-cols-2 gap-4 overflow-y-auto pr-1">
-                            {availableCategories.map((category) => {
-                              const config =
-                                categoryConfig[category] ||
-                                categoryConfig.Other;
-                              const CategoryIcon = config.icon;
-                              const categoryServices =
-                                groupedServices[category] || [];
-
-                              return (
-                                <div
-                                  key={category}
-                                  className="rounded-3xl bg-white p-4 shadow-sm ring-1 ring-slate-100"
-                                >
-                                  <div className="mb-4 flex items-start gap-3">
-                                    <div
-                                      className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${config.color}`}
-                                    >
-                                      <CategoryIcon size={21} />
-                                    </div>
-
-                                    <div>
-                                      <h4 className="text-sm font-black text-[#102A43]">
-                                        {config.title || category}
-                                      </h4>
-                                      <p className="mt-1 text-xs font-semibold leading-5 text-slate-500">
-                                        {config.subtitle}
-                                      </p>
-                                    </div>
-                                  </div>
-
-                                  <div className="space-y-2">
-                                    {categoryServices.map((service) => {
-                                      const ServiceIcon =
-                                        getServiceIcon(service);
-
-                                      return (
-                                        <a
-                                          key={service._id || service.slug}
-                                          href={getServiceHref(service)}
-                                          className="group flex gap-3 rounded-2xl p-3 transition hover:bg-[#F7FBFC]"
-                                        >
-                                          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#E9F8F6] text-[#0F766E] transition group-hover:bg-[#0F3D5E] group-hover:text-white">
-                                            <ServiceIcon size={18} />
-                                          </span>
-
-                                          <span className="min-w-0">
-                                            <span className="line-clamp-1 block text-sm font-black leading-tight text-[#102A43] group-hover:text-[#0F766E]">
-                                              {service.title}
-                                            </span>
-
-                                            <span className="mt-1 line-clamp-2 block text-xs font-semibold leading-5 text-slate-500">
-                                              {getServiceDescription(service)}
-                                            </span>
-                                          </span>
-                                        </a>
-                                      );
-                                    })}
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
 
             {mainNavLinks.slice(2, 6).map((link) => (
@@ -465,8 +317,191 @@ const Header = () => {
         </div>
       </header>
 
+      {/* Desktop Mega Menu - fixed to viewport, not inside navbar */}
+      {openMega && (
+        <div className="fixed inset-0 z-9999 hidden lg:block">
+          <button
+            type="button"
+            aria-label="Close services menu"
+            onClick={closeMega}
+            className="absolute inset-0 cursor-default bg-transparent"
+          />
+
+          <div className="absolute left-1/2 top-26 w-[min(940px,calc(100vw-40px))] -translate-x-1/2">
+            <div className="relative overflow-hidden rounded-[26px] border border-[#D8F0EE] bg-white shadow-2xl shadow-slate-900/20 ring-1 ring-slate-100">
+              <button
+                type="button"
+                onClick={closeMega}
+                className="absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#0F3D5E] shadow-lg transition hover:bg-[#E9F8F6]"
+                aria-label="Close services menu"
+              >
+                <X size={17} />
+              </button>
+
+              <div className="grid max-h-[calc(100vh-130px)] grid-cols-[250px_1fr] overflow-hidden">
+                {/* Left Panel */}
+                <div className="relative overflow-hidden bg-linear-to-br from-[#0F3D5E] via-[#126B73] to-[#2CB1A6] p-5 text-white">
+                  <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-white/10 blur-2xl" />
+                  <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-[#F4B183]/20 blur-3xl" />
+
+                  <div className="relative">
+                    <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 text-[11px] font-black text-white">
+                      <Sparkles size={14} className="text-[#F4B183]" />
+                      Urjasvini CDC
+                    </div>
+
+                    <h3 className="text-2xl font-black leading-tight">
+                      Clinical support for children and families.
+                    </h3>
+
+                    <p className="mt-4 text-sm font-semibold leading-7 text-white/75">
+                      Therapy, counselling, assessments and online consultation
+                      by Dr. Vini Jhariya.
+                    </p>
+
+                    <div className="mt-6 grid gap-3">
+                      <a
+                        href="/services"
+                        onClick={closeMega}
+                        className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-[#0F3D5E] transition hover:-translate-y-1"
+                      >
+                        View All
+                        <ArrowRight size={16} />
+                      </a>
+
+                      <a
+                        href="/contact-us"
+                        onClick={closeMega}
+                        className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:-translate-y-1 hover:bg-white/15"
+                      >
+                        Book
+                        <CalendarCheck size={16} />
+                      </a>
+                    </div>
+
+                    <div className="mt-6 grid grid-cols-3 gap-2">
+                      <div className="rounded-2xl bg-white/10 p-2 text-center">
+                        <p className="text-sm font-black">2013</p>
+                        <p className="mt-1 text-[9px] font-bold text-white/65">
+                          Since
+                        </p>
+                      </div>
+
+                      <div className="rounded-2xl bg-white/10 p-2 text-center">
+                        <p className="text-sm font-black">5K+</p>
+                        <p className="mt-1 text-[9px] font-bold text-white/65">
+                          Families
+                        </p>
+                      </div>
+
+                      <div className="rounded-2xl bg-white/10 p-2 text-center">
+                        <p className="text-sm font-black">4.9★</p>
+                        <p className="mt-1 text-[9px] font-bold text-white/65">
+                          Rating
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Backend Services */}
+                <div className="overflow-y-auto bg-[#F8FEFD] p-4">
+                  {servicesLoading ? (
+                    <div className="flex min-h-80 items-center justify-center rounded-3xl bg-white">
+                      <div className="text-center">
+                        <Loader2 className="mx-auto mb-3 animate-spin text-[#0F3D5E]" />
+                        <p className="text-sm font-bold text-slate-500">
+                          Loading services...
+                        </p>
+                      </div>
+                    </div>
+                  ) : activeServices.length === 0 ? (
+                    <div className="flex min-h-80 items-center justify-center rounded-3xl bg-white p-8 text-center">
+                      <div>
+                        <HeartHandshake className="mx-auto mb-4 text-[#0F3D5E]" />
+                        <h4 className="text-xl font-black text-[#102A43]">
+                          Services are coming soon
+                        </h4>
+                        <p className="mx-auto mt-2 max-w-md text-sm font-semibold leading-6 text-slate-500">
+                          Services will appear here automatically once active
+                          services are added from the admin dashboard.
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-3">
+                      {availableCategories.map((category) => {
+                        const config =
+                          categoryConfig[category] || categoryConfig.Other;
+                        const CategoryIcon = config.icon;
+                        const categoryServices =
+                          groupedServices[category] || [];
+
+                        return (
+                          <div
+                            key={category}
+                            className="rounded-[22px] bg-white p-3 shadow-sm ring-1 ring-slate-100"
+                          >
+                            <div className="mb-3 flex items-start gap-3">
+                              <div
+                                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${config.color}`}
+                              >
+                                <CategoryIcon size={19} />
+                              </div>
+
+                              <div>
+                                <h4 className="text-sm font-black text-[#102A43]">
+                                  {config.title || category}
+                                </h4>
+                                <p className="mt-1 line-clamp-2 text-xs font-semibold leading-5 text-slate-500">
+                                  {config.subtitle}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="space-y-1.5">
+                              {categoryServices.map((service) => {
+                                const ServiceIcon = getServiceIcon(service);
+
+                                return (
+                                  <a
+                                    key={service._id || service.slug}
+                                    href={getServiceHref(service)}
+                                    onClick={closeMega}
+                                    className="group flex gap-2 rounded-2xl p-2.5 transition hover:bg-[#F7FBFC]"
+                                  >
+                                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#E9F8F6] text-[#0F766E] transition group-hover:bg-[#0F3D5E] group-hover:text-white">
+                                      <ServiceIcon size={17} />
+                                    </span>
+
+                                    <span className="min-w-0">
+                                      <span className="line-clamp-1 block text-sm font-black leading-tight text-[#102A43] group-hover:text-[#0F766E]">
+                                        {service.title}
+                                      </span>
+
+                                      <span className="mt-1 line-clamp-1 block text-xs font-semibold leading-5 text-slate-500">
+                                        {getServiceDescription(service)}
+                                      </span>
+                                    </span>
+                                  </a>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Drawer */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-100 bg-slate-950/40 backdrop-blur-sm lg:hidden">
+        <div className="fixed inset-0 z-9999 bg-slate-950/40 backdrop-blur-sm lg:hidden">
           <div className="ml-auto flex h-full w-[90%] max-w-sm flex-col overflow-y-auto bg-[#F8FEFD] shadow-2xl">
             <div className="sticky top-0 z-10 border-b border-[#D8F0EE] bg-[#F8FEFD]/95 p-5 backdrop-blur-xl">
               <div className="flex items-center justify-between gap-4">
