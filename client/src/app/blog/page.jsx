@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { API } from "@/lib/api";
 import {
   ArrowRight,
   BookOpen,
+  CalendarCheck,
   CalendarDays,
   FileText,
   Loader2,
+  MessageCircle,
   Search,
   Sparkles,
 } from "lucide-react";
@@ -38,9 +41,10 @@ export default function BlogPage() {
 
       const { data } = await API.get("/api/blogs");
 
-      setBlogs(data?.data || []);
+      setBlogs(Array.isArray(data?.data) ? data.data : []);
     } catch (error) {
       console.log("BLOG FETCH ERROR:", error);
+      setBlogs([]);
     } finally {
       setLoading(false);
     }
@@ -50,41 +54,45 @@ export default function BlogPage() {
     fetchBlogs();
   }, []);
 
+  const activeBlogs = useMemo(() => {
+    return blogs.filter((blog) => blog?.isPublished !== false);
+  }, [blogs]);
+
   const filteredBlogs = useMemo(() => {
-    return blogs.filter((blog) => {
+    return activeBlogs.filter((blog) => {
       const matchesCategory =
         activeCategory === "All" || blog.category === activeCategory;
 
-      const text =
-        `${blog.title} ${blog.excerpt} ${blog.category} ${blog.tags?.join(
-          " ",
-        )}`.toLowerCase();
+      const text = `${blog.title || ""} ${blog.excerpt || ""} ${
+        blog.category || ""
+      } ${blog.tags?.join(" ") || ""}`.toLowerCase();
 
       const matchesSearch = text.includes(search.toLowerCase());
 
       return matchesCategory && matchesSearch;
     });
-  }, [blogs, search, activeCategory]);
+  }, [activeBlogs, search, activeCategory]);
 
-  const featuredBlog = blogs.find((blog) => blog.isFeatured) || blogs[0];
+  const featuredBlog =
+    activeBlogs.find((blog) => blog.isFeatured) || activeBlogs[0];
 
   return (
     <main className="overflow-hidden bg-[#F7FBFC]">
-      <section className="relative px-5 py-24">
-        <div className="absolute -left-28 -top-28 h-96 w-96 rounded-full bg-[#2CB1A6]/20 blur-3xl" />
-        <div className="absolute -right-28 top-20 h-96 w-96 rounded-full bg-[#0F3D5E]/10 blur-3xl" />
+      <section className="relative px-4 py-18 sm:px-5 sm:py-22 md:py-24">
+        <div className="absolute -left-28 -top-28 h-80 w-80 rounded-full bg-[#2CB1A6]/20 blur-3xl md:h-96 md:w-96" />
+        <div className="absolute -right-28 top-20 h-80 w-80 rounded-full bg-[#0F3D5E]/10 blur-3xl md:h-96 md:w-96" />
 
         <div className="relative mx-auto max-w-7xl">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-[#0F3D5E] shadow-sm">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm sm:text-sm">
             <Sparkles size={16} className="text-[#2CB1A6]" />
             Blog & Resources
           </div>
 
-          <h1 className="max-w-5xl text-5xl font-black leading-tight text-[#102A43] md:text-7xl">
+          <h1 className="max-w-5xl text-4xl font-black leading-tight text-[#102A43] sm:text-5xl md:text-7xl">
             Child psychology insights for parents, families and professionals.
           </h1>
 
-          <p className="mt-6 max-w-3xl text-lg font-semibold leading-8 text-slate-600">
+          <p className="mt-6 max-w-3xl text-base font-semibold leading-8 text-slate-600 sm:text-lg">
             Read expert articles on autism, ADHD, dyslexia, parenting, teen
             mental health, school concerns and emotional wellbeing.
           </p>
@@ -92,41 +100,49 @@ export default function BlogPage() {
       </section>
 
       {featuredBlog && (
-        <section className="-mt-10 px-5 pb-16">
-          <a
+        <section className="-mt-8 px-4 pb-14 sm:px-5 md:pb-16">
+          <Link
             href={`/blog/${featuredBlog.slug}`}
-            className="mx-auto grid max-w-7xl overflow-hidden rounded-[3rem] bg-white shadow-2xl shadow-slate-900/10 lg:grid-cols-[0.9fr_1.1fr]"
+            className="mx-auto grid max-w-7xl overflow-hidden rounded-4xl bg-white shadow-2xl shadow-slate-900/10 md:rounded-[3rem] lg:grid-cols-[0.9fr_1.1fr]"
           >
-            <div className="min-h-80 bg-[#102A43]">
+            <div className="min-h-72 overflow-hidden bg-[#102A43] sm:min-h-80">
               {featuredBlog.image?.url ? (
                 <img
                   src={featuredBlog.image.url}
-                  alt={featuredBlog.title}
-                  className="h-full w-full object-cover"
+                  alt={`${featuredBlog.title} by Dr. Vini Jhariya`}
+                  className="h-full min-h-72 w-full object-cover transition duration-500 hover:scale-105 sm:min-h-80"
                 />
               ) : (
-                <div className="flex h-full min-h-80 items-center justify-center text-white/30">
+                <div className="flex h-full min-h-72 items-center justify-center text-white/30 sm:min-h-80">
                   <BookOpen size={80} />
                 </div>
               )}
             </div>
 
-            <div className="p-8 md:p-12">
+            <div className="p-6 sm:p-8 md:p-12">
               <div className="mb-5 flex flex-wrap gap-3">
                 <span className="rounded-full bg-[#E9F8F6] px-4 py-2 text-xs font-black text-[#0F766E]">
                   Featured
                 </span>
 
-                <span className="rounded-full bg-[#F7FBFC] px-4 py-2 text-xs font-black text-[#0F3D5E]">
-                  {featuredBlog.category}
-                </span>
+                {featuredBlog.category && (
+                  <span className="rounded-full bg-[#F7FBFC] px-4 py-2 text-xs font-black text-[#0F3D5E]">
+                    {featuredBlog.category}
+                  </span>
+                )}
+
+                {featuredBlog.language && (
+                  <span className="rounded-full bg-[#FFF1EA] px-4 py-2 text-xs font-black text-[#C05621]">
+                    {featuredBlog.language}
+                  </span>
+                )}
               </div>
 
-              <h2 className="text-4xl font-black leading-tight text-[#102A43] md:text-5xl">
+              <h2 className="text-3xl font-black leading-tight text-[#102A43] sm:text-4xl md:text-5xl">
                 {featuredBlog.title}
               </h2>
 
-              <p className="mt-5 line-clamp-4 text-base font-semibold leading-8 text-slate-600">
+              <p className="mt-5 line-clamp-4 text-sm font-semibold leading-7 text-slate-600 sm:text-base sm:leading-8">
                 {featuredBlog.excerpt}
               </p>
 
@@ -135,19 +151,20 @@ export default function BlogPage() {
                 <ArrowRight size={17} />
               </div>
             </div>
-          </a>
+          </Link>
         </section>
       )}
 
-      <section className="px-5 pb-24">
+      <section className="px-4 pb-20 sm:px-5 md:pb-24">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-8 rounded-4xl bg-white p-5 shadow-xl shadow-slate-900/5">
-            <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div className="mb-8 rounded-4xl bg-white p-4 shadow-xl shadow-slate-900/5 sm:p-5 md:rounded-[2.5rem]">
+            <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-start">
               <div className="relative">
                 <Search
                   size={18}
                   className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"
                 />
+
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -156,12 +173,13 @@ export default function BlogPage() {
                 />
               </div>
 
-              <div className="flex flex-wrap gap-2">
+              <div className="flex max-w-full gap-2 overflow-x-auto pb-1 lg:max4xl lg:flex-wrap lg:overflow-visible">
                 {categories.map((category) => (
                   <button
                     key={category}
+                    type="button"
                     onClick={() => setActiveCategory(category)}
-                    className={`rounded-full px-4 py-3 text-xs font-black transition ${
+                    className={`shrink-0 rounded-full px-4 py-3 text-xs font-black transition ${
                       activeCategory === category
                         ? "bg-[#0F3D5E] text-white"
                         : "bg-[#F7FBFC] text-slate-600 hover:bg-[#E9F8F6] hover:text-[#0F766E]"
@@ -175,33 +193,56 @@ export default function BlogPage() {
           </div>
 
           {loading ? (
-            <div className="rounded-4xl bg-white p-16 text-center shadow-xl">
+            <div className="rounded-4xxl bg-white p-12 text-center shadow-xl sm:p-16">
               <Loader2 className="mx-auto mb-4 animate-spin text-[#0F3D5E]" />
               <p className="font-bold text-slate-500">Loading blogs...</p>
             </div>
           ) : filteredBlogs.length === 0 ? (
-            <div className="rounded-4xl bg-white p-16 text-center shadow-xl">
+            <div className="rounded-4xxl bg-white p-8 text-center shadow-xl sm:p-16">
               <FileText className="mx-auto mb-4 text-[#0F3D5E]" size={42} />
+
               <h3 className="text-2xl font-black text-[#102A43]">
-                No blogs found
+                Articles are coming soon
               </h3>
-              <p className="mt-2 font-semibold text-slate-500">
-                Try another category or search term.
+
+              <p className="mx-auto mt-3 max-w-xl text-sm font-semibold leading-7 text-slate-600">
+                Helpful articles on autism, ADHD, dyslexia, parenting, child
+                behaviour and emotional wellbeing will be published here soon.
               </p>
+
+              <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+                <Link
+                  href="/contact-us"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0F3D5E] px-7 py-4 text-sm font-black text-white transition hover:-translate-y-1"
+                >
+                  <CalendarCheck size={17} />
+                  Book Consultation
+                </Link>
+
+                <a
+                  href="https://wa.me/917999215093"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-7 py-4 text-sm font-black text-white transition hover:-translate-y-1"
+                >
+                  <MessageCircle size={17} />
+                  WhatsApp Us
+                </a>
+              </div>
             </div>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
               {filteredBlogs.map((blog) => (
-                <a
-                  key={blog._id}
+                <Link
+                  key={blog._id || blog.slug}
                   href={`/blog/${blog.slug}`}
                   className="group overflow-hidden rounded-4xl bg-white shadow-xl shadow-slate-900/5 transition hover:-translate-y-2 hover:shadow-2xl"
                 >
-                  <div className="h-56 bg-[#102A43]">
+                  <div className="h-56 overflow-hidden bg-[#102A43]">
                     {blog.image?.url ? (
                       <img
                         src={blog.image.url}
-                        alt={blog.title}
+                        alt={`${blog.title} by Dr. Vini Jhariya`}
                         className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                       />
                     ) : (
@@ -213,13 +254,17 @@ export default function BlogPage() {
 
                   <div className="p-6">
                     <div className="mb-4 flex flex-wrap gap-2">
-                      <span className="rounded-full bg-[#E9F8F6] px-3 py-1 text-xs font-black text-[#0F766E]">
-                        {blog.category}
-                      </span>
+                      {blog.category && (
+                        <span className="rounded-full bg-[#E9F8F6] px-3 py-1 text-xs font-black text-[#0F766E]">
+                          {blog.category}
+                        </span>
+                      )}
 
-                      <span className="rounded-full bg-[#F7FBFC] px-3 py-1 text-xs font-black text-[#0F3D5E]">
-                        {blog.language}
-                      </span>
+                      {blog.language && (
+                        <span className="rounded-full bg-[#F7FBFC] px-3 py-1 text-xs font-black text-[#0F3D5E]">
+                          {blog.language}
+                        </span>
+                      )}
                     </div>
 
                     <h2 className="line-clamp-2 text-2xl font-black leading-tight text-[#102A43]">
@@ -254,7 +299,7 @@ export default function BlogPage() {
                       </span>
                     </div>
                   </div>
-                </a>
+                </Link>
               ))}
             </div>
           )}
