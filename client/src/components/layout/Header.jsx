@@ -243,7 +243,7 @@ const Header = () => {
             <div
               className="relative"
               onMouseEnter={() => setOpenMega(true)}
-              onMouseLeave={() => setOpenMega(false)}
+              // onMouseLeave={() => setOpenMega(false)}
             >
               <button
                 type="button"

@@ -180,11 +180,11 @@ export default function MegaMenu({ onNavigate }) {
   }, [groupedServices]);
 
   return (
-    <div className="absolute left-1/2 top-full z-999 mt-4 w-260 -translate-x-1/2">
-      <div className="overflow-hidden rounded-4xl border border-white/80 bg-white shadow-2xl shadow-slate-900/15 ring-1 ring-slate-100">
-        <div className="grid grid-cols-[320px_1fr]">
+    <div className="fixed left-1/2 top-20.5 z-999 w-[min(1120px,calc(100vw-32px))] -translate-x-1/2">
+      <div className="overflow-hidden rounded-4xl border border-white/80 bg-white shadow-2xl shadow-slate-900/20 ring-1 ring-slate-100">
+        <div className="grid max-h-[calc(100vh-110px)] grid-cols-[300px_1fr] overflow-hidden">
           {/* Left Premium Panel */}
-          <div className="relative overflow-hidden bg-linear-to-br from-[#0F3D5E] via-[#126B73] to-[#2CB1A6] p-7 text-white">
+          <div className="relative overflow-hidden bg-linear-to-br from-[#0F3D5E] via-[#126B73] to-[#2CB1A6] p-6 text-white">
             <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-white/10 blur-2xl" />
             <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-[#F4B183]/20 blur-3xl" />
 
@@ -194,7 +194,7 @@ export default function MegaMenu({ onNavigate }) {
                 Urjasvini CDC Services
               </div>
 
-              <h3 className="text-3xl font-black leading-tight">
+              <h3 className="text-2xl font-black leading-tight">
                 Clinical support for children, parents and families.
               </h3>
 
@@ -203,7 +203,7 @@ export default function MegaMenu({ onNavigate }) {
                 Vini Jhariya.
               </p>
 
-              <div className="mt-7 grid gap-3">
+              <div className="mt-6 grid gap-3">
                 <a
                   href="/services"
                   onClick={onNavigate}
@@ -223,23 +223,23 @@ export default function MegaMenu({ onNavigate }) {
                 </a>
               </div>
 
-              <div className="mt-8 grid grid-cols-3 gap-3">
+              <div className="mt-7 grid grid-cols-3 gap-3">
                 <div className="rounded-2xl bg-white/10 p-3 text-center">
-                  <p className="text-lg font-black">2013</p>
+                  <p className="text-base font-black">2013</p>
                   <p className="mt-1 text-[10px] font-bold text-white/65">
                     Since
                   </p>
                 </div>
 
                 <div className="rounded-2xl bg-white/10 p-3 text-center">
-                  <p className="text-lg font-black">5,000+</p>
+                  <p className="text-base font-black">5,000+</p>
                   <p className="mt-1 text-[10px] font-bold text-white/65">
                     Families
                   </p>
                 </div>
 
                 <div className="rounded-2xl bg-white/10 p-3 text-center">
-                  <p className="text-lg font-black">4.9★</p>
+                  <p className="text-base font-black">4.9★</p>
                   <p className="mt-1 text-[10px] font-bold text-white/65">
                     Rating
                   </p>
@@ -249,7 +249,7 @@ export default function MegaMenu({ onNavigate }) {
           </div>
 
           {/* Backend Service Links */}
-          <div className="bg-[#F8FEFD] p-5">
+          <div className="overflow-y-auto bg-[#F8FEFD] p-5">
             {loading ? (
               <div className="flex min-h-90 items-center justify-center rounded-3xl bg-white">
                 <div className="text-center">
@@ -273,7 +273,7 @@ export default function MegaMenu({ onNavigate }) {
                 </div>
               </div>
             ) : (
-              <div className="grid max-h-130 grid-cols-2 gap-4 overflow-y-auto pr-1">
+              <div className="grid grid-cols-2 gap-4">
                 {availableCategories.map((category) => {
                   const config =
                     categoryConfig[category] || categoryConfig.Other;
