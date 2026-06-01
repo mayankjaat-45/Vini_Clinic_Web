@@ -168,15 +168,12 @@ export default function MegaMenu({ onNavigate }) {
       if (!acc[category]) acc[category] = [];
 
       acc[category].push(service);
-
       return acc;
     }, {});
   }, [activeServices]);
 
   const availableCategories = useMemo(() => {
-    const categories = Object.keys(groupedServices);
-
-    return categories.sort((a, b) => {
+    return Object.keys(groupedServices).sort((a, b) => {
       const aIndex = categoryOrder.indexOf(a);
       const bIndex = categoryOrder.indexOf(b);
 
@@ -196,7 +193,7 @@ export default function MegaMenu({ onNavigate }) {
           <X size={17} />
         </button>
 
-        <div className="grid max-h-[calc(100vh-130px)] grid-cols-[250px_1fr] overflow-hidden">
+        <div className="grid h-[min(620px,calc(100vh-130px))] grid-cols-[250px_1fr] overflow-hidden">
           {/* Left Premium Panel */}
           <div className="relative overflow-hidden bg-linear-to-br from-[#0F3D5E] via-[#126B73] to-[#2CB1A6] p-5 text-white">
             <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-white/10 blur-2xl" />
@@ -262,93 +259,95 @@ export default function MegaMenu({ onNavigate }) {
             </div>
           </div>
 
-          {/* Backend Services */}
-          <div className="overflow-y-auto bg-[#F8FEFD] p-4">
-            {loading ? (
-              <div className="flex min-h-80 items-center justify-center rounded-3xl bg-white">
-                <div className="text-center">
-                  <Loader2 className="mx-auto mb-3 animate-spin text-[#0F3D5E]" />
-                  <p className="text-sm font-bold text-slate-500">
-                    Loading services...
-                  </p>
+          {/* Backend Services - Scrollable */}
+          <div className="h-full min-h-0 overflow-hidden bg-[#F8FEFD]">
+            <div className="h-full overflow-y-auto p-4 pr-5">
+              {loading ? (
+                <div className="flex min-h-80 items-center justify-center rounded-3xl bg-white">
+                  <div className="text-center">
+                    <Loader2 className="mx-auto mb-3 animate-spin text-[#0F3D5E]" />
+                    <p className="text-sm font-bold text-slate-500">
+                      Loading services...
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ) : activeServices.length === 0 ? (
-              <div className="flex min-h-80 items-center justify-center rounded-3xl bg-white p-8 text-center">
-                <div>
-                  <HeartHandshake className="mx-auto mb-4 text-[#0F3D5E]" />
-                  <h4 className="text-xl font-black text-[#102A43]">
-                    Services are coming soon
-                  </h4>
-                  <p className="mx-auto mt-2 max-w-md text-sm font-semibold leading-6 text-slate-500">
-                    Services will appear here automatically once active services
-                    are added from the admin dashboard.
-                  </p>
+              ) : activeServices.length === 0 ? (
+                <div className="flex min-h-80 items-center justify-center rounded-3xl bg-white p-8 text-center">
+                  <div>
+                    <HeartHandshake className="mx-auto mb-4 text-[#0F3D5E]" />
+                    <h4 className="text-xl font-black text-[#102A43]">
+                      Services are coming soon
+                    </h4>
+                    <p className="mx-auto mt-2 max-w-md text-sm font-semibold leading-6 text-slate-500">
+                      Services will appear here automatically once active
+                      services are added from the admin dashboard.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-3">
-                {availableCategories.map((category) => {
-                  const config =
-                    categoryConfig[category] || categoryConfig.Other;
-                  const CategoryIcon = config.icon;
-                  const categoryServices = groupedServices[category] || [];
+              ) : (
+                <div className="grid grid-cols-2 gap-3 pb-4">
+                  {availableCategories.map((category) => {
+                    const config =
+                      categoryConfig[category] || categoryConfig.Other;
+                    const CategoryIcon = config.icon;
+                    const categoryServices = groupedServices[category] || [];
 
-                  return (
-                    <div
-                      key={category}
-                      className="rounded-[22px] bg-white p-3 shadow-sm ring-1 ring-slate-100"
-                    >
-                      <div className="mb-3 flex items-start gap-3">
-                        <div
-                          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${config.color}`}
-                        >
-                          <CategoryIcon size={19} />
+                    return (
+                      <div
+                        key={category}
+                        className="rounded-[22px] bg-white p-3 shadow-sm ring-1 ring-slate-100"
+                      >
+                        <div className="mb-3 flex items-start gap-3">
+                          <div
+                            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${config.color}`}
+                          >
+                            <CategoryIcon size={19} />
+                          </div>
+
+                          <div>
+                            <h4 className="text-sm font-black text-[#102A43]">
+                              {config.title || category}
+                            </h4>
+                            <p className="mt-1 line-clamp-2 text-xs font-semibold leading-5 text-slate-500">
+                              {config.subtitle}
+                            </p>
+                          </div>
                         </div>
 
-                        <div>
-                          <h4 className="text-sm font-black text-[#102A43]">
-                            {config.title || category}
-                          </h4>
-                          <p className="mt-1 line-clamp-2 text-xs font-semibold leading-5 text-slate-500">
-                            {config.subtitle}
-                          </p>
+                        <div className="space-y-1.5">
+                          {categoryServices.map((service) => {
+                            const ServiceIcon = getServiceIcon(service);
+
+                            return (
+                              <a
+                                key={service._id || service.slug}
+                                href={`/services/${service.slug}`}
+                                onClick={onNavigate}
+                                className="group flex gap-2 rounded-2xl p-2.5 transition hover:bg-[#F7FBFC]"
+                              >
+                                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#E9F8F6] text-[#0F766E] transition group-hover:bg-[#0F3D5E] group-hover:text-white">
+                                  <ServiceIcon size={17} />
+                                </span>
+
+                                <span className="min-w-0">
+                                  <span className="line-clamp-1 block text-sm font-black leading-tight text-[#102A43] group-hover:text-[#0F766E]">
+                                    {service.title}
+                                  </span>
+
+                                  <span className="mt-1 line-clamp-1 block text-xs font-semibold leading-5 text-slate-500">
+                                    {getServiceDesc(service)}
+                                  </span>
+                                </span>
+                              </a>
+                            );
+                          })}
                         </div>
                       </div>
-
-                      <div className="space-y-1.5">
-                        {categoryServices.map((service) => {
-                          const ServiceIcon = getServiceIcon(service);
-
-                          return (
-                            <a
-                              key={service._id || service.slug}
-                              href={`/services/${service.slug}`}
-                              onClick={onNavigate}
-                              className="group flex gap-2 rounded-2xl p-2.5 transition hover:bg-[#F7FBFC]"
-                            >
-                              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#E9F8F6] text-[#0F766E] transition group-hover:bg-[#0F3D5E] group-hover:text-white">
-                                <ServiceIcon size={17} />
-                              </span>
-
-                              <span className="min-w-0">
-                                <span className="line-clamp-1 block text-sm font-black leading-tight text-[#102A43] group-hover:text-[#0F766E]">
-                                  {service.title}
-                                </span>
-
-                                <span className="mt-1 line-clamp-1 block text-xs font-semibold leading-5 text-slate-500">
-                                  {getServiceDesc(service)}
-                                </span>
-                              </span>
-                            </a>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
