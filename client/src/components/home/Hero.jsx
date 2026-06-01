@@ -43,7 +43,7 @@ const Hero = () => {
       <div className="absolute -right-24 top-32 h-96 w-96 rounded-full bg-[#0F3D5E]/10 blur-3xl" />
       <div className="absolute bottom-0 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-[#F4B183]/20 blur-3xl" />
 
-      <section className="relative mx-auto grid min-h-screen max-w-7xl items-center gap-10 px-5 pb-20 pt-28 sm:px-6 sm:pt-32 md:py-16 lg:grid-cols-[1.08fr_0.92fr] lg:px-8 lg:pt-36">
+      <section className="relative mx-auto grid min-h-screen max-w-7xl items-center gap-10 px-5 pb-16 pt-10 sm:px-6 sm:pt-22 md:py-13 lg:grid-cols-[1.08fr_0.92fr] lg:px-8 lg:pt-24">
         {/* Left Content */}
         <div className="text-center lg:text-left">
           <p className="inline-flex items-center gap-2 rounded-full border border-[#2CB1A6]/20 bg-white px-4 py-2 text-xs font-bold text-[#2CB1A6] shadow-sm sm:text-sm">
@@ -140,7 +140,7 @@ const Hero = () => {
         </div>
 
         {/* Right Photo */}
-        <div className="relative mx-auto w-full max-w-[430px] sm:max-w-[480px] lg:max-w-[520px]">
+        <div className="relative mx-auto w-full max-w-107.5 sm:max-w-120 lg:max-w-130">
           <div className="absolute -left-3 top-8 z-10 hidden rounded-3xl bg-white p-4 shadow-2xl shadow-slate-900/10 sm:block lg:-left-8">
             <div className="flex items-start gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#2CB1A6]">
@@ -169,8 +169,8 @@ const Hero = () => {
             <p className="mt-1 text-xs text-white/70">237 Google reviews</p>
           </div>
 
-          <div className="relative overflow-hidden rounded-[2rem] border-[7px] border-white bg-white shadow-2xl shadow-slate-900/15 sm:rounded-[3rem] sm:border-[10px]">
-            <div className="relative aspect-[4/5] w-full">
+          <div className="relative overflow-hidden rounded-4xl border-[7px] border-white bg-white shadow-2xl shadow-slate-900/15 sm:rounded-[3rem] sm:border-10">
+            <div className="relative aspect-4/5 w-full">
               <Image
                 src="/images/vini-pic.jpeg"
                 alt="Dr. Vini Jhariya, Clinical & Child Psychologist in Indore"
