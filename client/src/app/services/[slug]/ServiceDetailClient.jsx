@@ -47,8 +47,8 @@ const getTextLines = (text = "") => {
 };
 
 const getButtonHref = (buttonLink) => {
-  if (!buttonLink) return "/contact";
-  return buttonLink;
+  if (!buttonLink) return "/contact-us";
+  return buttonLink === "/contact" ? "/contact-us" : buttonLink;
 };
 
 const isExternalLink = (link = "") => {
@@ -937,7 +937,7 @@ function BottomCTA({ service }) {
 
         <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
           <Link
-            href="/contact"
+            href="/contact-us"
             className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-4 text-sm font-black text-[#102A43] transition hover:-translate-y-1"
           >
             Book Consultation
