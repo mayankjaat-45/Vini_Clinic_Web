@@ -1,35 +1,136 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { API } from "@/lib/api";
 import {
-  Baby,
-  Users,
-  Globe2,
+  Activity,
   ArrowRight,
+  Baby,
+  Brain,
+  ClipboardCheck,
+  GraduationCap,
   HeartHandshake,
   Loader2,
+  MessageCircle,
+  MonitorSmartphone,
+  PhoneCall,
+  Sparkles,
+  Users,
 } from "lucide-react";
+
+const getServiceIcon = (service = {}) => {
+  const text = `${service.title || ""} ${service.slug || ""} ${
+    service.category || ""
+  }`.toLowerCase();
+
+  if (text.includes("autism")) return Brain;
+  if (text.includes("adhd")) return Activity;
+  if (text.includes("dyslexia")) return ClipboardCheck;
+  if (text.includes("assessment")) return ClipboardCheck;
+  if (text.includes("early")) return Baby;
+  if (text.includes("child")) return Baby;
+  if (text.includes("adolescent") || text.includes("teen")) return Users;
+  if (text.includes("adult")) return MessageCircle;
+  if (text.includes("couple")) return HeartHandshake;
+  if (text.includes("family")) return Users;
+  if (text.includes("online")) return MonitorSmartphone;
+  if (text.includes("internship")) return GraduationCap;
+  if (text.includes("workshop") || text.includes("course")) return Sparkles;
+
+  return HeartHandshake;
+};
+
+const getServiceDesc = (service = {}) => {
+  if (service.shortDescription) return service.shortDescription;
+
+  const text = `${service.title || ""} ${service.slug || ""}`.toLowerCase();
+
+  if (text.includes("autism")) return "Therapy, parent guidance and support";
+  if (text.includes("adhd")) return "Attention, behaviour and focus support";
+  if (text.includes("dyslexia"))
+    return "Reading and learning difficulty support";
+  if (text.includes("assessment"))
+    return "Clinical and psychological assessment";
+  if (text.includes("online")) return "Consult Dr. Vini from anywhere";
+
+  return "View service details";
+};
+
+const categoryOrder = [
+  "Children",
+  "Adults",
+  "Online Consultation",
+  "Assessment",
+  "Training",
+  "Other",
+];
+
+const normalizeCategory = (service = {}) => {
+  const text = `${service.category || ""} ${service.title || ""} ${
+    service.slug || ""
+  }`.toLowerCase();
+
+  if (text.includes("online")) return "Online Consultation";
+  if (
+    text.includes("adult") ||
+    text.includes("couple") ||
+    text.includes("family")
+  )
+    return "Adults";
+  if (text.includes("assessment")) return "Assessment";
+  if (
+    text.includes("internship") ||
+    text.includes("workshop") ||
+    text.includes("course") ||
+    text.includes("training")
+  )
+    return "Training";
+
+  if (service.category) return service.category;
+
+  return "Children";
+};
 
 const categoryConfig = {
   Children: {
-    title: "Children 2–18",
+    title: "Children & Teens",
+    subtitle: "Therapy, counselling and developmental support",
     icon: Baby,
     color: "bg-[#E9F8F6] text-[#0F766E]",
   },
   Adults: {
-    title: "Adults",
+    title: "Adults & Families",
+    subtitle: "Counselling, relationship and family support",
     icon: Users,
     color: "bg-[#FFF1EA] text-[#C05621]",
   },
   "Online Consultation": {
     title: "Online Consultation",
-    icon: Globe2,
+    subtitle: "Consult from anywhere",
+    icon: MonitorSmartphone,
     color: "bg-[#EEF4FF] text-[#3158D4]",
+  },
+  Assessment: {
+    title: "Assessments",
+    subtitle: "Clinical, learning and behavioural assessments",
+    icon: ClipboardCheck,
+    color: "bg-[#F4F0FF] text-[#6B46C1]",
+  },
+  Training: {
+    title: "Training Programs",
+    subtitle: "Internship, workshops and courses",
+    icon: GraduationCap,
+    color: "bg-[#FFF7E6] text-[#B7791F]",
+  },
+  Other: {
+    title: "Other Services",
+    subtitle: "Additional support services",
+    icon: HeartHandshake,
+    color: "bg-[#E9F8F6] text-[#0F766E]",
   },
 };
 
-const MegaMenu = () => {
+export default function MegaMenu({ onNavigate }) {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,9 +140,10 @@ const MegaMenu = () => {
 
       const { data } = await API.get("/api/services");
 
-      setServices(data?.data || []);
+      setServices(Array.isArray(data?.data) ? data.data : []);
     } catch (error) {
       console.log("MEGA MENU SERVICES ERROR:", error);
+      setServices([]);
     } finally {
       setLoading(false);
     }
@@ -51,56 +153,105 @@ const MegaMenu = () => {
     fetchServices();
   }, []);
 
-  const groupedServices = services.reduce((acc, service) => {
-    const category = service.category || "Children";
+  const activeServices = useMemo(() => {
+    return services.filter((service) => service?.isActive !== false);
+  }, [services]);
 
-    if (!acc[category]) {
-      acc[category] = [];
-    }
+  const groupedServices = useMemo(() => {
+    return activeServices.reduce((acc, service) => {
+      const category = normalizeCategory(service);
 
-    acc[category].push(service);
-    return acc;
-  }, {});
+      if (!acc[category]) acc[category] = [];
 
-  const categories = ["Children", "Adults", "Online Consultation"];
+      acc[category].push(service);
+      return acc;
+    }, {});
+  }, [activeServices]);
+
+  const availableCategories = useMemo(() => {
+    const categories = Object.keys(groupedServices);
+
+    return categories.sort((a, b) => {
+      const aIndex = categoryOrder.indexOf(a);
+      const bIndex = categoryOrder.indexOf(b);
+
+      return (aIndex === -1 ? 99 : aIndex) - (bIndex === -1 ? 99 : bIndex);
+    });
+  }, [groupedServices]);
 
   return (
-    <div className="absolute left-1/2 top-full z-999 w-245 -translate-x-2/5 pt-8">
-      <div className="overflow-hidden rounded-4xl border border-[#D8F0EE] bg-white shadow-2xl shadow-slate-900/15">
-        <div className="grid grid-cols-[280px_1fr]">
-          {/* Left Branding Panel */}
-          <div className="relative overflow-hidden bg-linear-to-br from-[#0F3D5E] to-[#168A83] p-7 text-white">
+    <div className="absolute left-1/2 top-full z-999 mt-4 w-260 -translate-x-1/2">
+      <div className="overflow-hidden rounded-4xl border border-white/80 bg-white shadow-2xl shadow-slate-900/15 ring-1 ring-slate-100">
+        <div className="grid grid-cols-[320px_1fr]">
+          {/* Left Premium Panel */}
+          <div className="relative overflow-hidden bg-linear-to-br from-[#0F3D5E] via-[#126B73] to-[#2CB1A6] p-7 text-white">
             <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-white/10 blur-2xl" />
-            <div className="absolute -bottom-16 -left-16 h-44 w-44 rounded-full bg-[#F4B183]/20 blur-2xl" />
+            <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-[#F4B183]/20 blur-3xl" />
 
             <div className="relative">
-              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15">
-                <HeartHandshake size={24} />
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-black text-white">
+                <Sparkles size={15} className="text-[#F4B183]" />
+                Urjasvini CDC Services
               </div>
 
-              <h3 className="text-2xl font-black leading-tight">
-                Services for every stage
+              <h3 className="text-3xl font-black leading-tight">
+                Clinical support for children, parents and families.
               </h3>
 
-              <p className="mt-3 text-sm leading-6 text-white/75">
-                Therapy, counselling, assessments and online consultations for
-                children, adults and families.
+              <p className="mt-4 text-sm font-semibold leading-7 text-white/75">
+                Therapy, counselling, assessments and online consultation by Dr.
+                Vini Jhariya.
               </p>
 
-              <a
-                href="/services"
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-[#0F3D5E] transition hover:-translate-y-0.5"
-              >
-                View all services
-                <ArrowRight size={15} />
-              </a>
+              <div className="mt-7 grid gap-3">
+                <a
+                  href="/services"
+                  onClick={onNavigate}
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-[#0F3D5E] transition hover:-translate-y-1"
+                >
+                  View All Services
+                  <ArrowRight size={16} />
+                </a>
+
+                <a
+                  href="/contact-us"
+                  onClick={onNavigate}
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:-translate-y-1 hover:bg-white/15"
+                >
+                  Book Consultation
+                  <PhoneCall size={16} />
+                </a>
+              </div>
+
+              <div className="mt-8 grid grid-cols-3 gap-3">
+                <div className="rounded-2xl bg-white/10 p-3 text-center">
+                  <p className="text-lg font-black">2013</p>
+                  <p className="mt-1 text-[10px] font-bold text-white/65">
+                    Since
+                  </p>
+                </div>
+
+                <div className="rounded-2xl bg-white/10 p-3 text-center">
+                  <p className="text-lg font-black">5,000+</p>
+                  <p className="mt-1 text-[10px] font-bold text-white/65">
+                    Families
+                  </p>
+                </div>
+
+                <div className="rounded-2xl bg-white/10 p-3 text-center">
+                  <p className="text-lg font-black">4.9★</p>
+                  <p className="mt-1 text-[10px] font-bold text-white/65">
+                    Rating
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Service Columns */}
+          {/* Backend Service Links */}
           <div className="bg-[#F8FEFD] p-5">
             {loading ? (
-              <div className="flex min-h-65 items-center justify-center">
+              <div className="flex min-h-90 items-center justify-center rounded-3xl bg-white">
                 <div className="text-center">
                   <Loader2 className="mx-auto mb-3 animate-spin text-[#0F3D5E]" />
                   <p className="text-sm font-bold text-slate-500">
@@ -108,63 +259,77 @@ const MegaMenu = () => {
                   </p>
                 </div>
               </div>
-            ) : services.length === 0 ? (
-              <div className="flex min-h-65 items-center justify-center rounded-3xl bg-white p-8 text-center">
+            ) : activeServices.length === 0 ? (
+              <div className="flex min-h-90 items-center justify-center rounded-3xl bg-white p-8 text-center">
                 <div>
-                  <HeartHandshake className="mx-auto mb-3 text-[#0F3D5E]" />
-                  <h4 className="text-lg font-black text-[#102A43]">
-                    No services added
+                  <HeartHandshake className="mx-auto mb-4 text-[#0F3D5E]" />
+                  <h4 className="text-xl font-black text-[#102A43]">
+                    Services are coming soon
                   </h4>
-                  <p className="mt-2 text-sm font-semibold text-slate-500">
-                    Add active services from admin dashboard.
+                  <p className="mx-auto mt-2 max-w-md text-sm font-semibold leading-6 text-slate-500">
+                    Services will appear here automatically once active services
+                    are added from the admin dashboard.
                   </p>
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-3 gap-4">
-                {categories.map((category) => {
-                  const config = categoryConfig[category];
-                  const Icon = config.icon;
+              <div className="grid max-h-130 grid-cols-2 gap-4 overflow-y-auto pr-1">
+                {availableCategories.map((category) => {
+                  const config =
+                    categoryConfig[category] || categoryConfig.Other;
+                  const CategoryIcon = config.icon;
                   const categoryServices = groupedServices[category] || [];
 
                   return (
                     <div
                       key={category}
-                      className="rounded-3xl border border-[#E5F3F1] bg-white p-5"
+                      className="rounded-3xl bg-white p-4 shadow-sm ring-1 ring-slate-100"
                     >
-                      <div
-                        className={`mb-4 flex h-11 w-11 items-center justify-center rounded-2xl ${config.color}`}
-                      >
-                        <Icon size={21} />
+                      <div className="mb-4 flex items-start gap-3">
+                        <div
+                          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${config.color}`}
+                        >
+                          <CategoryIcon size={21} />
+                        </div>
+
+                        <div>
+                          <h4 className="text-sm font-black text-[#102A43]">
+                            {config.title || category}
+                          </h4>
+                          <p className="mt-1 text-xs font-semibold leading-5 text-slate-500">
+                            {config.subtitle}
+                          </p>
+                        </div>
                       </div>
 
-                      <h4 className="mb-3 text-base font-black text-[#102A43]">
-                        {config.title}
-                      </h4>
+                      <div className="space-y-2">
+                        {categoryServices.map((service) => {
+                          const ServiceIcon = getServiceIcon(service);
 
-                      {categoryServices.length === 0 ? (
-                        <p className="rounded-xl bg-[#F7FBFC] px-3 py-3 text-xs font-bold text-slate-400">
-                          No active service
-                        </p>
-                      ) : (
-                        <div className="space-y-1.5">
-                          {categoryServices.slice(0, 6).map((service) => (
+                          return (
                             <a
-                              key={service._id}
+                              key={service._id || service.slug}
                               href={`/services/${service.slug}`}
-                              className="group flex items-center justify-between rounded-xl px-3 py-2 text-sm font-semibold text-[#52677A] transition hover:bg-[#E9F8F6] hover:text-[#0F766E]"
+                              onClick={onNavigate}
+                              className="group flex gap-3 rounded-2xl p-3 transition hover:bg-[#F7FBFC]"
                             >
-                              <span className="line-clamp-1">
-                                {service.title}
+                              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#E9F8F6] text-[#0F766E] transition group-hover:bg-[#0F3D5E] group-hover:text-white">
+                                <ServiceIcon size={18} />
                               </span>
-                              <ArrowRight
-                                size={13}
-                                className="shrink-0 opacity-0 transition group-hover:translate-x-1 group-hover:opacity-100"
-                              />
+
+                              <span className="min-w-0">
+                                <span className="line-clamp-1 block text-sm font-black leading-tight text-[#102A43] group-hover:text-[#0F766E]">
+                                  {service.title}
+                                </span>
+
+                                <span className="mt-1 line-clamp-2 block text-xs font-semibold leading-5 text-slate-500">
+                                  {getServiceDesc(service)}
+                                </span>
+                              </span>
                             </a>
-                          ))}
-                        </div>
-                      )}
+                          );
+                        })}
+                      </div>
                     </div>
                   );
                 })}
@@ -175,6 +340,4 @@ const MegaMenu = () => {
       </div>
     </div>
   );
-};
-
-export default MegaMenu;
+}
