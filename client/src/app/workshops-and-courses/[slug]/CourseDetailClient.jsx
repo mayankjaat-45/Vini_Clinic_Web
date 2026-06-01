@@ -39,7 +39,7 @@ export default function CourseDetailClient({ course }) {
             This course may have been removed or hidden.
           </p>
           <Link
-            href="/courses"
+            href="/workshops-and-courses"
             className="mt-7 inline-flex items-center gap-2 rounded-full bg-[#0F3D5E] px-6 py-3 text-sm font-black text-white"
           >
             <ArrowLeft size={16} />
