@@ -16,6 +16,7 @@ import {
   PhoneCall,
   Sparkles,
   Users,
+  X,
 } from "lucide-react";
 
 const getServiceIcon = (service = {}) => {
@@ -75,20 +76,20 @@ const normalizeCategory = (service = {}) => {
     text.includes("adult") ||
     text.includes("couple") ||
     text.includes("family")
-  )
+  ) {
     return "Adults";
+  }
   if (text.includes("assessment")) return "Assessment";
   if (
     text.includes("internship") ||
     text.includes("workshop") ||
     text.includes("course") ||
     text.includes("training")
-  )
+  ) {
     return "Training";
+  }
 
-  if (service.category) return service.category;
-
-  return "Children";
+  return service.category || "Children";
 };
 
 const categoryConfig = {
@@ -180,22 +181,30 @@ export default function MegaMenu({ onNavigate }) {
   }, [groupedServices]);
 
   return (
-    <div className="fixed left-1/2 top-20.5 z-999 w-[min(1120px,calc(100vw-32px))] -translate-x-1/2">
-      <div className="overflow-hidden rounded-4xl border border-white/80 bg-white shadow-2xl shadow-slate-900/20 ring-1 ring-slate-100">
-        <div className="grid max-h-[calc(100vh-110px)] grid-cols-[300px_1fr] overflow-hidden">
-          {/* Left Premium Panel */}
+    <div className="fixed top-84px z-999 hidden w-[min(980px,calc(100vw-32px))] -translate-x-1/2 lg:block">
+      <div className="relative overflow-hidden rounded-[26px] border border-[#D8F0EE] bg-white shadow-2xl shadow-slate-900/20 ring-1 ring-slate-100">
+        <button
+          type="button"
+          onClick={onNavigate}
+          className="absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#0F3D5E] shadow-lg transition hover:bg-[#E9F8F6]"
+          aria-label="Close services menu"
+        >
+          <X size={17} />
+        </button>
+
+        <div className="grid max-h-[calc(100vh-110px)] grid-cols-[260px_1fr] overflow-hidden">
           <div className="relative overflow-hidden bg-linear-to-br from-[#0F3D5E] via-[#126B73] to-[#2CB1A6] p-6 text-white">
             <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-white/10 blur-2xl" />
             <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-[#F4B183]/20 blur-3xl" />
 
             <div className="relative">
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-black text-white">
-                <Sparkles size={15} className="text-[#F4B183]" />
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-[11px] font-black text-white">
+                <Sparkles size={14} className="text-[#F4B183]" />
                 Urjasvini CDC Services
               </div>
 
               <h3 className="text-2xl font-black leading-tight">
-                Clinical support for children, parents and families.
+                Clinical support for children and families.
               </h3>
 
               <p className="mt-4 text-sm font-semibold leading-7 text-white/75">
@@ -223,24 +232,24 @@ export default function MegaMenu({ onNavigate }) {
                 </a>
               </div>
 
-              <div className="mt-7 grid grid-cols-3 gap-3">
-                <div className="rounded-2xl bg-white/10 p-3 text-center">
-                  <p className="text-base font-black">2013</p>
-                  <p className="mt-1 text-[10px] font-bold text-white/65">
+              <div className="mt-7 grid grid-cols-3 gap-2">
+                <div className="rounded-2xl bg-white/10 p-2 text-center">
+                  <p className="text-sm font-black">2013</p>
+                  <p className="mt-1 text-[9px] font-bold text-white/65">
                     Since
                   </p>
                 </div>
 
-                <div className="rounded-2xl bg-white/10 p-3 text-center">
-                  <p className="text-base font-black">5,000+</p>
-                  <p className="mt-1 text-[10px] font-bold text-white/65">
+                <div className="rounded-2xl bg-white/10 p-2 text-center">
+                  <p className="text-sm font-black">5,000+</p>
+                  <p className="mt-1 text-[9px] font-bold text-white/65">
                     Families
                   </p>
                 </div>
 
-                <div className="rounded-2xl bg-white/10 p-3 text-center">
-                  <p className="text-base font-black">4.9★</p>
-                  <p className="mt-1 text-[10px] font-bold text-white/65">
+                <div className="rounded-2xl bg-white/10 p-2 text-center">
+                  <p className="text-sm font-black">4.9★</p>
+                  <p className="mt-1 text-[9px] font-bold text-white/65">
                     Rating
                   </p>
                 </div>
@@ -248,10 +257,9 @@ export default function MegaMenu({ onNavigate }) {
             </div>
           </div>
 
-          {/* Backend Service Links */}
-          <div className="overflow-y-auto bg-[#F8FEFD] p-5">
+          <div className="overflow-y-auto bg-[#F8FEFD] p-4">
             {loading ? (
-              <div className="flex min-h-90 items-center justify-center rounded-3xl bg-white">
+              <div className="flex min-h-80 items-center justify-center rounded-3xl bg-white">
                 <div className="text-center">
                   <Loader2 className="mx-auto mb-3 animate-spin text-[#0F3D5E]" />
                   <p className="text-sm font-bold text-slate-500">
@@ -260,7 +268,7 @@ export default function MegaMenu({ onNavigate }) {
                 </div>
               </div>
             ) : activeServices.length === 0 ? (
-              <div className="flex min-h-90 items-center justify-center rounded-3xl bg-white p-8 text-center">
+              <div className="flex min-h-80 items-center justify-center rounded-3xl bg-white p-8 text-center">
                 <div>
                   <HeartHandshake className="mx-auto mb-4 text-[#0F3D5E]" />
                   <h4 className="text-xl font-black text-[#102A43]">
@@ -273,7 +281,7 @@ export default function MegaMenu({ onNavigate }) {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 {availableCategories.map((category) => {
                   const config =
                     categoryConfig[category] || categoryConfig.Other;
@@ -283,26 +291,26 @@ export default function MegaMenu({ onNavigate }) {
                   return (
                     <div
                       key={category}
-                      className="rounded-3xl bg-white p-4 shadow-sm ring-1 ring-slate-100"
+                      className="rounded-[22px] bg-white p-3 shadow-sm ring-1 ring-slate-100"
                     >
-                      <div className="mb-4 flex items-start gap-3">
+                      <div className="mb-3 flex items-start gap-3">
                         <div
-                          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${config.color}`}
+                          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${config.color}`}
                         >
-                          <CategoryIcon size={21} />
+                          <CategoryIcon size={19} />
                         </div>
 
                         <div>
                           <h4 className="text-sm font-black text-[#102A43]">
                             {config.title || category}
                           </h4>
-                          <p className="mt-1 text-xs font-semibold leading-5 text-slate-500">
+                          <p className="mt-1 line-clamp-2 text-xs font-semibold leading-5 text-slate-500">
                             {config.subtitle}
                           </p>
                         </div>
                       </div>
 
-                      <div className="space-y-2">
+                      <div className="space-y-1.5">
                         {categoryServices.map((service) => {
                           const ServiceIcon = getServiceIcon(service);
 
@@ -311,10 +319,10 @@ export default function MegaMenu({ onNavigate }) {
                               key={service._id || service.slug}
                               href={`/services/${service.slug}`}
                               onClick={onNavigate}
-                              className="group flex gap-3 rounded-2xl p-3 transition hover:bg-[#F7FBFC]"
+                              className="group flex gap-2 rounded-2xl p-2.5 transition hover:bg-[#F7FBFC]"
                             >
-                              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#E9F8F6] text-[#0F766E] transition group-hover:bg-[#0F3D5E] group-hover:text-white">
-                                <ServiceIcon size={18} />
+                              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#E9F8F6] text-[#0F766E] transition group-hover:bg-[#0F3D5E] group-hover:text-white">
+                                <ServiceIcon size={17} />
                               </span>
 
                               <span className="min-w-0">
@@ -322,7 +330,7 @@ export default function MegaMenu({ onNavigate }) {
                                   {service.title}
                                 </span>
 
-                                <span className="mt-1 line-clamp-2 block text-xs font-semibold leading-5 text-slate-500">
+                                <span className="mt-1 line-clamp-1 block text-xs font-semibold leading-5 text-slate-500">
                                   {getServiceDesc(service)}
                                 </span>
                               </span>

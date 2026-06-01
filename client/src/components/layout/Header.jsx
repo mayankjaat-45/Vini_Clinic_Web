@@ -258,7 +258,7 @@ const Header = () => {
               </button>
 
               {openMega && (
-                <div className="absolute left-1/2 top-full z-100 mt-4 w-260 -translate-x-1/2">
+                <div className="absolute left-2/2 top-full z-100 mt-4 w-260 -translate-x-1/2">
                   <div className="overflow-hidden rounded-4xl border border-white/80 bg-white shadow-2xl shadow-slate-900/15 ring-1 ring-slate-100">
                     <div className="grid grid-cols-[320px_1fr]">
                       <div className="relative overflow-hidden bg-linear-to-br from-[#0F3D5E] via-[#126B73] to-[#2CB1A6] p-7 text-white">
