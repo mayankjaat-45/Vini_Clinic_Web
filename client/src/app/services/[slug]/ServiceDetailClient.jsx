@@ -316,10 +316,6 @@ function SectionHeading({ section, center = false }) {
       viewport={{ once: true, amount: 0.2 }}
       className={center ? "mx-auto max-w-4xl text-center" : "max-w-4xl"}
     >
-      <p className="mb-3 inline-flex rounded-full bg-[#E9F8F6] px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-[#0F766E]">
-        {section.type || "section"}
-      </p>
-
       <h2 className="whitespace-pre-line text-3xl font-black leading-tight text-[#102A43] sm:text-4xl md:text-5xl">
         {section.title}
       </h2>
