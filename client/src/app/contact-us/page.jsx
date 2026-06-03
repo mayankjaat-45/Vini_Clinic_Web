@@ -18,7 +18,12 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
+import {
+  FaFacebook,
+  FaInstagram,
+  FaLinkedinIn,
+  FaYoutube,
+} from "react-icons/fa";
 
 const initialForm = {
   name: "",
@@ -677,7 +682,7 @@ export default function ContactUsPage() {
             />
 
             <SocialCard
-              icon={<FaLinkedin />}
+              icon={<FaLinkedinIn />}
               title="LinkedIn"
               handle="Dr. Vini Jhariya"
               link="https://www.linkedin.com/in/vini-jhariya/"
