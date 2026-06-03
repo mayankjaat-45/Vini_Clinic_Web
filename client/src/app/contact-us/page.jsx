@@ -8,10 +8,7 @@ import {
   ArrowRight,
   CalendarCheck,
   Clock,
-  Facebook,
   HelpCircle,
-  Instagram,
-  Linkedin,
   Loader2,
   Mail,
   MapPin,
@@ -19,8 +16,9 @@ import {
   Phone,
   Send,
   Sparkles,
-  Youtube,
 } from "lucide-react";
+
+import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
 
 const initialForm = {
   name: "",
@@ -33,13 +31,13 @@ const initialForm = {
   preferredTime: "",
   heardFrom: "",
 };
-
 const enquiryForOptions = [
   "My child",
   "My teenager",
-  "Myself",
-  "My partner / marriage",
-  "My family",
+  "Parent guidance",
+  "Psychological assessment",
+  "Autism / ADHD / Dyslexia support",
+  "Early intervention",
   "Online consultation",
   "Not sure yet",
 ];
@@ -164,10 +162,13 @@ export default function ContactUsPage() {
   const [loading, setLoading] = useState(false);
 
   const showChildAge = useMemo(() => {
-    return (
-      formData.enquiryFor === "My child" ||
-      formData.enquiryFor === "My teenager"
-    );
+    return [
+      "My child",
+      "My teenager",
+      "Psychological assessment",
+      "Autism / ADHD / Dyslexia support",
+      "Early intervention",
+    ].includes(formData.enquiryFor);
   }, [formData.enquiryFor]);
 
   const handleChange = (e) => {
@@ -234,10 +235,14 @@ export default function ContactUsPage() {
       const { data } = await API.post("/api/contact-enquiries", payload);
 
       if (data?.success) {
-        toast.success("Your enquiry has been sent successfully.");
+        toast.success(
+          "Thank you. Your enquiry has been received. We will contact you soon.",
+        );
         setFormData(initialForm);
       } else {
-        toast.success("Your enquiry has been sent successfully.");
+        toast.success(
+          "Thank you. Your enquiry has been received. We will contact you soon.",
+        );
         setFormData(initialForm);
       }
     } catch (error) {
@@ -358,9 +363,10 @@ export default function ContactUsPage() {
                 Clinic & online consultations available
               </p>
               <p className="mt-2 text-sm font-semibold leading-6 text-slate-500">
-                Reach out for child counselling, adolescent support, adult
-                counselling, couple counselling, family therapy, assessments,
-                and online consultations.
+                Reach out for child counselling, adolescent support, autism,
+                ADHD, dyslexia, developmental concerns, psychological
+                assessments, early intervention, parent guidance and online
+                consultations.
               </p>
             </div>
           </motion.div>
@@ -637,7 +643,7 @@ export default function ContactUsPage() {
               Hindi and English.
             </p>
             <a
-              href="/services/online-consultation"
+              href="/online-consultation"
               className="mt-7 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-black text-[#0F3D5E] transition hover:-translate-y-1"
             >
               Learn More About Online Consultations
@@ -663,7 +669,7 @@ export default function ContactUsPage() {
             className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4"
           >
             <SocialCard
-              // icon={<Instagram />}
+              icon={<FaInstagram />}
               title="Instagram"
               handle="@vini_thechildpsychologist"
               link="https://www.instagram.com/vini_thechildpsychologist/"
@@ -671,7 +677,7 @@ export default function ContactUsPage() {
             />
 
             <SocialCard
-              // icon={<Linkedin />}
+              icon={<FaLinkedin />}
               title="LinkedIn"
               handle="Dr. Vini Jhariya"
               link="https://www.linkedin.com/in/vini-jhariya/"
@@ -679,7 +685,7 @@ export default function ContactUsPage() {
             />
 
             <SocialCard
-              // icon={<Youtube />}
+              icon={<FaYoutube />}
               title="YouTube"
               handle="Vini The Child Psychologist"
               link="https://www.youtube.com/@ViniTheChildPsychologist"
@@ -687,7 +693,7 @@ export default function ContactUsPage() {
             />
 
             <SocialCard
-              // icon={<Facebook />}
+              icon={<FaFacebook />}
               title="Facebook"
               handle="Urjasvini Child Development Centre"
               link="#"

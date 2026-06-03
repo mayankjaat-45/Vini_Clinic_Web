@@ -25,7 +25,7 @@ const credentials = [
   "iRise Women Conclave — Social Impact Award",
   "Lions Club Recognition Award",
   "Formerly — Clinical & Child Psychologist, Choithram Hospital and Research Center, Indore",
-  "Since 2013 | 5000+ Children | 100+ Schools & Families across India",
+  "Trusted Since 2013 | 5,000+ Families Supported | 100+ Schools & Families across India",
 ];
 
 const expertise = [
@@ -54,8 +54,8 @@ const expertise = [
     desc: "Structured, play-based intervention for toddlers and young children showing developmental concerns.",
   },
   {
-    title: "Adult Mental Health",
-    desc: "Individual counselling, couple counselling, family therapy, grief support, and parenting guidance.",
+    title: "Parent & Family Guidance",
+    desc: "Practical guidance for parents to understand behaviour, emotional needs, school concerns, and therapy planning.",
   },
   {
     title: "Research & Professional Training",
@@ -315,7 +315,7 @@ export default function AboutDrViniClient() {
                 "And behind every label was a parent who had been everywhere — paediatricians, tutors, teachers, relatives with advice — and had come away with nothing but more confusion, more guilt, and a quiet fear that something was fundamentally wrong with their child.",
                 "Nothing was fundamentally wrong. The wrong thing was that nobody had stopped long enough to ask the right question.",
                 "What is this child trying to tell us?",
-                "That question has been at the centre of my work for over a decade. It is the question I ask before every assessment, before every therapy session, before every conversation with a parent sitting across from me — exhausted, scared, and holding on.",
+                "That question has been at the centre of my work since 2013. It is the question I ask before every assessment, before every therapy session, before every conversation with a parent sitting across from me — exhausted, scared, and holding on.",
                 "I am Dr. Vini Jhariya — Clinical and Child Psychologist, TEDx speaker, published researcher, and the founder of Urjasvini Child Development Centre and Urjasvini Special School. I work with children and families across India — in clinic in Indore, and online for families wherever they are.",
                 "My practice is not built on giving parents hope. It is built on giving them answers. And then a plan. And then walking with them until they do not need me anymore.",
               ].map((text, index) => (
@@ -483,9 +483,9 @@ export default function AboutDrViniClient() {
                   <Mic2 className="mx-auto mb-3 text-[#F4B183]" size={38} />
                 </motion.div>
 
-                <p className="font-black">TEDx Video Placeholder</p>
+                <p className="font-black">TEDx Talk</p>
                 <p className="mt-1 text-sm text-white/60">
-                  Add YouTube embed link when available
+                  Video link will be updated after official publication.
                 </p>
               </div>
             </motion.div>
@@ -559,7 +559,8 @@ export default function AboutDrViniClient() {
 
             <p className="mt-4 max-w-3xl text-base leading-8 text-slate-600 sm:text-lg">
               A practice built on evidence, sharpened by international training,
-              and grounded in over a decade of real clinical work.
+              and grounded in clinical work with children and families since
+              2013.
             </p>
           </motion.div>
 
@@ -677,7 +678,7 @@ export default function AboutDrViniClient() {
             <motion.a
               whileHover={{ y: -5, scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              href="/contact"
+              href="/contact-us"
               className="rounded-full bg-[#0F3D5E] px-8 py-4 text-sm font-black text-white shadow-xl shadow-blue-950/15 transition hover:bg-[#102A43]"
             >
               Book Consultation

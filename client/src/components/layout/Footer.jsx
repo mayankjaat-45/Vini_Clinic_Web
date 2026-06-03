@@ -28,12 +28,18 @@ const footerLinks = [
   {
     title: "Services",
     links: [
-      { name: "Autism Therapy", href: "/services/autism-therapy-indore" },
+      {
+        name: "Autism Therapy",
+        href: "/services/autism-therapy-indore",
+      },
       {
         name: "ADHD Assessment & Therapy",
         href: "/services/adhd-assessment-therapy-indore",
       },
-      { name: "Dyslexia Support", href: "/services/dyslexia-therapy-indore" },
+      {
+        name: "Dyslexia Support",
+        href: "/services/dyslexia-specialist-indore",
+      },
       {
         name: "Psychological Assessments",
         href: "/services/psychological-assessments-indore",
@@ -48,23 +54,11 @@ const footerLinks = [
       },
       {
         name: "Early Intervention",
-        href: "/services/early-intervention-indore",
+        href: "/services/early-intervention",
       },
       {
-        name: "Adult Counselling",
-        href: "/services/adult-counselling-indore",
-      },
-      {
-        name: "Couple Counselling",
-        href: "/services/couple-counselling-indore",
-      },
-      {
-        name: "Family Therapy",
-        href: "/services/family-therapy-indore",
-      },
-      {
-        name: "Premarital Counselling",
-        href: "/services/premarital-counselling-indore",
+        name: "Online Consultation",
+        href: "/online-consultation",
       },
       {
         name: "Psychology Internship",
@@ -73,10 +67,6 @@ const footerLinks = [
       {
         name: "Workshops & Courses",
         href: "/workshops-and-courses",
-      },
-      {
-        name: "Success Stories",
-        href: "/success-stories",
       },
     ],
   },
@@ -100,10 +90,10 @@ const trustItems = [
     text: "Clinical & Child Psychologist",
   },
   {
-    icon: Award,
-    title: "Since 2013",
-    text: "Over a decade of care",
-  },
+  icon: Award,
+  title: "Trusted Since 2013",
+  text: "10+ years of clinical care",
+},
   {
     icon: Star,
     title: "4.9★ Rating",
@@ -176,8 +166,9 @@ const Footer = () => {
 
             <p className="mt-6 max-w-md text-sm leading-7 text-white/65 sm:text-base">
               Urjasvini Child Development Centre supports children, adolescents,
-              parents and families through counselling, psychological
-              assessments, therapy planning and parent guidance.
+              parents and families through child counselling, developmental
+              assessments, therapy planning, early intervention and parent
+              guidance.
             </p>
 
             <div className="mt-7 grid gap-3">
