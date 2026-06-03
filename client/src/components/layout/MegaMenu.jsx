@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { API } from "@/lib/api";
 import {
   Activity,
@@ -182,20 +183,43 @@ export default function MegaMenu({ onNavigate }) {
   }, [groupedServices]);
 
   return (
-    <div className="fixed left-1/2 top-26 z-9999 hidden w-[min(940px,calc(100vw-40px))] -translate-x-1/2 lg:block">
-      <div className="relative overflow-hidden rounded-[26px] border border-[#D8F0EE] bg-white shadow-2xl shadow-slate-900/20 ring-1 ring-slate-100">
+    <div
+      className="
+      fixed left-1/2 top-28 bottom-4 z-9999 hidden
+      w-[min(980px,calc(100vw-32px))]
+      -translate-x-1/2 lg:block
+      pointer-events-auto
+    "
+    >
+      <div
+        className="
+        relative h-full overflow-hidden
+        rounded-[26px] border border-[#D8F0EE] bg-white
+        shadow-2xl shadow-slate-900/20 ring-1 ring-slate-100
+      "
+      >
         <button
           type="button"
           onClick={onNavigate}
-          className="absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#0F3D5E] shadow-lg transition hover:bg-[#E9F8F6]"
+          className="
+          absolute right-4 top-4 z-30 flex h-9 w-9 items-center justify-center
+          rounded-full bg-white text-[#0F3D5E] shadow-lg transition
+          hover:bg-[#E9F8F6]
+        "
           aria-label="Close services menu"
         >
           <X size={17} />
         </button>
 
-        <div className="grid h-[min(620px,calc(100vh-130px))] grid-cols-[250px_1fr] overflow-hidden">
+        <div className="grid h-full min-h-0 grid-cols-[255px_1fr] overflow-hidden">
           {/* Left Premium Panel */}
-          <div className="relative overflow-hidden bg-linear-to-br from-[#0F3D5E] via-[#126B73] to-[#2CB1A6] p-5 text-white">
+          <div
+            className="
+            relative h-full min-h-0 overflow-y-auto bg-linear-to-br
+            from-[#0F3D5E] via-[#126B73] to-[#2CB1A6]
+            p-5 text-white
+          "
+          >
             <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-white/10 blur-2xl" />
             <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-[#F4B183]/20 blur-3xl" />
 
@@ -215,23 +239,32 @@ export default function MegaMenu({ onNavigate }) {
               </p>
 
               <div className="mt-6 grid gap-3">
-                <a
+                <Link
                   href="/services"
                   onClick={onNavigate}
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-[#0F3D5E] transition hover:-translate-y-1"
+                  className="
+                  inline-flex items-center justify-center gap-2 rounded-full
+                  bg-white px-5 py-3 text-sm font-black text-[#0F3D5E]
+                  transition hover:-translate-y-1
+                "
                 >
                   View All
                   <ArrowRight size={16} />
-                </a>
+                </Link>
 
-                <a
+                <Link
                   href="/contact-us"
                   onClick={onNavigate}
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:-translate-y-1 hover:bg-white/15"
+                  className="
+                  inline-flex items-center justify-center gap-2 rounded-full
+                  border border-white/20 bg-white/10 px-5 py-3
+                  text-sm font-black text-white transition
+                  hover:-translate-y-1 hover:bg-white/15
+                "
                 >
                   Book
                   <PhoneCall size={16} />
-                </a>
+                </Link>
               </div>
 
               <div className="mt-6 grid grid-cols-3 gap-2">
@@ -259,9 +292,21 @@ export default function MegaMenu({ onNavigate }) {
             </div>
           </div>
 
-          {/* Backend Services - Scrollable */}
+          {/* Scrollable Services Panel */}
           <div className="h-full min-h-0 overflow-hidden bg-[#F8FEFD]">
-            <div className="h-full overflow-y-auto p-4 pr-5">
+            <div
+              className="
+              h-full min-h-0 overflow-y-scroll overscroll-contain
+              p-4 pr-5
+              [scrollbar-width:thin]
+              [scrollbar-color:#0F766E_#E9F8F6]
+            "
+              style={{
+                WebkitOverflowScrolling: "touch",
+                maxHeight: "100%",
+              }}
+              onWheel={(e) => e.stopPropagation()}
+            >
               {loading ? (
                 <div className="flex min-h-80 items-center justify-center rounded-3xl bg-white">
                   <div className="text-center">
@@ -285,7 +330,7 @@ export default function MegaMenu({ onNavigate }) {
                   </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 gap-3 pb-4">
+                <div className="grid grid-cols-2 gap-3 pb-10">
                   {availableCategories.map((category) => {
                     const config =
                       categoryConfig[category] || categoryConfig.Other;
@@ -319,18 +364,34 @@ export default function MegaMenu({ onNavigate }) {
                             const ServiceIcon = getServiceIcon(service);
 
                             return (
-                              <a
+                              <Link
                                 key={service._id || service.slug}
                                 href={`/services/${service.slug}`}
                                 onClick={onNavigate}
-                                className="group flex gap-2 rounded-2xl p-2.5 transition hover:bg-[#F7FBFC]"
+                                className="
+                                group flex gap-2 rounded-2xl p-2.5 transition
+                                hover:bg-[#F7FBFC]
+                              "
                               >
-                                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#E9F8F6] text-[#0F766E] transition group-hover:bg-[#0F3D5E] group-hover:text-white">
+                                <span
+                                  className="
+                                  flex h-9 w-9 shrink-0 items-center justify-center
+                                  rounded-xl bg-[#E9F8F6] text-[#0F766E]
+                                  transition group-hover:bg-[#0F3D5E]
+                                  group-hover:text-white
+                                "
+                                >
                                   <ServiceIcon size={17} />
                                 </span>
 
                                 <span className="min-w-0">
-                                  <span className="line-clamp-1 block text-sm font-black leading-tight text-[#102A43] group-hover:text-[#0F766E]">
+                                  <span
+                                    className="
+                                    line-clamp-1 block text-sm font-black
+                                    leading-tight text-[#102A43]
+                                    group-hover:text-[#0F766E]
+                                  "
+                                  >
                                     {service.title}
                                   </span>
 
@@ -338,7 +399,7 @@ export default function MegaMenu({ onNavigate }) {
                                     {getServiceDesc(service)}
                                   </span>
                                 </span>
-                              </a>
+                              </Link>
                             );
                           })}
                         </div>

@@ -260,7 +260,7 @@ const Header = () => {
             <div className="relative">
               <button
                 type="button"
-                onClick={() => setOpenMega((prev) => !prev)}
+                onMouseOver={() => setOpenMega((prev) => !prev)}
                 className="flex items-center gap-1 rounded-full px-3 py-2 text-sm font-bold text-[#24415A] transition hover:bg-[#E9F8F6] hover:text-[#0F766E] xl:px-4"
               >
                 Services
@@ -327,20 +327,42 @@ const Header = () => {
             className="absolute inset-0 cursor-default bg-transparent"
           />
 
-          <div className="absolute left-1/2 top-26 w-[min(940px,calc(100vw-40px))] -translate-x-1/2">
-            <div className="relative overflow-hidden rounded-[26px] border border-[#D8F0EE] bg-white shadow-2xl shadow-slate-900/20 ring-1 ring-slate-100">
+          <div
+            className="
+        absolute left-1/2 top-24 bottom-5
+        w-[min(980px,calc(100vw-40px))]
+        -translate-x-1/2
+      "
+          >
+            <div
+              className="
+          relative h-full overflow-hidden rounded-[26px]
+          border border-[#D8F0EE] bg-white
+          shadow-2xl shadow-slate-900/20 ring-1 ring-slate-100
+        "
+            >
               <button
                 type="button"
                 onClick={closeMega}
-                className="absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#0F3D5E] shadow-lg transition hover:bg-[#E9F8F6]"
+                className="
+            absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center
+            rounded-full bg-white text-[#0F3D5E] shadow-lg transition
+            hover:bg-[#E9F8F6]
+          "
                 aria-label="Close services menu"
               >
                 <X size={17} />
               </button>
 
-              <div className="grid max-h-[calc(100vh-130px)] grid-cols-[250px_1fr] overflow-hidden">
+              <div className="grid h-full min-h-0 grid-cols-[250px_1fr] overflow-hidden">
                 {/* Left Panel */}
-                <div className="relative overflow-hidden bg-linear-to-br from-[#0F3D5E] via-[#126B73] to-[#2CB1A6] p-5 text-white">
+                <div
+                  className="
+              relative h-full min-h-0 overflow-y-auto
+              bg-linear-to-br from-[#0F3D5E] via-[#126B73] to-[#2CB1A6]
+              p-5 text-white
+            "
+                >
                   <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-white/10 blur-2xl" />
                   <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-[#F4B183]/20 blur-3xl" />
 
@@ -363,7 +385,11 @@ const Header = () => {
                       <a
                         href="/services"
                         onClick={closeMega}
-                        className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-[#0F3D5E] transition hover:-translate-y-1"
+                        className="
+                    inline-flex items-center justify-center gap-2 rounded-full
+                    bg-white px-5 py-3 text-sm font-black text-[#0F3D5E]
+                    transition hover:-translate-y-1
+                  "
                       >
                         View All
                         <ArrowRight size={16} />
@@ -372,7 +398,12 @@ const Header = () => {
                       <a
                         href="/contact-us"
                         onClick={closeMega}
-                        className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:-translate-y-1 hover:bg-white/15"
+                        className="
+                    inline-flex items-center justify-center gap-2 rounded-full
+                    border border-white/20 bg-white/10 px-5 py-3
+                    text-sm font-black text-white transition
+                    hover:-translate-y-1 hover:bg-white/15
+                  "
                       >
                         Book
                         <CalendarCheck size={16} />
@@ -404,94 +435,123 @@ const Header = () => {
                   </div>
                 </div>
 
-                {/* Backend Services */}
-                <div className="overflow-y-auto bg-[#F8FEFD] p-4">
-                  {servicesLoading ? (
-                    <div className="flex min-h-80 items-center justify-center rounded-3xl bg-white">
-                      <div className="text-center">
-                        <Loader2 className="mx-auto mb-3 animate-spin text-[#0F3D5E]" />
-                        <p className="text-sm font-bold text-slate-500">
-                          Loading services...
-                        </p>
+                {/* Backend Services - REAL SCROLL AREA */}
+                <div className="h-full min-h-0 overflow-hidden bg-[#F8FEFD]">
+                  <div
+                    className="
+                h-full min-h-0 overflow-y-scroll overscroll-contain
+                p-4 pr-5
+                [scrollbar-width:thin]
+                [scrollbar-color:#0F766E_#E9F8F6]
+              "
+                    style={{
+                      WebkitOverflowScrolling: "touch",
+                    }}
+                    onWheel={(e) => e.stopPropagation()}
+                  >
+                    {servicesLoading ? (
+                      <div className="flex min-h-80 items-center justify-center rounded-3xl bg-white">
+                        <div className="text-center">
+                          <Loader2 className="mx-auto mb-3 animate-spin text-[#0F3D5E]" />
+                          <p className="text-sm font-bold text-slate-500">
+                            Loading services...
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  ) : activeServices.length === 0 ? (
-                    <div className="flex min-h-80 items-center justify-center rounded-3xl bg-white p-8 text-center">
-                      <div>
-                        <HeartHandshake className="mx-auto mb-4 text-[#0F3D5E]" />
-                        <h4 className="text-xl font-black text-[#102A43]">
-                          Services are coming soon
-                        </h4>
-                        <p className="mx-auto mt-2 max-w-md text-sm font-semibold leading-6 text-slate-500">
-                          Services will appear here automatically once active
-                          services are added from the admin dashboard.
-                        </p>
+                    ) : activeServices.length === 0 ? (
+                      <div className="flex min-h-80 items-center justify-center rounded-3xl bg-white p-8 text-center">
+                        <div>
+                          <HeartHandshake className="mx-auto mb-4 text-[#0F3D5E]" />
+                          <h4 className="text-xl font-black text-[#102A43]">
+                            Services are coming soon
+                          </h4>
+                          <p className="mx-auto mt-2 max-w-md text-sm font-semibold leading-6 text-slate-500">
+                            Services will appear here automatically once active
+                            services are added from the admin dashboard.
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-3">
-                      {availableCategories.map((category) => {
-                        const config =
-                          categoryConfig[category] || categoryConfig.Other;
-                        const CategoryIcon = config.icon;
-                        const categoryServices =
-                          groupedServices[category] || [];
+                    ) : (
+                      <div className="grid grid-cols-2 gap-3 pb-10">
+                        {availableCategories.map((category) => {
+                          const config =
+                            categoryConfig[category] || categoryConfig.Other;
+                          const CategoryIcon = config.icon;
+                          const categoryServices =
+                            groupedServices[category] || [];
 
-                        return (
-                          <div
-                            key={category}
-                            className="rounded-[22px] bg-white p-3 shadow-sm ring-1 ring-slate-100"
-                          >
-                            <div className="mb-3 flex items-start gap-3">
-                              <div
-                                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${config.color}`}
-                              >
-                                <CategoryIcon size={19} />
+                          return (
+                            <div
+                              key={category}
+                              className="rounded-[22px] bg-white p-3 shadow-sm ring-1 ring-slate-100"
+                            >
+                              <div className="mb-3 flex items-start gap-3">
+                                <div
+                                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${config.color}`}
+                                >
+                                  <CategoryIcon size={19} />
+                                </div>
+
+                                <div>
+                                  <h4 className="text-sm font-black text-[#102A43]">
+                                    {config.title || category}
+                                  </h4>
+                                  <p className="mt-1 line-clamp-2 text-xs font-semibold leading-5 text-slate-500">
+                                    {config.subtitle}
+                                  </p>
+                                </div>
                               </div>
 
-                              <div>
-                                <h4 className="text-sm font-black text-[#102A43]">
-                                  {config.title || category}
-                                </h4>
-                                <p className="mt-1 line-clamp-2 text-xs font-semibold leading-5 text-slate-500">
-                                  {config.subtitle}
-                                </p>
+                              <div className="space-y-1.5">
+                                {categoryServices.map((service) => {
+                                  const ServiceIcon = getServiceIcon(service);
+
+                                  return (
+                                    <a
+                                      key={service._id || service.slug}
+                                      href={getServiceHref(service)}
+                                      onClick={closeMega}
+                                      className="
+                                  group flex gap-2 rounded-2xl p-2.5 transition
+                                  hover:bg-[#F7FBFC]
+                                "
+                                    >
+                                      <span
+                                        className="
+                                    flex h-9 w-9 shrink-0 items-center justify-center
+                                    rounded-xl bg-[#E9F8F6] text-[#0F766E]
+                                    transition group-hover:bg-[#0F3D5E]
+                                    group-hover:text-white
+                                  "
+                                      >
+                                        <ServiceIcon size={17} />
+                                      </span>
+
+                                      <span className="min-w-0">
+                                        <span
+                                          className="
+                                      line-clamp-1 block text-sm font-black
+                                      leading-tight text-[#102A43]
+                                      group-hover:text-[#0F766E]
+                                    "
+                                        >
+                                          {service.title}
+                                        </span>
+
+                                        <span className="mt-1 line-clamp-1 block text-xs font-semibold leading-5 text-slate-500">
+                                          {getServiceDescription(service)}
+                                        </span>
+                                      </span>
+                                    </a>
+                                  );
+                                })}
                               </div>
                             </div>
-
-                            <div className="space-y-1.5">
-                              {categoryServices.map((service) => {
-                                const ServiceIcon = getServiceIcon(service);
-
-                                return (
-                                  <a
-                                    key={service._id || service.slug}
-                                    href={getServiceHref(service)}
-                                    onClick={closeMega}
-                                    className="group flex gap-2 rounded-2xl p-2.5 transition hover:bg-[#F7FBFC]"
-                                  >
-                                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#E9F8F6] text-[#0F766E] transition group-hover:bg-[#0F3D5E] group-hover:text-white">
-                                      <ServiceIcon size={17} />
-                                    </span>
-
-                                    <span className="min-w-0">
-                                      <span className="line-clamp-1 block text-sm font-black leading-tight text-[#102A43] group-hover:text-[#0F766E]">
-                                        {service.title}
-                                      </span>
-
-                                      <span className="mt-1 line-clamp-1 block text-xs font-semibold leading-5 text-slate-500">
-                                        {getServiceDescription(service)}
-                                      </span>
-                                    </span>
-                                  </a>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
