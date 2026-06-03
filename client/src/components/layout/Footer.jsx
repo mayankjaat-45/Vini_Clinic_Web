@@ -90,10 +90,10 @@ const trustItems = [
     text: "Clinical & Child Psychologist",
   },
   {
-  icon: Award,
-  title: "Trusted Since 2013",
-  text: "10+ years of clinical care",
-},
+    icon: Award,
+    title: "Trusted Since 2013",
+    text: "10+ years of clinical care",
+  },
   {
     icon: Star,
     title: "4.9★ Rating",
@@ -240,11 +240,6 @@ const Footer = () => {
 
                 <div className="mt-5 space-y-2.5">
                   {group.links.map((link) => {
-                    const isExternal =
-                      link.href.startsWith("http") ||
-                      link.href.startsWith("tel:") ||
-                      link.href.startsWith("mailto:");
-
                     return (
                       <a
                         key={link.name}
