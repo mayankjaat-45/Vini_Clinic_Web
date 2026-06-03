@@ -16,6 +16,7 @@ import {
   Phone,
   Send,
   Sparkles,
+  Youtube,
 } from "lucide-react";
 
 import {
