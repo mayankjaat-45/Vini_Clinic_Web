@@ -2,8 +2,8 @@ import JsonLd from "@/components/seo/JsonLd";
 import ServiceDetailClient from "./ServiceDetailClient";
 import { API } from "@/lib/api";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://vini-clinic-web.vercel.app";
 const defaultOgImage = `${siteUrl}/images/dr-vini-og.jpg`;
 
 async function getService(slug) {
@@ -124,11 +124,12 @@ export default async function ServiceDetailPage({ params }) {
   const resolvedParams = await params;
   const service = await getService(resolvedParams.slug);
 
-  const canonicalUrl = service
-    ? getServiceUrl(service, resolvedParams.slug)
-    : `${siteUrl}/services/${resolvedParams.slug}`;
+  if (!service) {
+    notFound();
+  }
 
-  const description = service ? getServiceDescription(service) : "";
+  const canonicalUrl = getServiceUrl(service, resolvedParams.slug);
+  const description = getServiceDescription(service);
 
   const serviceJsonLd = service
     ? {
