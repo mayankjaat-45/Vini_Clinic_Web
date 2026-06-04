@@ -10,7 +10,6 @@ import {
   ShieldCheck,
   Star,
 } from "lucide-react";
-import Image from "next/image";
 
 const footerLinks = [
   {
@@ -157,17 +156,10 @@ const Footer = () => {
           {/* Brand + Contact */}
           <div>
             <a href="/" className="inline-block">
-              <div className="inline-flex rounded-3xl bg-white p-3 shadow-xl shadow-black/10">
-                <Image
-                  src="/images/urjasvini-logo.png"
-                  alt="Urjasvini Child Development Centre logo"
-                  width={280}
-                  height={120}
-                  className="h-20 w-auto object-contain sm:h-24"
-                />
-              </div>
-
-              <p className="mt-4 text-sm font-semibold text-white/60">
+              <h2 className="text-2xl font-black sm:text-3xl">
+                Dr. Vini Jhariya
+              </h2>
+              <p className="mt-2 text-sm font-semibold text-white/60">
                 Clinical & Child Psychologist • TEDx Speaker
               </p>
             </a>
