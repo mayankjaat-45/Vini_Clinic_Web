@@ -41,88 +41,37 @@ const navItemClass =
 const categoryConfig = {
   Children: {
     title: "Children & Teens",
-    subtitle: "Child counselling, therapy and developmental support",
+    subtitle: "Therapy, counselling and developmental support",
     icon: Baby,
     color: "bg-[#E9F8F6] text-[#0F766E]",
   },
-  Assessment: {
-    title: "Assessments",
-    subtitle: "Learning, behaviour and developmental assessments",
-    icon: ClipboardCheck,
-    color: "bg-[#F4F0FF] text-[#6B46C1]",
-  },
-  "Online Consultation": {
-    title: "Online Consultation",
-    subtitle: "Guidance and follow-up support from anywhere",
-    icon: MonitorSmartphone,
-    color: "bg-[#EEF4FF] text-[#3158D4]",
-  },
-  Training: {
-    title: "Training Programs",
-    subtitle: "Internship, workshops and courses",
-    icon: GraduationCap,
-    color: "bg-[#FFF7E6] text-[#B7791F]",
-  },
-  Other: {
-    title: "Other Child Support",
-    subtitle: "Additional child and family guidance",
-    icon: HeartHandshake,
-    color: "bg-[#E9F8F6] text-[#0F766E]",
+  Adults: {
+    title: "Adults & Families",
+    subtitle: "Counselling, relationship and family support",
+    icon: Users,
+    color: "bg-[#FFF2EA] text-[#B85C24]",
   },
 };
 
-const categoryOrder = [
-  "Children",
-  "Assessment",
-  "Online Consultation",
-  "Training",
-  "Other",
-];
-
-const hiddenServiceKeywords = [
-  "adult",
-  "couple",
-  "family therapy",
-  "premarital",
-  "marriage",
-  "relationship",
-];
+const categoryOrder = ["Children", "Adults"];
 
 const normalizeCategory = (service = {}) => {
   const text = `${service.category || ""} ${service.title || ""} ${
     service.slug || ""
   }`.toLowerCase();
 
-  if (text.includes("online")) return "Online Consultation";
-
   if (
-    text.includes("assessment") ||
-    text.includes("dyslexia") ||
-    text.includes("adhd")
+    text.includes("adult") ||
+    text.includes("couple") ||
+    text.includes("family") ||
+    text.includes("premarital") ||
+    text.includes("marriage") ||
+    text.includes("relationship")
   ) {
-    return "Assessment";
+    return "Adults";
   }
 
-  if (
-    text.includes("internship") ||
-    text.includes("workshop") ||
-    text.includes("course") ||
-    text.includes("training")
-  ) {
-    return "Training";
-  }
-
-  if (
-    text.includes("autism") ||
-    text.includes("child") ||
-    text.includes("adolescent") ||
-    text.includes("teen") ||
-    text.includes("early")
-  ) {
-    return "Children";
-  }
-
-  return "Other";
+  return "Children";
 };
 
 const getServiceIcon = (service = {}) => {
@@ -221,19 +170,7 @@ const Header = () => {
   }, []);
 
   const activeServices = useMemo(() => {
-    return services.filter((service) => {
-      if (service?.isActive === false) return false;
-
-      const text = `${service.title || ""} ${service.slug || ""} ${
-        service.category || ""
-      }`.toLowerCase();
-
-      const shouldHide = hiddenServiceKeywords.some((keyword) =>
-        text.includes(keyword),
-      );
-
-      return !shouldHide;
-    });
+    return services.filter((service) => service?.isActive !== false);
   }, [services]);
 
   const groupedServices = useMemo(() => {
@@ -457,10 +394,9 @@ const Header = () => {
                         </div>
                       </div>
                     ) : (
-                      <div className="grid grid-cols-2 gap-3 pb-10">
-                        {availableCategories.map((category) => {
-                          const config =
-                            categoryConfig[category] || categoryConfig.Other;
+                      <div className="grid grid-cols-2 gap-5 pb-10">
+                        {categoryOrder.map((category) => {
+                          const config = categoryConfig[category];
                           const CategoryIcon = config.icon;
                           const categoryServices =
                             groupedServices[category] || [];
@@ -468,52 +404,58 @@ const Header = () => {
                           return (
                             <div
                               key={category}
-                              className="rounded-[22px] bg-white p-3 shadow-sm ring-1 ring-slate-100"
+                              className="rounded-[26px] bg-white p-5 shadow-sm ring-1 ring-slate-100"
                             >
-                              <div className="mb-3 flex items-start gap-3">
+                              <div className="mb-5 flex items-start gap-4">
                                 <div
-                                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${config.color}`}
+                                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${config.color}`}
                                 >
-                                  <CategoryIcon size={19} />
+                                  <CategoryIcon size={22} />
                                 </div>
 
                                 <div>
-                                  <h4 className="text-sm font-black text-[#102A43]">
-                                    {config.title || category}
+                                  <h4 className="text-xl font-black text-[#102A43]">
+                                    {config.title}
                                   </h4>
-                                  <p className="mt-1 line-clamp-2 text-xs font-semibold leading-5 text-slate-500">
+                                  <p className="mt-1 text-sm font-semibold leading-6 text-slate-500">
                                     {config.subtitle}
                                   </p>
                                 </div>
                               </div>
 
-                              <div className="space-y-1.5">
-                                {categoryServices.map((service) => {
-                                  const ServiceIcon = getServiceIcon(service);
+                              <div className="space-y-3">
+                                {categoryServices.length === 0 ? (
+                                  <p className="rounded-2xl bg-[#F7FBFC] p-4 text-sm font-bold text-slate-500">
+                                    No services added yet.
+                                  </p>
+                                ) : (
+                                  categoryServices.map((service) => {
+                                    const ServiceIcon = getServiceIcon(service);
 
-                                  return (
-                                    <a
-                                      key={service._id || service.slug}
-                                      href={getServiceHref(service)}
-                                      onClick={closeMega}
-                                      className="group flex gap-2 rounded-2xl p-2.5 transition hover:bg-[#F7FBFC]"
-                                    >
-                                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#E9F8F6] text-[#0F766E] transition group-hover:bg-[#0F3D5E] group-hover:text-white">
-                                        <ServiceIcon size={17} />
-                                      </span>
-
-                                      <span className="min-w-0">
-                                        <span className="line-clamp-1 block text-sm font-black leading-tight text-[#102A43] group-hover:text-[#0F766E]">
-                                          {service.title}
+                                    return (
+                                      <a
+                                        key={service._id || service.slug}
+                                        href={getServiceHref(service)}
+                                        onClick={closeMega}
+                                        className="group flex gap-3 rounded-2xl p-3 transition hover:bg-[#F7FBFC]"
+                                      >
+                                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#E9F8F6] text-[#0F766E] transition group-hover:bg-[#0F3D5E] group-hover:text-white">
+                                          <ServiceIcon size={18} />
                                         </span>
 
-                                        <span className="mt-1 line-clamp-1 block text-xs font-semibold leading-5 text-slate-500">
-                                          {getServiceDescription(service)}
+                                        <span className="min-w-0">
+                                          <span className="line-clamp-1 block text-base font-black leading-tight text-[#102A43] group-hover:text-[#0F766E]">
+                                            {service.title}
+                                          </span>
+
+                                          <span className="mt-1 line-clamp-2 block text-sm font-semibold leading-6 text-slate-500">
+                                            {getServiceDescription(service)}
+                                          </span>
                                         </span>
-                                      </span>
-                                    </a>
-                                  );
-                                })}
+                                      </a>
+                                    );
+                                  })
+                                )}
                               </div>
                             </div>
                           );
