@@ -49,8 +49,8 @@ const enquiryForOptions = [
 
 const preferredModes = [
   "In-clinic at Urjasvini CDC, Indore",
-  "Online",
-  "Not sure yet",
+  "Online Consultation",
+  "Not Sure",
 ];
 
 const preferredTimes = ["Morning", "Afternoon", "Evening"];

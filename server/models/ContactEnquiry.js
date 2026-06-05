@@ -24,7 +24,7 @@ const contactEnquirySchema = new mongoose.Schema(
 
     preferredMode: {
       type: String,
-      enum: ["Clinic Visit", "Online Consultation", "Not Sure", ""],
+      enum: ["In-clinic at Urjasvini CDC, Indore", "Online Consultation", "Not Sure", ""],
       default: "Not Sure",
     },
 
