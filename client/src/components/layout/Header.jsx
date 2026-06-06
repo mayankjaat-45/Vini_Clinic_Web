@@ -327,13 +327,21 @@ const Header = () => {
                 <a
                   href="/"
                   onClick={closeMobileMenu}
-                  className="flex flex-col leading-tight"
+                  className="group flex shrink-0 items-center gap-2.5 rounded-2xl px-1.5 py-1 transition hover:bg-[#E9F8F6]"
                 >
-                  <span className="text-lg font-black tracking-tight text-[#0F3D5E]">
-                    Dr. Vini Jhariya
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-[#0F3D5E] via-[#168A83] to-[#54C6B8] text-base font-black text-white shadow-md shadow-teal-900/20 transition group-hover:-rotate-3 group-hover:scale-105">
+                    V
                   </span>
-                  <span className="text-xs font-bold uppercase tracking-[0.18em] text-[#168A83]">
-                    Child Psychologist
+
+                  <span className="flex min-w-0 flex-col leading-tight">
+                    <span className="truncate text-[16px] font-black tracking-tight text-[#0F3D5E] transition group-hover:text-[#0F766E]">
+                      Dr. Vini Jhariya
+                    </span>
+
+                    <span className="mt-0.5 flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.18em] text-[#168A83]">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#54C6B8]" />
+                      Child Psychologist
+                    </span>
                   </span>
                 </a>
 
