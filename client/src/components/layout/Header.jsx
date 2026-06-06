@@ -81,11 +81,6 @@ const menuGroups = [
         fallbackSlug: "couple-counselling",
       },
       {
-        label: "Premarital Counselling",
-        keywords: ["premarital", "pre marital"],
-        fallbackSlug: "premarital-counselling",
-      },
-      {
         label: "Family Therapy",
         keywords: ["family therapy", "family-therapy"],
         fallbackSlug: "family-therapy",
