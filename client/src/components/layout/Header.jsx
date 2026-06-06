@@ -170,12 +170,23 @@ const Header = () => {
     <>
       <header className="sticky top-0 z-50 border-b border-[#D8F0EE] bg-[#F8FEFD]/95 shadow-sm shadow-teal-900/5 backdrop-blur-2xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 sm:px-5">
-          <a href="/" className="flex shrink-0 flex-col leading-tight">
-            <span className="text-lg font-black tracking-tight text-[#0F3D5E]">
-              Dr. Vini Jhariya
+          <a
+            href="/"
+            className="group flex shrink-0 items-center gap-3 rounded-2xl px-2 py-1.5 transition hover:bg-[#E9F8F6]"
+          >
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-br from-[#0F3D5E] via-[#168A83] to-[#54C6B8] text-lg font-black text-white shadow-lg shadow-teal-900/20 transition group-hover:-rotate-3 group-hover:scale-105">
+              V
             </span>
-            <span className="text-xs font-bold uppercase tracking-[0.18em] text-[#168A83]">
-              Child Psychologist
+
+            <span className="flex flex-col leading-tight">
+              <span className="text-[17px] font-black tracking-tight text-[#0F3D5E] transition group-hover:text-[#0F766E] sm:text-xl">
+                Dr. Vini Jhariya
+              </span>
+
+              <span className="mt-0.5 flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.22em] text-[#168A83] sm:text-[11px]">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#54C6B8]" />
+                Child Psychologist
+              </span>
             </span>
           </a>
           <nav className="hidden items-center gap-1 lg:flex">
