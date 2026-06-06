@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import {
   CalendarCheck,
   ChevronDown,
@@ -176,17 +175,14 @@ const Header = () => {
     <>
       <header className="sticky top-0 z-50 border-b border-[#D8F0EE] bg-[#F8FEFD]/95 shadow-sm shadow-teal-900/5 backdrop-blur-2xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 sm:px-5">
-          <a href="/" className="flex shrink-0 items-center">
-            <Image
-              src="/images/urjasvini-logo.png"
-              alt="Dr. Vini Jhariya logo"
-              width={250}
-              height={100}
-              priority
-              className="h-12 w-auto object-contain sm:h-14 lg:h-16"
-            />
+          <a href="/" className="flex shrink-0 flex-col leading-tight">
+            <span className="text-lg font-black tracking-tight text-[#0F3D5E]">
+              Dr. Vini Jhariya
+            </span>
+            <span className="text-xs font-bold uppercase tracking-[0.18em] text-[#168A83]">
+              Child Psychologist
+            </span>
           </a>
-
           <nav className="hidden items-center gap-1 lg:flex">
             {mainNavLinks.slice(0, 2).map((link) => (
               <a key={link.name} href={link.href} className={navItemClass}>
@@ -322,15 +318,17 @@ const Header = () => {
           <div className="ml-auto flex h-full w-[90%] max-w-sm flex-col overflow-y-auto bg-[#F8FEFD] shadow-2xl">
             <div className="sticky top-0 z-10 border-b border-[#D8F0EE] bg-[#F8FEFD]/95 p-5 backdrop-blur-xl">
               <div className="flex items-center justify-between gap-4">
-                <a href="/" onClick={closeMobileMenu}>
-                  <Image
-                    src="/images/urjasvini-logo.png"
-                    alt="Dr. Vini Jhariya logo"
-                    width={220}
-                    height={90}
-                    priority
-                    className="h-12 w-auto object-contain"
-                  />
+                <a
+                  href="/"
+                  onClick={closeMobileMenu}
+                  className="flex flex-col leading-tight"
+                >
+                  <span className="text-lg font-black tracking-tight text-[#0F3D5E]">
+                    Dr. Vini Jhariya
+                  </span>
+                  <span className="text-xs font-bold uppercase tracking-[0.18em] text-[#168A83]">
+                    Child Psychologist
+                  </span>
                 </a>
 
                 <button

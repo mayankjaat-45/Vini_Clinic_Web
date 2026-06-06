@@ -210,7 +210,7 @@ export default function MegaMenu({ onNavigate }) {
                 return (
                   <div
                     key={group.title}
-                    className={`overflow-hidden rounded-[24px] border border-slate-100 bg-linear-to-br ${group.accent} p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 sm:p-5`}
+                    className={`overflow-hidden rounded-3xl border border-slate-100 bg-linear-to-br ${group.accent} p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 sm:p-5`}
                   >
                     <div className="mb-5 flex items-center gap-3 border-b border-slate-200/80 pb-4">
                       <div
