@@ -3,23 +3,12 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import {
-  Activity,
-  ArrowRight,
-  Baby,
-  BookOpen,
-  Brain,
   CalendarCheck,
   ChevronDown,
-  ClipboardCheck,
-  GraduationCap,
-  HeartHandshake,
   Loader2,
   Menu,
   MessageCircle,
-  MonitorSmartphone,
   PhoneCall,
-  Sparkles,
-  Users,
   X,
 } from "lucide-react";
 import { API } from "@/lib/api";
@@ -38,91 +27,101 @@ const mainNavLinks = [
 const navItemClass =
   "rounded-full px-3 py-2 text-sm font-bold text-[#24415A] transition hover:bg-[#E9F8F6] hover:text-[#0F766E] xl:px-4";
 
-const categoryConfig = {
-  Children: {
-    title: "Children & Teens",
-    subtitle: "Therapy, counselling and developmental support",
-    icon: Baby,
-    color: "bg-[#E9F8F6] text-[#0F766E]",
+const menuGroups = [
+  {
+    title: "CHILDREN & TEENS",
+    services: [
+      {
+        label: "Autism Therapy",
+        keywords: ["autism"],
+        fallbackSlug: "autism-therapy",
+      },
+      {
+        label: "ADHD Assessment",
+        keywords: ["adhd"],
+        fallbackSlug: "adhd-assessment",
+      },
+      {
+        label: "Dyslexia & Remedial",
+        keywords: ["dyslexia", "remedial"],
+        fallbackSlug: "dyslexia-remedial",
+      },
+      {
+        label: "Child Counselling",
+        keywords: ["child counselling", "child-counselling"],
+        fallbackSlug: "child-counselling",
+      },
+      {
+        label: "Adolescent Counselling",
+        keywords: ["adolescent", "teen"],
+        fallbackSlug: "adolescent-counselling",
+      },
+      {
+        label: "Early Intervention",
+        keywords: ["early intervention", "early-intervention"],
+        fallbackSlug: "early-intervention",
+      },
+      {
+        label: "Psychological Assessments",
+        keywords: ["psychological assessment", "psychological-assessments"],
+        fallbackSlug: "psychological-assessments",
+      },
+    ],
   },
-  Adults: {
-    title: "Adults & Families",
-    subtitle: "Counselling, relationship and family support",
-    icon: Users,
-    color: "bg-[#FFF2EA] text-[#B85C24]",
+  {
+    title: "ADULTS & FAMILIES",
+    services: [
+      {
+        label: "Adult Counselling",
+        keywords: ["adult counselling", "adult-counselling"],
+        fallbackSlug: "adult-counselling",
+      },
+      {
+        label: "Couple Counselling",
+        keywords: ["couple counselling", "couple-counselling"],
+        fallbackSlug: "couple-counselling",
+      },
+      {
+        label: "Premarital Counselling",
+        keywords: ["premarital", "pre marital"],
+        fallbackSlug: "premarital-counselling",
+      },
+      {
+        label: "Family Therapy",
+        keywords: ["family therapy", "family-therapy"],
+        fallbackSlug: "family-therapy",
+      },
+      {
+        label: "Online Consultation",
+        keywords: ["online consultation", "online-consultation"],
+        fallbackSlug: "online-consultation",
+        customHref: "/online-consultation",
+      },
+    ],
   },
-};
+];
 
-const categoryOrder = ["Children", "Adults"];
+const normalizeText = (value = "") =>
+  value.toString().toLowerCase().replace(/-/g, " ").trim();
 
-const normalizeCategory = (service = {}) => {
-  const text = `${service.category || ""} ${service.title || ""} ${
-    service.slug || ""
-  }`.toLowerCase();
+const getServiceHref = (item, services = []) => {
+  if (item.customHref) return item.customHref;
 
-  if (
-    text.includes("adult") ||
-    text.includes("couple") ||
-    text.includes("family") ||
-    text.includes("premarital") ||
-    text.includes("marriage") ||
-    text.includes("relationship")
-  ) {
-    return "Adults";
-  }
+  const matchedService = services.find((service) => {
+    const text = normalizeText(
+      `${service?.title || ""} ${service?.slug || ""} ${
+        service?.category || ""
+      }`,
+    );
 
-  return "Children";
-};
+    return item.keywords.some((keyword) =>
+      text.includes(normalizeText(keyword)),
+    );
+  });
 
-const getServiceIcon = (service = {}) => {
-  const text = `${service.title || ""} ${service.slug || ""} ${
-    service.category || ""
-  }`.toLowerCase();
+  const slug = matchedService?.slug || item.fallbackSlug;
 
-  if (text.includes("autism")) return Brain;
-  if (text.includes("adhd")) return Activity;
-  if (text.includes("dyslexia")) return BookOpen;
-  if (text.includes("assessment")) return ClipboardCheck;
-  if (text.includes("early")) return Baby;
-  if (text.includes("child")) return Baby;
-  if (text.includes("adolescent") || text.includes("teen")) return Users;
-  if (text.includes("online")) return MonitorSmartphone;
-  if (text.includes("internship")) return GraduationCap;
-  if (text.includes("workshop") || text.includes("course")) return Sparkles;
-
-  return HeartHandshake;
-};
-
-const getServiceDescription = (service = {}) => {
-  if (service.shortDescription) return service.shortDescription;
-
-  const text = `${service.title || ""} ${service.slug || ""}`.toLowerCase();
-
-  if (text.includes("autism")) return "Therapy, support and parent guidance";
-  if (text.includes("adhd")) return "Attention, behaviour and focus support";
-  if (text.includes("dyslexia"))
-    return "Reading and learning difficulty support";
-  if (text.includes("assessment"))
-    return "Clinical and psychological assessment";
-  if (text.includes("early")) return "Early support for child development";
-  if (text.includes("child")) return "Counselling and emotional support";
-  if (text.includes("adolescent")) return "Support for teens and families";
-  if (text.includes("online")) return "Consult Dr. Vini from anywhere";
-
-  return "View service details";
-};
-
-const getServiceHref = (service = {}) => {
-  if (!service.slug) return "/services";
-
-  if (service.slug === "online-consultation") return "/online-consultation";
-  if (service.slug === "psychology-internship-indore") {
-    return "/psychology-internship-indore";
-  }
-  if (service.slug === "workshops-and-courses") return "/workshops-and-courses";
-  if (service.slug === "success-stories") return "/success-stories";
-
-  return `/services/${service.slug}`;
+  return `/services/${slug}`;
 };
 
 const Header = () => {
@@ -173,26 +172,6 @@ const Header = () => {
     return services.filter((service) => service?.isActive !== false);
   }, [services]);
 
-  const groupedServices = useMemo(() => {
-    return activeServices.reduce((acc, service) => {
-      const category = normalizeCategory(service);
-
-      if (!acc[category]) acc[category] = [];
-
-      acc[category].push(service);
-      return acc;
-    }, {});
-  }, [activeServices]);
-
-  const availableCategories = useMemo(() => {
-    return Object.keys(groupedServices).sort((a, b) => {
-      const aIndex = categoryOrder.indexOf(a);
-      const bIndex = categoryOrder.indexOf(b);
-
-      return (aIndex === -1 ? 99 : aIndex) - (bIndex === -1 ? 99 : bIndex);
-    });
-  }, [groupedServices]);
-
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-[#D8F0EE] bg-[#F8FEFD]/95 shadow-sm shadow-teal-900/5 backdrop-blur-2xl">
@@ -200,7 +179,7 @@ const Header = () => {
           <a href="/" className="flex shrink-0 items-center">
             <Image
               src="/images/urjasvini-logo.png"
-              alt="Urjasvini Child Development Centre logo"
+              alt="Dr. Vini Jhariya logo"
               width={250}
               height={100}
               priority
@@ -240,7 +219,7 @@ const Header = () => {
           <div className="hidden items-center gap-2 lg:flex">
             <a
               href="tel:+917999215093"
-              aria-label="Call Urjasvini Child Development Centre"
+              aria-label="Call Dr. Vini Jhariya"
               className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#BFE6E2] bg-white text-[#0F766E] shadow-sm transition hover:-translate-y-0.5 hover:border-[#168A83] hover:bg-[#E9F8F6]"
             >
               <PhoneCall size={18} />
@@ -250,7 +229,7 @@ const Header = () => {
               href="https://wa.me/917999215093"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="WhatsApp Urjasvini Child Development Centre"
+              aria-label="WhatsApp Dr. Vini Jhariya"
               className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#BFE6E2] bg-white text-[#0F766E] shadow-sm transition hover:-translate-y-0.5 hover:border-[#168A83] hover:bg-[#E9F8F6]"
             >
               <MessageCircle size={18} />
@@ -285,185 +264,53 @@ const Header = () => {
             className="absolute inset-0 cursor-default bg-transparent"
           />
 
-          <div className="absolute bottom-5 left-1/2 top-24 w-[min(980px,calc(100vw-40px))] -translate-x-1/2">
-            <div className="relative h-full overflow-hidden rounded-[26px] border border-[#D8F0EE] bg-white shadow-2xl shadow-slate-900/20 ring-1 ring-slate-100">
+          <div className="absolute left-1/2 top-24 w-[min(920px,calc(100vw-40px))] -translate-x-1/2">
+            <div className="relative overflow-hidden rounded-[22px] border border-slate-200 bg-white shadow-2xl shadow-slate-900/15 ring-1 ring-slate-100">
               <button
                 type="button"
                 onClick={closeMega}
-                className="absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#0F3D5E] shadow-lg transition hover:bg-[#E9F8F6]"
+                className="absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-700 shadow-md ring-1 ring-slate-200 transition hover:bg-slate-50"
                 aria-label="Close services menu"
               >
                 <X size={17} />
               </button>
 
-              <div className="grid h-full min-h-0 grid-cols-[250px_1fr] overflow-hidden">
-                <div className="relative h-full min-h-0 overflow-y-auto bg-linear-to-br from-[#0F3D5E] via-[#126B73] to-[#2CB1A6] p-5 text-white">
-                  <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-white/10 blur-2xl" />
-                  <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-[#F4B183]/20 blur-3xl" />
-
-                  <div className="relative">
-                    <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 text-[11px] font-black text-white">
-                      <Sparkles size={14} className="text-[#F4B183]" />
-                      Urjasvini CDC
-                    </div>
-
-                    <h3 className="text-2xl font-black leading-tight">
-                      Child development, counselling and assessment support.
-                    </h3>
-
-                    <p className="mt-4 text-sm font-semibold leading-7 text-white/75">
-                      Support for children, adolescents, parents and families
-                      through therapy planning, assessments, counselling and
-                      online consultation by Dr. Vini Jhariya.
-                    </p>
-
-                    <div className="mt-6 grid gap-3">
-                      <a
-                        href="/services"
-                        onClick={closeMega}
-                        className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-[#0F3D5E] transition hover:-translate-y-1"
-                      >
-                        View All Services
-                        <ArrowRight size={16} />
-                      </a>
-
-                      <a
-                        href="/contact-us"
-                        onClick={closeMega}
-                        className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:-translate-y-1 hover:bg-white/15"
-                      >
-                        Book Consultation
-                        <CalendarCheck size={16} />
-                      </a>
-                    </div>
-
-                    <div className="mt-6 grid grid-cols-3 gap-2">
-                      <div className="rounded-2xl bg-white/10 p-2 text-center">
-                        <p className="text-sm font-black">2013</p>
-                        <p className="mt-1 text-[9px] font-bold text-white/65">
-                          Since
-                        </p>
-                      </div>
-
-                      <div className="rounded-2xl bg-white/10 p-2 text-center">
-                        <p className="text-sm font-black">5,000+</p>
-                        <p className="mt-1 text-[9px] font-bold text-white/65">
-                          Families
-                        </p>
-                      </div>
-
-                      <div className="rounded-2xl bg-white/10 p-2 text-center">
-                        <p className="text-sm font-black">4.9★</p>
-                        <p className="mt-1 text-[9px] font-bold text-white/65">
-                          Rating
-                        </p>
-                      </div>
+              <div className="max-h-[calc(100vh-140px)] overflow-y-auto p-8 pr-12 [scrollbar-color:#0F766E_#E9F8F6] [scrollbar-width:thin]">
+                {servicesLoading ? (
+                  <div className="flex min-h-48 items-center justify-center">
+                    <div className="text-center">
+                      <Loader2 className="mx-auto mb-3 animate-spin text-[#0F3D5E]" />
+                      <p className="text-sm font-bold text-slate-500">
+                        Loading services...
+                      </p>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-16">
+                    {menuGroups.map((group) => (
+                      <div key={group.title}>
+                        <h3 className="mb-5 text-[15px] font-black uppercase tracking-[0.28em] text-slate-800">
+                          {group.title}
+                        </h3>
 
-                <div className="h-full min-h-0 overflow-hidden bg-[#F8FEFD]">
-                  <div
-                    className="h-full min-h-0 overflow-y-scroll overscroll-contain p-4 pr-5 [scrollbar-color:#0F766E_#E9F8F6] [scrollbar-width:thin]"
-                    style={{
-                      WebkitOverflowScrolling: "touch",
-                    }}
-                    onWheel={(e) => e.stopPropagation()}
-                  >
-                    {servicesLoading ? (
-                      <div className="flex min-h-80 items-center justify-center rounded-3xl bg-white">
-                        <div className="text-center">
-                          <Loader2 className="mx-auto mb-3 animate-spin text-[#0F3D5E]" />
-                          <p className="text-sm font-bold text-slate-500">
-                            Loading services...
-                          </p>
-                        </div>
-                      </div>
-                    ) : activeServices.length === 0 ? (
-                      <div className="flex min-h-80 items-center justify-center rounded-3xl bg-white p-8 text-center">
-                        <div>
-                          <HeartHandshake className="mx-auto mb-4 text-[#0F3D5E]" />
-                          <h4 className="text-xl font-black text-[#102A43]">
-                            Services are coming soon
-                          </h4>
-                          <p className="mx-auto mt-2 max-w-md text-sm font-semibold leading-6 text-slate-500">
-                            Services will appear here automatically once active
-                            child-focused services are added from the admin
-                            dashboard.
-                          </p>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="grid grid-cols-2 gap-5 pb-10">
-                        {categoryOrder.map((category) => {
-                          const config = categoryConfig[category];
-                          const CategoryIcon = config.icon;
-                          const categoryServices =
-                            groupedServices[category] || [];
+                        <div className="mb-6 h-px w-full bg-slate-300" />
 
-                          return (
-                            <div
-                              key={category}
-                              className="rounded-[26px] bg-white p-5 shadow-sm ring-1 ring-slate-100"
+                        <div className="space-y-4">
+                          {group.services.map((item) => (
+                            <a
+                              key={item.label}
+                              href={getServiceHref(item, activeServices)}
+                              onClick={closeMega}
+                              className="block text-[21px] font-semibold leading-tight tracking-[0.08em] text-slate-800 transition hover:translate-x-1 hover:text-[#0F766E]"
                             >
-                              <div className="mb-5 flex items-start gap-4">
-                                <div
-                                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${config.color}`}
-                                >
-                                  <CategoryIcon size={22} />
-                                </div>
-
-                                <div>
-                                  <h4 className="text-xl font-black text-[#102A43]">
-                                    {config.title}
-                                  </h4>
-                                  <p className="mt-1 text-sm font-semibold leading-6 text-slate-500">
-                                    {config.subtitle}
-                                  </p>
-                                </div>
-                              </div>
-
-                              <div className="space-y-3">
-                                {categoryServices.length === 0 ? (
-                                  <p className="rounded-2xl bg-[#F7FBFC] p-4 text-sm font-bold text-slate-500">
-                                    No services added yet.
-                                  </p>
-                                ) : (
-                                  categoryServices.map((service) => {
-                                    const ServiceIcon = getServiceIcon(service);
-
-                                    return (
-                                      <a
-                                        key={service._id || service.slug}
-                                        href={getServiceHref(service)}
-                                        onClick={closeMega}
-                                        className="group flex gap-3 rounded-2xl p-3 transition hover:bg-[#F7FBFC]"
-                                      >
-                                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#E9F8F6] text-[#0F766E] transition group-hover:bg-[#0F3D5E] group-hover:text-white">
-                                          <ServiceIcon size={18} />
-                                        </span>
-
-                                        <span className="min-w-0">
-                                          <span className="line-clamp-1 block text-base font-black leading-tight text-[#102A43] group-hover:text-[#0F766E]">
-                                            {service.title}
-                                          </span>
-
-                                          <span className="mt-1 line-clamp-2 block text-sm font-semibold leading-6 text-slate-500">
-                                            {getServiceDescription(service)}
-                                          </span>
-                                        </span>
-                                      </a>
-                                    );
-                                  })
-                                )}
-                              </div>
-                            </div>
-                          );
-                        })}
+                              {item.label}
+                            </a>
+                          ))}
+                        </div>
                       </div>
-                    )}
+                    ))}
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
@@ -478,7 +325,7 @@ const Header = () => {
                 <a href="/" onClick={closeMobileMenu}>
                   <Image
                     src="/images/urjasvini-logo.png"
-                    alt="Urjasvini Child Development Centre logo"
+                    alt="Dr. Vini Jhariya logo"
                     width={220}
                     height={90}
                     priority
@@ -525,7 +372,7 @@ const Header = () => {
                 </button>
 
                 {mobileServicesOpen && (
-                  <div className="space-y-4 rounded-3xl border border-[#D8F0EE] bg-white p-3">
+                  <div className="rounded-3xl border border-[#D8F0EE] bg-white p-4">
                     {servicesLoading ? (
                       <div className="py-6 text-center">
                         <Loader2 className="mx-auto mb-3 animate-spin text-[#0F3D5E]" />
@@ -533,54 +380,29 @@ const Header = () => {
                           Loading services...
                         </p>
                       </div>
-                    ) : activeServices.length === 0 ? (
-                      <div className="rounded-2xl bg-[#F7FBFC] p-4 text-center">
-                        <HeartHandshake className="mx-auto mb-2 text-[#0F3D5E]" />
-                        <p className="text-sm font-black text-[#102A43]">
-                          Services are coming soon
-                        </p>
-                      </div>
                     ) : (
-                      availableCategories.map((category) => {
-                        const categoryServices =
-                          groupedServices[category] || [];
-
-                        return (
-                          <div key={category}>
-                            <p className="mb-2 px-2 text-xs font-black uppercase tracking-[0.14em] text-[#0F766E]">
-                              {categoryConfig[category]?.title || category}
+                      <div className="space-y-6">
+                        {menuGroups.map((group) => (
+                          <div key={group.title}>
+                            <p className="mb-3 px-1 text-xs font-black uppercase tracking-[0.18em] text-[#0F766E]">
+                              {group.title}
                             </p>
 
-                            <div className="space-y-2">
-                              {categoryServices.map((service) => {
-                                const ServiceIcon = getServiceIcon(service);
-
-                                return (
-                                  <a
-                                    key={service._id || service.slug}
-                                    href={getServiceHref(service)}
-                                    onClick={closeMobileMenu}
-                                    className="flex items-center gap-3 rounded-2xl bg-[#F7FBFC] p-3"
-                                  >
-                                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#E9F8F6] text-[#0F766E]">
-                                      <ServiceIcon size={18} />
-                                    </span>
-
-                                    <span>
-                                      <span className="block text-sm font-black text-[#102A43]">
-                                        {service.title}
-                                      </span>
-                                      <span className="line-clamp-1 text-xs font-semibold text-slate-500">
-                                        {getServiceDescription(service)}
-                                      </span>
-                                    </span>
-                                  </a>
-                                );
-                              })}
+                            <div className="space-y-1">
+                              {group.services.map((item) => (
+                                <a
+                                  key={item.label}
+                                  href={getServiceHref(item, activeServices)}
+                                  onClick={closeMobileMenu}
+                                  className="block rounded-2xl px-3 py-2.5 text-sm font-bold text-[#24415A] transition hover:bg-[#F7FBFC] hover:text-[#0F766E]"
+                                >
+                                  {item.label}
+                                </a>
+                              ))}
                             </div>
                           </div>
-                        );
-                      })
+                        ))}
+                      </div>
                     )}
                   </div>
                 )}
