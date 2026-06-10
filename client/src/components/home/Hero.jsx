@@ -211,7 +211,7 @@ const Hero = () => {
       </section>
 
       {/* Mobile Sticky WhatsApp */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/20 bg-white/90 p-3 shadow-[0_-12px_30px_rgba(15,61,94,0.12)] backdrop-blur-md md:hidden">
+      {/* <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/20 bg-white/90 p-3 shadow-[0_-12px_30px_rgba(15,61,94,0.12)] backdrop-blur-md md:hidden">
         <a
           href="https://wa.me/917999215093"
           target="_blank"
@@ -221,7 +221,7 @@ const Hero = () => {
           <MessageCircle size={18} />
           WhatsApp Us
         </a>
-      </div>
+      </div> */}
     </div>
   );
 };
