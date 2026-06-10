@@ -185,7 +185,7 @@ const Header = () => {
 
               <span className="mt-0.5 flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.22em] text-[#168A83] sm:text-[11px]">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#54C6B8]" />
-                Clinic and Child Psychologist
+                Clinical and Child Psychologist
               </span>
             </span>
           </a>
@@ -320,27 +320,27 @@ const Header = () => {
       )}
 
       {mobileOpen && (
-        <div className="fixed inset-0 z-9999 bg-slate-950/40 backdrop-blur-sm lg:hidden">
-          <div className="ml-auto flex h-full w-[86%] max-w-sm flex-col overflow-y-auto bg-[#F8FEFD] shadow-2xl">
-            <div className="sticky top-0 z-10 border-b border-[#D8F0EE] bg-[#F8FEFD]/95 p-5 backdrop-blur-xl">
-              <div className="flex items-center justify-between gap-4">
+        <div className="fixed inset-0 z-9999 bg-slate-950/45 backdrop-blur-sm lg:hidden">
+          <div className="ml-auto flex h-full w-[88%] max-w-sm flex-col overflow-hidden bg-[#F8FEFD] shadow-2xl">
+            {/* Header */}
+            <div className="shrink-0 border-b border-[#D8F0EE] bg-[#F8FEFD]/95 px-4 py-4 backdrop-blur-xl">
+              <div className="flex items-center justify-between gap-3">
                 <a
                   href="/"
                   onClick={closeMobileMenu}
-                  className="group flex shrink-0 items-center gap-2.5 rounded-2xl px-1.5 py-1 transition hover:bg-[#E9F8F6]"
+                  className="group flex min-w-0 flex-1 items-center gap-3 rounded-2xl px-1.5 py-1 transition hover:bg-[#E9F8F6]"
                 >
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-[#0F3D5E] via-[#168A83] to-[#54C6B8] text-base font-black text-white shadow-md shadow-teal-900/20 transition group-hover:-rotate-3 group-hover:scale-105">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-[#0F3D5E] via-[#168A83] to-[#54C6B8] text-lg font-black text-white shadow-md shadow-teal-900/20 transition group-hover:-rotate-3 group-hover:scale-105">
                     V
                   </span>
 
-                  <span className="flex min-w-0 flex-col leading-tight">
+                  <span className="flex min-w-0 flex-1 flex-col leading-tight">
                     <span className="truncate text-[16px] font-black tracking-tight text-[#0F3D5E] transition group-hover:text-[#0F766E]">
                       Dr. Vini Jhariya
                     </span>
 
-                    <span className="mt-0.5 flex items-center gap-1.5 text-[5px] font-black uppercase tracking-[0.18em] text-[#168A83]">
-                      {/* <span className="h-1 w-1 rounded-full bg-[#54C6B8]" /> */}
-                      Clinic and Child Psychologist
+                    <span className="mt-1 line-clamp-1 text-[10px] font-black uppercase tracking-[0.12em] text-[#168A83]">
+                      Clinical & Child Psychologist
                     </span>
                   </span>
                 </a>
@@ -349,14 +349,15 @@ const Header = () => {
                   type="button"
                   onClick={closeMobileMenu}
                   aria-label="Close menu"
-                  className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#E9F8F6] text-[#0F766E]"
+                  className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#E9F8F6] text-[#0F766E] transition hover:bg-[#D8F0EE]"
                 >
                   <X size={20} />
                 </button>
               </div>
             </div>
 
-            <div className="flex-1 p-5">
+            {/* Body */}
+            <div className="flex-1 overflow-y-auto px-4 py-5">
               <div className="space-y-2">
                 {mainNavLinks.slice(0, 2).map((link) => (
                   <a
@@ -374,17 +375,18 @@ const Header = () => {
                   onClick={() => setMobileServicesOpen((prev) => !prev)}
                   className="flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-base font-bold text-[#24415A] transition hover:bg-[#E9F8F6] hover:text-[#0F766E]"
                 >
-                  Services
+                  <span>Services</span>
+
                   <ChevronDown
                     size={18}
-                    className={`transition ${
+                    className={`shrink-0 transition ${
                       mobileServicesOpen ? "rotate-180" : ""
                     }`}
                   />
                 </button>
 
                 {mobileServicesOpen && (
-                  <div className="rounded-3xl border border-[#D8F0EE] bg-white p-4">
+                  <div className="max-h-[48vh] overflow-y-auto rounded-3xl border border-[#D8F0EE] bg-white p-4 shadow-sm">
                     {servicesLoading ? (
                       <div className="py-6 text-center">
                         <Loader2 className="mx-auto mb-3 animate-spin text-[#0F3D5E]" />
@@ -396,7 +398,7 @@ const Header = () => {
                       <div className="space-y-6">
                         {menuGroups.map((group) => (
                           <div key={group.title}>
-                            <p className="mb-3 px-1 text-xs font-black uppercase tracking-[0.18em] text-[#0F766E]">
+                            <p className="mb-3 px-1 text-[11px] font-black uppercase tracking-[0.16em] text-[#0F766E]">
                               {group.title}
                             </p>
 
@@ -406,7 +408,7 @@ const Header = () => {
                                   key={item.label}
                                   href={getServiceHref(item, activeServices)}
                                   onClick={closeMobileMenu}
-                                  className="block rounded-2xl px-3 py-2.5 text-sm font-bold text-[#24415A] transition hover:bg-[#F7FBFC] hover:text-[#0F766E]"
+                                  className="block rounded-2xl px-3 py-2.5 text-sm font-bold leading-5 text-[#24415A] transition hover:bg-[#F7FBFC] hover:text-[#0F766E]"
                                 >
                                   {item.label}
                                 </a>
@@ -431,11 +433,12 @@ const Header = () => {
                 ))}
               </div>
 
+              {/* Action Buttons */}
               <div className="mt-8 grid grid-cols-2 gap-3">
                 <a
                   href="tel:+917999215093"
                   onClick={closeMobileMenu}
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-[#BFE6E2] bg-white px-4 py-3 text-sm font-bold text-[#0F766E]"
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-[#BFE6E2] bg-white px-4 py-3 text-sm font-bold text-[#0F766E] shadow-sm transition hover:bg-[#E9F8F6]"
                 >
                   <PhoneCall size={17} />
                   Call
@@ -446,7 +449,7 @@ const Header = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={closeMobileMenu}
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-[#BFE6E2] bg-white px-4 py-3 text-sm font-bold text-[#0F766E]"
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-[#BFE6E2] bg-white px-4 py-3 text-sm font-bold text-[#0F766E] shadow-sm transition hover:bg-[#E9F8F6]"
                 >
                   <MessageCircle size={17} />
                   WhatsApp
@@ -456,13 +459,13 @@ const Header = () => {
               <a
                 href="/contact-us"
                 onClick={closeMobileMenu}
-                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-linear-to-r from-[#0F3D5E] to-[#168A83] px-5 py-4 text-sm font-bold text-white shadow-xl shadow-teal-900/20"
+                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-linear-to-r from-[#0F3D5E] to-[#168A83] px-5 py-4 text-sm font-bold text-white shadow-xl shadow-teal-900/20 transition hover:scale-[1.01]"
               >
                 <CalendarCheck size={18} />
                 Book Consultation
               </a>
 
-              <p className="mt-5 text-center text-xs font-semibold leading-5 text-slate-500">
+              <p className="mx-auto mt-5 max-w-75 text-center text-xs font-semibold leading-5 text-slate-500">
                 100-A, Baikunth Dham Colony, Old Palasia, Saket, Indore, Madhya
                 Pradesh — 452018
               </p>
