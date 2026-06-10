@@ -338,8 +338,8 @@ const Header = () => {
                       Dr. Vini Jhariya
                     </span>
 
-                    <span className="mt-0.5 flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.18em] text-[#168A83]">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#54C6B8]" />
+                    <span className="mt-0.5 flex items-center gap-1.5 text-[5px] font-black uppercase tracking-[0.18em] text-[#168A83]">
+                      <span className="h-1 w-1 rounded-full bg-[#54C6B8]" />
                       Clinic and Child Psychologist
                     </span>
                   </span>
