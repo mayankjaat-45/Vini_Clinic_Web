@@ -321,7 +321,7 @@ const Header = () => {
 
       {mobileOpen && (
         <div className="fixed inset-0 z-9999 bg-slate-950/40 backdrop-blur-sm lg:hidden">
-          <div className="ml-auto flex h-full w-[90%] max-w-sm flex-col overflow-y-auto bg-[#F8FEFD] shadow-2xl">
+          <div className="ml-auto flex h-full w-[86%] max-w-sm flex-col overflow-y-auto bg-[#F8FEFD] shadow-2xl">
             <div className="sticky top-0 z-10 border-b border-[#D8F0EE] bg-[#F8FEFD]/95 p-5 backdrop-blur-xl">
               <div className="flex items-center justify-between gap-4">
                 <a
