@@ -193,7 +193,7 @@ const Header = () => {
                 Dr. Vini Jhariya
               </span>
 
-              <span className="mt-1 flex min-w-0 items-center gap-2 text-[9px] font-black uppercase tracking-[0.24em] text-[#168A83] 2xl:text-[10px]">
+              <span className="mt-1 flex min-w-0 items-center gap-2 text-[6px] font-black uppercase tracking-[0.18em] text-[#168A83] 2xl:text-[8px]">
                 <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#54C6B8]" />
                 <span className="truncate">
                   Clinical and Child Psychologist
@@ -213,7 +213,7 @@ const Header = () => {
               type="button"
               onMouseEnter={() => setOpenMega(true)}
               onClick={() => setOpenMega((prev) => !prev)}
-              className="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 text-[14px] font-extrabold text-[#213D56] transition hover:bg-[#E9F8F6] hover:text-[#0F766E] 2xl:px-3.5 2xl:text-[15px]"
+              className="inline-flex h-10 shrink-0 items-center justify-center gap-0.5 whitespace-nowrap rounded-full px-3 text-[14px] font-extrabold text-[#213D56] transition hover:bg-[#E9F8F6] hover:text-[#0F766E] 2xl:px-3.5 2xl:text-[15px]"
             >
               Services
               <ChevronDown
