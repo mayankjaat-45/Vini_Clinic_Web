@@ -24,10 +24,10 @@ const mainNavLinks = [
 ];
 
 const navItemClass =
-  "inline-flex h-10 items-center whitespace-nowrap rounded-full px-3 text-[13px] font-bold text-[#24415A] transition hover:bg-[#E9F8F6] hover:text-[#0F766E] xl:px-3.5 xl:text-sm";
+  "inline-flex h-11 items-center justify-center whitespace-nowrap rounded-full px-4 text-[15px] font-extrabold text-[#213D56] transition hover:bg-[#E9F8F6] hover:text-[#0F766E]";
 
 const iconBtnClass =
-  "inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#BFE6E2] bg-white text-[#0F766E] shadow-sm transition hover:-translate-y-0.5 hover:border-[#168A83] hover:bg-[#E9F8F6] xl:h-11 xl:w-11";
+  "inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#BFE6E2] bg-white text-[#0F766E] shadow-md shadow-teal-900/10 transition hover:-translate-y-0.5 hover:border-[#168A83] hover:bg-[#E9F8F6]";
 
 const menuGroups = [
   {
@@ -179,22 +179,22 @@ const Header = () => {
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-[#D8F0EE] bg-[#F8FEFD]/95 shadow-sm shadow-teal-900/5 backdrop-blur-2xl">
-        <div className="mx-auto flex h-18 max-w-7xl items-center gap-3 px-3 sm:px-5 lg:h-19.5 lg:gap-4">
+        <div className="mx-auto flex h-21.5 max-w-390 items-center justify-between gap-5 px-4 sm:px-6 lg:px-8">
           <a
             href="/"
-            className="group flex min-w-0 flex-1 items-center gap-2 rounded-2xl px-1 py-1 transition hover:bg-[#E9F8F6] sm:gap-3 sm:px-2 lg:max-w-61.25 lg:flex-none xl:max-w-70"
+            className="group flex min-w-0 shrink-0 items-center gap-3 rounded-3xl px-2 py-2 transition hover:bg-[#E9F8F6] xl:w-82.5 2xl:w-90"
           >
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-[#0F3D5E] via-[#168A83] to-[#54C6B8] text-base font-black text-white shadow-lg shadow-teal-900/20 transition group-hover:-rotate-3 group-hover:scale-105 sm:h-11 sm:w-11 sm:text-lg">
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-3xl bg-linear-to-br from-[#0F3D5E] via-[#168A83] to-[#54C6B8] text-2xl font-black text-white shadow-xl shadow-teal-900/20 transition group-hover:-rotate-3 group-hover:scale-105">
               V
             </span>
 
             <span className="flex min-w-0 flex-1 flex-col leading-tight">
-              <span className="truncate text-[16px] font-black tracking-tight text-[#0F3D5E] transition group-hover:text-[#0F766E] sm:text-xl lg:text-[18px] xl:text-xl">
+              <span className="truncate text-[21px] font-black tracking-tight text-[#0F3D5E] transition group-hover:text-[#0F766E] 2xl:text-[25px]">
                 Dr. Vini Jhariya
               </span>
 
-              <span className="mt-0.5 flex min-w-0 items-center gap-1.5 text-[8.5px] font-black uppercase tracking-[0.12em] text-[#168A83] sm:text-[11px] sm:tracking-[0.18em] lg:text-[9px] xl:text-[10px]">
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#54C6B8]" />
+              <span className="mt-1 flex min-w-0 items-center gap-2 text-[10px] font-black uppercase tracking-[0.28em] text-[#168A83] 2xl:text-[11px]">
+                <span className="h-2 w-2 shrink-0 rounded-full bg-[#54C6B8]" />
                 <span className="truncate">
                   Clinical and Child Psychologist
                 </span>
@@ -202,7 +202,7 @@ const Header = () => {
             </span>
           </a>
 
-          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 lg:flex xl:gap-1">
+          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 xl:flex 2xl:gap-2">
             {mainNavLinks.slice(0, 2).map((link) => (
               <a key={link.name} href={link.href} className={navItemClass}>
                 {link.name}
@@ -213,11 +213,11 @@ const Header = () => {
               type="button"
               onMouseEnter={() => setOpenMega(true)}
               onClick={() => setOpenMega((prev) => !prev)}
-              className="inline-flex h-10 items-center gap-1 whitespace-nowrap rounded-full px-3 text-[13px] font-bold text-[#24415A] transition hover:bg-[#E9F8F6] hover:text-[#0F766E] xl:px-3.5 xl:text-sm"
+              className="inline-flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-4 text-[15px] font-extrabold text-[#213D56] transition hover:bg-[#E9F8F6] hover:text-[#0F766E]"
             >
               Services
               <ChevronDown
-                size={16}
+                size={17}
                 className={`transition ${openMega ? "rotate-180" : ""}`}
               />
             </button>
@@ -229,13 +229,13 @@ const Header = () => {
             ))}
           </nav>
 
-          <div className="hidden shrink-0 items-center gap-2 lg:flex">
+          <div className="hidden shrink-0 items-center gap-3 xl:flex">
             <a
               href="tel:+917999215093"
               aria-label="Call Dr. Vini Jhariya"
               className={iconBtnClass}
             >
-              <PhoneCall size={18} />
+              <PhoneCall size={21} />
             </a>
 
             <a
@@ -245,14 +245,14 @@ const Header = () => {
               aria-label="WhatsApp Dr. Vini Jhariya"
               className={iconBtnClass}
             >
-              <MessageCircle size={18} />
+              <MessageCircle size={21} />
             </a>
 
             <a
               href="/contact-us"
-              className="hidden items-center gap-2 rounded-full bg-linear-to-r from-[#0F3D5E] to-[#168A83] px-4 py-3 text-sm font-bold text-white shadow-xl shadow-teal-900/20 transition hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-teal-900/25 xl:inline-flex xl:px-5"
+              className="hidden items-center gap-2.5 rounded-full bg-linear-to-r from-[#0F3D5E] to-[#168A83] px-6 py-4 text-[15px] font-black text-white shadow-xl shadow-teal-900/20 transition hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-teal-900/25 2xl:inline-flex"
             >
-              <CalendarCheck size={18} />
+              <CalendarCheck size={20} />
               <span className="whitespace-nowrap">Book Consultation</span>
             </a>
           </div>
@@ -261,15 +261,15 @@ const Header = () => {
             type="button"
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#BFE6E2] bg-white text-[#0F766E] shadow-sm lg:hidden"
+            className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#BFE6E2] bg-white text-[#0F766E] shadow-sm xl:hidden"
           >
-            <Menu size={22} />
+            <Menu size={24} />
           </button>
         </div>
       </header>
 
       {openMega && (
-        <div className="fixed inset-0 z-9999 hidden lg:block">
+        <div className="fixed inset-0 z-9999 hidden xl:block">
           <button
             type="button"
             aria-label="Close services menu"
@@ -279,9 +279,9 @@ const Header = () => {
 
           <div
             onMouseLeave={closeMega}
-            className="absolute left-1/2 top-21.5 w-[min(920px,calc(100vw-40px))] -translate-x-1/2 xl:top-23"
+            className="absolute left-1/2 top-24 w-[min(940px,calc(100vw-48px))] -translate-x-1/2"
           >
-            <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-slate-900/15 ring-1 ring-slate-100">
+            <div className="relative overflow-hidden rounded-4xl border border-slate-200 bg-white shadow-2xl shadow-slate-900/15 ring-1 ring-slate-100">
               <button
                 type="button"
                 onClick={closeMega}
@@ -291,7 +291,7 @@ const Header = () => {
                 <X size={17} />
               </button>
 
-              <div className="max-h-[calc(100vh-140px)] overflow-y-auto p-7 pr-12 [scrollbar-color:#0F766E_#E9F8F6] [scrollbar-width:thin] xl:p-8 xl:pr-12">
+              <div className="max-h-[calc(100vh-150px)] overflow-y-auto p-8 pr-14 [scrollbar-color:#0F766E_#E9F8F6] [scrollbar-width:thin]">
                 {servicesLoading ? (
                   <div className="flex min-h-48 items-center justify-center">
                     <div className="text-center">
@@ -302,22 +302,22 @@ const Header = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 gap-10 xl:gap-16">
+                  <div className="grid grid-cols-2 gap-14">
                     {menuGroups.map((group) => (
                       <div key={group.title} className="min-w-0">
-                        <h3 className="mb-4 text-[13px] font-black uppercase tracking-[0.25em] text-slate-800 xl:text-[15px]">
+                        <h3 className="mb-4 text-[14px] font-black uppercase tracking-[0.25em] text-slate-800">
                           {group.title}
                         </h3>
 
                         <div className="mb-5 h-px w-full bg-slate-300" />
 
-                        <div className="space-y-3.5 xl:space-y-4">
+                        <div className="space-y-4">
                           {group.services.map((item) => (
                             <a
                               key={item.label}
                               href={getServiceHref(item, activeServices)}
                               onClick={closeMega}
-                              className="block text-[18px] font-semibold leading-tight tracking-wider text-slate-800 transition hover:translate-x-1 hover:text-[#0F766E] xl:text-[21px] xl:tracking-[0.08em]"
+                              className="block text-[20px] font-semibold leading-tight tracking-wide text-slate-800 transition hover:translate-x-1 hover:text-[#0F766E]"
                             >
                               {item.label}
                             </a>
@@ -334,7 +334,7 @@ const Header = () => {
       )}
 
       {mobileOpen && (
-        <div className="fixed inset-0 z-9999 bg-slate-950/45 backdrop-blur-sm lg:hidden">
+        <div className="fixed inset-0 z-9999 bg-slate-950/45 backdrop-blur-sm xl:hidden">
           <button
             type="button"
             aria-label="Close mobile menu overlay"
