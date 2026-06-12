@@ -24,10 +24,10 @@ const mainNavLinks = [
 ];
 
 const navItemClass =
-  "inline-flex h-11 items-center justify-center whitespace-nowrap rounded-full px-4 text-[15px] font-extrabold text-[#213D56] transition hover:bg-[#E9F8F6] hover:text-[#0F766E]";
+  "inline-flex h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full px-3 text-[14px] font-extrabold text-[#213D56] transition hover:bg-[#E9F8F6] hover:text-[#0F766E] 2xl:px-3.5 2xl:text-[15px]";
 
 const iconBtnClass =
-  "inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#BFE6E2] bg-white text-[#0F766E] shadow-md shadow-teal-900/10 transition hover:-translate-y-0.5 hover:border-[#168A83] hover:bg-[#E9F8F6]";
+  "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#BFE6E2] bg-white text-[#0F766E] shadow-md shadow-teal-900/10 transition hover:-translate-y-0.5 hover:border-[#168A83] hover:bg-[#E9F8F6]";
 
 const menuGroups = [
   {
@@ -179,22 +179,22 @@ const Header = () => {
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-[#D8F0EE] bg-[#F8FEFD]/95 shadow-sm shadow-teal-900/5 backdrop-blur-2xl">
-        <div className="mx-auto flex h-21.5 max-w-390 items-center justify-between gap-5 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-19.5 w-full max-w-430 items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
           <a
             href="/"
-            className="group flex min-w-0 shrink-0 items-center gap-3 rounded-3xl px-2 py-2 transition hover:bg-[#E9F8F6] xl:w-82.5 2xl:w-90"
+            className="group flex min-w-0 shrink-0 items-center gap-3 rounded-3xl px-1.5 py-1.5 transition hover:bg-[#E9F8F6] xl:w-75 2xl:w-82.5"
           >
-            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-3xl bg-linear-to-br from-[#0F3D5E] via-[#168A83] to-[#54C6B8] text-2xl font-black text-white shadow-xl shadow-teal-900/20 transition group-hover:-rotate-3 group-hover:scale-105">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-[#0F3D5E] via-[#168A83] to-[#54C6B8] text-xl font-black text-white shadow-lg shadow-teal-900/20 transition group-hover:-rotate-3 group-hover:scale-105 2xl:h-13 2xl:w-13">
               V
             </span>
 
             <span className="flex min-w-0 flex-1 flex-col leading-tight">
-              <span className="truncate text-[21px] font-black tracking-tight text-[#0F3D5E] transition group-hover:text-[#0F766E] 2xl:text-[25px]">
+              <span className="truncate text-[20px] font-black tracking-tight text-[#0F3D5E] transition group-hover:text-[#0F766E] 2xl:text-[23px]">
                 Dr. Vini Jhariya
               </span>
 
-              <span className="mt-1 flex min-w-0 items-center gap-2 text-[10px] font-black uppercase tracking-[0.28em] text-[#168A83] 2xl:text-[11px]">
-                <span className="h-2 w-2 shrink-0 rounded-full bg-[#54C6B8]" />
+              <span className="mt-1 flex min-w-0 items-center gap-2 text-[9px] font-black uppercase tracking-[0.24em] text-[#168A83] 2xl:text-[10px]">
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#54C6B8]" />
                 <span className="truncate">
                   Clinical and Child Psychologist
                 </span>
@@ -202,7 +202,7 @@ const Header = () => {
             </span>
           </a>
 
-          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 xl:flex 2xl:gap-2">
+          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 xl:flex 2xl:gap-1">
             {mainNavLinks.slice(0, 2).map((link) => (
               <a key={link.name} href={link.href} className={navItemClass}>
                 {link.name}
@@ -213,7 +213,7 @@ const Header = () => {
               type="button"
               onMouseEnter={() => setOpenMega(true)}
               onClick={() => setOpenMega((prev) => !prev)}
-              className="inline-flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-4 text-[15px] font-extrabold text-[#213D56] transition hover:bg-[#E9F8F6] hover:text-[#0F766E]"
+              className="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 text-[14px] font-extrabold text-[#213D56] transition hover:bg-[#E9F8F6] hover:text-[#0F766E] 2xl:px-3.5 2xl:text-[15px]"
             >
               Services
               <ChevronDown
@@ -229,13 +229,13 @@ const Header = () => {
             ))}
           </nav>
 
-          <div className="hidden shrink-0 items-center gap-3 xl:flex">
+          <div className="hidden shrink-0 items-center gap-2 xl:flex 2xl:gap-3">
             <a
               href="tel:+917999215093"
               aria-label="Call Dr. Vini Jhariya"
               className={iconBtnClass}
             >
-              <PhoneCall size={21} />
+              <PhoneCall size={19} />
             </a>
 
             <a
@@ -245,14 +245,14 @@ const Header = () => {
               aria-label="WhatsApp Dr. Vini Jhariya"
               className={iconBtnClass}
             >
-              <MessageCircle size={21} />
+              <MessageCircle size={19} />
             </a>
 
             <a
               href="/contact-us"
-              className="hidden items-center gap-2.5 rounded-full bg-linear-to-r from-[#0F3D5E] to-[#168A83] px-6 py-4 text-[15px] font-black text-white shadow-xl shadow-teal-900/20 transition hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-teal-900/25 2xl:inline-flex"
+              className="hidden items-center gap-2 rounded-full bg-linear-to-r from-[#0F3D5E] to-[#168A83] px-5 py-3.5 text-[14px] font-black text-white shadow-xl shadow-teal-900/20 transition hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-teal-900/25 min-[1700px]:inline-flex"
             >
-              <CalendarCheck size={20} />
+              <CalendarCheck size={19} />
               <span className="whitespace-nowrap">Book Consultation</span>
             </a>
           </div>
@@ -261,9 +261,9 @@ const Header = () => {
             type="button"
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
-            className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#BFE6E2] bg-white text-[#0F766E] shadow-sm xl:hidden"
+            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#BFE6E2] bg-white text-[#0F766E] shadow-sm xl:hidden"
           >
-            <Menu size={24} />
+            <Menu size={23} />
           </button>
         </div>
       </header>
@@ -279,7 +279,7 @@ const Header = () => {
 
           <div
             onMouseLeave={closeMega}
-            className="absolute left-1/2 top-24 w-[min(940px,calc(100vw-48px))] -translate-x-1/2"
+            className="absolute left-1/2 top-22 w-[min(940px,calc(100vw-48px))] -translate-x-1/2"
           >
             <div className="relative overflow-hidden rounded-4xl border border-slate-200 bg-white shadow-2xl shadow-slate-900/15 ring-1 ring-slate-100">
               <button
@@ -291,7 +291,7 @@ const Header = () => {
                 <X size={17} />
               </button>
 
-              <div className="max-h-[calc(100vh-150px)] overflow-y-auto p-8 pr-14 [scrollbar-color:#0F766E_#E9F8F6] [scrollbar-width:thin]">
+              <div className="max-h-[calc(100vh-140px)] overflow-y-auto p-8 pr-14 [scrollbar-color:#0F766E_#E9F8F6] [scrollbar-width:thin]">
                 {servicesLoading ? (
                   <div className="flex min-h-48 items-center justify-center">
                     <div className="text-center">
