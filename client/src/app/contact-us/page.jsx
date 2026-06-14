@@ -727,8 +727,8 @@ export default function ContactUsPage() {
               icon={<FaFacebook />}
               title="Facebook"
               handle="Urjasvini Child Development Centre"
-              link="#"
-              button="Coming Soon"
+              link="https://www.facebook.com/profile.php?id=61565145723116"
+              button="Follow"
               variant="facebook"
             />
           </motion.div>
