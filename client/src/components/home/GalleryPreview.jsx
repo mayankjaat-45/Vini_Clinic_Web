@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
-import { API } from "@/lib/api";
 import {
   ArrowRight,
   Award,
@@ -10,9 +9,7 @@ import {
   CalendarCheck,
   GraduationCap,
   ImageIcon,
-  Loader2,
   MessageCircle,
-  Newspaper,
   Sparkles,
   Users,
 } from "lucide-react";
@@ -68,38 +65,25 @@ const fallbackGallery = [
   },
 ];
 
-export default function GalleryPreview() {
-  const [gallery, setGallery] = useState([]);
-  const [loading, setLoading] = useState(true);
+const optimizeCloudinaryImage = (url, width = 900) => {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
 
-  const fetchGallery = async () => {
-    try {
-      setLoading(true);
+  return url.replace("/upload/", `/upload/f_auto,q_auto,w_${width},c_limit/`);
+};
 
-      const { data } = await API.get("/api/gallery");
-
-      setGallery(Array.isArray(data?.data) ? data.data : []);
-    } catch (error) {
-      console.log("HOME GALLERY ERROR:", error);
-      setGallery([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchGallery();
-  }, []);
-
+export default function GalleryPreview({ initialGallery = [] }) {
   const previewImages = useMemo(() => {
-    const activeImages = gallery.filter((item) => item?.image?.url);
-    const featured = activeImages.filter((item) => item.isFeatured);
+    const activeImages = initialGallery.filter(
+      (item) => item?.isActive !== false && item?.image?.url,
+    );
+
+    const featured = activeImages.filter((item) => item?.isFeatured);
 
     if (featured.length) return featured.slice(0, 6);
     if (activeImages.length) return activeImages.slice(0, 6);
 
     return fallbackGallery;
-  }, [gallery]);
+  }, [initialGallery]);
 
   return (
     <section className="relative overflow-hidden bg-[#F7FBFC] px-4 py-14 sm:px-5 sm:py-18 md:py-22">
@@ -134,70 +118,69 @@ export default function GalleryPreview() {
           </Link>
         </div>
 
-        {loading ? (
-          <div className="rounded-4xl bg-white p-10 text-center shadow-xl">
-            <Loader2 className="mx-auto mb-4 animate-spin text-[#0F3D5E]" />
-            <p className="font-bold text-slate-600">Loading gallery...</p>
-          </div>
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {previewImages.map((item, index) => {
-              const hasImage = Boolean(item?.image?.url);
-              const Icon = item.icon || ImageIcon;
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {previewImages.map((item, index) => {
+            const hasImage = Boolean(item?.image?.url);
+            const Icon = item.icon || ImageIcon;
+            const imageUrl = optimizeCloudinaryImage(
+              item?.image?.url,
+              index === 0 ? 1000 : 600,
+            );
 
-              return (
-                <Link
-                  href="/gallery"
-                  key={item._id || item.title}
-                  className={`group relative overflow-hidden rounded-4xl bg-[#102A43] shadow-xl shadow-slate-900/5 transition duration-300 hover:-translate-y-2 hover:shadow-2xl ${
-                    index === 0 ? "sm:col-span-2 sm:row-span-2" : ""
-                  }`}
-                >
-                  {hasImage ? (
-                    <img
-                      src={item.image.url}
-                      alt={
-                        item.alt ||
-                        `${item.title}, Urjasvini Child Development Centre gallery`
-                      }
-                      className={`w-full object-cover transition duration-500 group-hover:scale-105 ${
-                        index === 0 ? "h-90 sm:h-115" : "h-56"
-                      }`}
-                    />
-                  ) : (
-                    <div
-                      className={`flex ${
-                        index === 0 ? "h-90 sm:h-115" : "h-56"
-                      } w-full items-center justify-center bg-linear-to-br ${
-                        item.gradient || "from-[#0F3D5E] to-[#2CB1A6]"
-                      }`}
-                    >
-                      <Icon size={46} className="text-white/90" />
-                    </div>
-                  )}
-
-                  <div className="absolute inset-0 bg-linear-to-t from-[#102A43]/92 via-[#102A43]/25 to-transparent" />
-
-                  <div className="absolute bottom-0 left-0 right-0 p-5">
-                    <span className="mb-3 inline-flex rounded-full bg-white/90 px-3 py-1 text-xs font-black text-[#0F3D5E]">
-                      {item.category}
-                    </span>
-
-                    <h3 className="line-clamp-2 text-xl font-black leading-tight text-white">
-                      {item.title}
-                    </h3>
-
-                    {!hasImage && item.description && (
-                      <p className="mt-2 line-clamp-2 text-sm font-semibold leading-6 text-white/70">
-                        {item.description}
-                      </p>
-                    )}
+            return (
+              <Link
+                href="/gallery"
+                key={item._id || item.slug || item.title}
+                className={`group relative overflow-hidden rounded-4xl bg-[#102A43] shadow-xl shadow-slate-900/5 transition duration-300 hover:-translate-y-2 hover:shadow-2xl ${
+                  index === 0 ? "sm:col-span-2 sm:row-span-2" : ""
+                }`}
+              >
+                {hasImage ? (
+                  <img
+                    src={imageUrl}
+                    alt={
+                      item.alt ||
+                      `${item.title}, Urjasvini Child Development Centre gallery`
+                    }
+                    loading="lazy"
+                    decoding="async"
+                    className={`w-full object-cover transition duration-500 group-hover:scale-105 ${
+                      index === 0 ? "h-90 sm:h-115" : "h-56"
+                    }`}
+                  />
+                ) : (
+                  <div
+                    className={`flex ${
+                      index === 0 ? "h-90 sm:h-115" : "h-56"
+                    } w-full items-center justify-center bg-linear-to-br ${
+                      item.gradient || "from-[#0F3D5E] to-[#2CB1A6]"
+                    }`}
+                  >
+                    <Icon size={46} className="text-white/90" />
                   </div>
-                </Link>
-              );
-            })}
-          </div>
-        )}
+                )}
+
+                <div className="absolute inset-0 bg-linear-to-t from-[#102A43]/92 via-[#102A43]/25 to-transparent" />
+
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <span className="mb-3 inline-flex rounded-full bg-white/90 px-3 py-1 text-xs font-black text-[#0F3D5E]">
+                    {item.category || "Gallery"}
+                  </span>
+
+                  <h3 className="line-clamp-2 text-xl font-black leading-tight text-white">
+                    {item.title}
+                  </h3>
+
+                  {!hasImage && item.description && (
+                    <p className="mt-2 line-clamp-2 text-sm font-semibold leading-6 text-white/70">
+                      {item.description}
+                    </p>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
 
         <div className="mt-10 overflow-hidden rounded-4xl bg-white p-6 text-center shadow-xl shadow-slate-900/5 sm:p-8 md:rounded-[3rem]">
           <Camera className="mx-auto mb-4 text-[#0F766E]" size={38} />

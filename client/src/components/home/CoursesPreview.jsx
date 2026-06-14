@@ -1,16 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
-import { API } from "@/lib/api";
 import {
   ArrowRight,
-  BookOpen,
   Brain,
   CalendarCheck,
   GraduationCap,
   HeartHandshake,
-  Loader2,
   MessageCircle,
   School,
   Sparkles,
@@ -53,40 +50,19 @@ const fallbackCourses = [
   },
 ];
 
-export default function CoursesPreview() {
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchCourses = async () => {
-    try {
-      setLoading(true);
-
-      const { data } = await API.get("/api/courses");
-
-      setCourses(Array.isArray(data?.data) ? data.data : []);
-    } catch (error) {
-      console.log("HOME COURSES ERROR:", error);
-      setCourses([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCourses();
-  }, []);
-
+export default function CoursesPreview({ initialCourses = [] }) {
   const previewCourses = useMemo(() => {
-    const activeCourses = courses.filter(
+    const activeCourses = initialCourses.filter(
       (course) => course?.isActive !== false,
     );
-    const featured = activeCourses.filter((course) => course.isFeatured);
+
+    const featured = activeCourses.filter((course) => course?.isFeatured);
 
     if (featured.length) return featured.slice(0, 3);
     if (activeCourses.length) return activeCourses.slice(0, 3);
 
     return fallbackCourses;
-  }, [courses]);
+  }, [initialCourses]);
 
   return (
     <section className="relative overflow-hidden bg-white px-4 py-14 sm:px-5 sm:py-18 md:py-22">
@@ -121,77 +97,73 @@ export default function CoursesPreview() {
           </Link>
         </div>
 
-        {loading ? (
-          <div className="rounded-4xl bg-[#F7FBFC] p-10 text-center shadow-xl">
-            <Loader2 className="mx-auto mb-4 animate-spin text-[#0F3D5E]" />
-            <p className="font-bold text-slate-600">Loading courses...</p>
-          </div>
-        ) : (
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {previewCourses.map((course) => {
-              const Icon = course.icon || GraduationCap;
-              const hasRealCourse = Boolean(course._id && !course.icon);
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {previewCourses.map((course) => {
+            const Icon = course.icon || GraduationCap;
+            const hasRealCourse = Boolean(course._id && !course.icon);
 
-              return (
-                <Link
-                  key={course._id}
-                  href={
-                    hasRealCourse
-                      ? `/courses/${course.slug}`
-                      : "/workshops-and-courses"
-                  }
-                  className="group overflow-hidden rounded-4xl bg-[#F7FBFC] shadow-xl shadow-slate-900/5 transition duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-slate-900/10"
-                >
-                  <div className="relative h-56 overflow-hidden bg-linear-to-br from-[#0F3D5E] to-[#168A83]">
-                    {course.image?.url ? (
-                      <img
-                        src={course.image.url}
-                        alt={`${course.title} by Dr. Vini Jhariya`}
-                        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="flex h-full items-center justify-center text-white/80">
-                        <Icon size={62} />
-                      </div>
-                    )}
-
-                    <div className="absolute left-5 top-5 rounded-full bg-white/90 px-4 py-2 text-xs font-black text-[#0F3D5E]">
-                      {course.duration || "Coming soon"}
+            return (
+              <Link
+                key={course._id || course.slug || course.title}
+                href={
+                  hasRealCourse && course.slug
+                    ? `/courses/${course.slug}`
+                    : "/workshops-and-courses"
+                }
+                className="group overflow-hidden rounded-4xl bg-[#F7FBFC] shadow-xl shadow-slate-900/5 transition duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-slate-900/10"
+              >
+                <div className="relative h-56 overflow-hidden bg-linear-to-br from-[#0F3D5E] to-[#168A83]">
+                  {course.image?.url ? (
+                    <img
+                      src={course.image.url}
+                      alt={`${course.title} by Dr. Vini Jhariya`}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-white/80">
+                      <Icon size={62} />
                     </div>
+                  )}
+
+                  <div className="absolute left-5 top-5 rounded-full bg-white/90 px-4 py-2 text-xs font-black text-[#0F3D5E]">
+                    {course.duration || "Coming soon"}
+                  </div>
+                </div>
+
+                <div className="p-6">
+                  <div className="mb-4 flex flex-wrap gap-2">
+                    <span className="rounded-full bg-[#E9F8F6] px-3 py-1 text-xs font-black text-[#0F766E]">
+                      {course.category || "Workshop"}
+                    </span>
+
+                    <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-[#0F3D5E]">
+                      {course.mode || "Online / Offline"}
+                    </span>
                   </div>
 
-                  <div className="p-6">
-                    <div className="mb-4 flex flex-wrap gap-2">
-                      <span className="rounded-full bg-[#E9F8F6] px-3 py-1 text-xs font-black text-[#0F766E]">
-                        {course.category}
-                      </span>
+                  <h3 className="line-clamp-2 text-2xl font-black leading-tight text-[#102A43]">
+                    {course.title}
+                  </h3>
 
-                      <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-[#0F3D5E]">
-                        {course.mode}
-                      </span>
-                    </div>
+                  <p className="mt-4 line-clamp-3 min-h-18 text-sm font-semibold leading-6 text-slate-600">
+                    {course.shortDescription ||
+                      course.description ||
+                      "Learn practical child psychology, counselling and intervention skills through guided workshops."}
+                  </p>
 
-                    <h3 className="line-clamp-2 text-2xl font-black leading-tight text-[#102A43]">
-                      {course.title}
-                    </h3>
-
-                    <p className="mt-4 line-clamp-3 min-h-18 text-sm font-semibold leading-6 text-slate-600">
-                      {course.shortDescription}
-                    </p>
-
-                    <div className="mt-7 inline-flex items-center gap-2 text-sm font-black text-[#0F3D5E]">
-                      {hasRealCourse ? "View Details" : "Join Waitlist"}
-                      <ArrowRight
-                        size={16}
-                        className="transition group-hover:translate-x-1"
-                      />
-                    </div>
+                  <div className="mt-7 inline-flex items-center gap-2 text-sm font-black text-[#0F3D5E]">
+                    {hasRealCourse ? "View Details" : "Join Waitlist"}
+                    <ArrowRight
+                      size={16}
+                      className="transition group-hover:translate-x-1"
+                    />
                   </div>
-                </Link>
-              );
-            })}
-          </div>
-        )}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
 
         <div className="mt-10 overflow-hidden rounded-4xl bg-linear-to-br from-[#0F3D5E] to-[#168A83] p-6 text-white shadow-2xl shadow-blue-950/20 sm:p-8 md:rounded-[2.5rem]">
           <div className="grid gap-7 md:grid-cols-[1.2fr_0.8fr] md:items-center">

@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { API } from "@/lib/api";
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -10,7 +9,6 @@ import {
   CheckCircle2,
   Globe2,
   HeartHandshake,
-  Loader2,
   Users,
 } from "lucide-react";
 
@@ -20,37 +18,20 @@ const categoryIcons = {
   "Online Consultation": Globe2,
 };
 
-const ServicesOverview = () => {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchServices = async () => {
-    try {
-      setLoading(true);
-
-      const { data } = await API.get("/api/services");
-
-      setServices(data?.data || []);
-    } catch (error) {
-      console.log("HOME SERVICES ERROR:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchServices();
-  }, []);
-
+const ServicesOverview = ({ initialServices = [] }) => {
   const featuredServices = useMemo(() => {
-    const featured = services.filter((service) => service.isFeatured);
+    const activeServices = initialServices.filter(
+      (service) => service?.isActive !== false,
+    );
+
+    const featured = activeServices.filter((service) => service?.isFeatured);
 
     if (featured.length) {
       return featured.slice(0, 6);
     }
 
-    return services.slice(0, 6);
-  }, [services]);
+    return activeServices.slice(0, 6);
+  }, [initialServices]);
 
   return (
     <section className="relative overflow-hidden bg-[#F7FBFC] px-5 py-18">
@@ -60,7 +41,7 @@ const ServicesOverview = () => {
       <div className="relative mx-auto max-w-7xl">
         <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <div className="mb-5 inline-flex items-center  gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-[#0F3D5E] shadow-sm">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-[#0F3D5E] shadow-sm">
               <HeartHandshake size={16} className="text-[#2CB1A6]" />
               Services
             </div>
@@ -84,20 +65,23 @@ const ServicesOverview = () => {
           </a>
         </div>
 
-        {loading ? (
-          <div className="rounded-4xl bg-white p-10 text-center shadow-xl">
-            <Loader2 className="mx-auto mb-4 animate-spin text-[#0F3D5E]" />
-            <p className="font-bold text-slate-600">Loading services...</p>
-          </div>
-        ) : featuredServices.length === 0 ? (
+        {featuredServices.length === 0 ? (
           <div className="rounded-4xl bg-white p-10 text-center shadow-xl">
             <Brain className="mx-auto mb-4 text-[#0F3D5E]" size={38} />
             <h3 className="text-2xl font-black text-[#102A43]">
-              No services available
+              Services are available
             </h3>
             <p className="mt-2 text-slate-600">
-              Add active services from admin dashboard.
+              Please contact us to know the right support for your child.
             </p>
+
+            <a
+              href="/contact-us"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#0F3D5E] px-6 py-3 text-sm font-black text-white transition hover:-translate-y-1"
+            >
+              Contact Us
+              <ArrowRight size={16} />
+            </a>
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -106,12 +90,12 @@ const ServicesOverview = () => {
 
               return (
                 <motion.a
-                  key={service._id}
+                  key={service._id || service.slug || service.title}
                   href={`/services/${service.slug}`}
                   initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.06 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{ duration: 0.45, delay: index * 0.04 }}
                   className="group relative overflow-hidden rounded-4xl border border-white bg-white p-6 shadow-xl shadow-slate-900/5 transition duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-slate-900/10"
                 >
                   <div className="absolute right-0 top-0 h-28 w-28 rounded-bl-full bg-[#2CB1A6]/10" />
@@ -120,7 +104,8 @@ const ServicesOverview = () => {
                     {service.image?.url ? (
                       <img
                         src={service.image.url}
-                        alt={service.title}
+                        alt={service.title || "Service image"}
+                        loading="lazy"
                         className="mb-5 h-44 w-full rounded-3xl object-cover"
                       />
                     ) : (
@@ -130,7 +115,7 @@ const ServicesOverview = () => {
                     )}
 
                     <div className="mb-4 inline-flex rounded-full bg-[#F7FBFC] px-4 py-2 text-xs font-black text-[#0F3D5E]">
-                      {service.category}
+                      {service.category || "Therapy Support"}
                     </div>
 
                     <h3 className="text-2xl font-black leading-tight text-[#102A43]">
@@ -138,7 +123,9 @@ const ServicesOverview = () => {
                     </h3>
 
                     <p className="mt-4 line-clamp-3 min-h-18 text-sm font-semibold leading-6 text-slate-600">
-                      {service.shortDescription}
+                      {service.shortDescription ||
+                        service.metaDescription ||
+                        "Personalised counselling, assessment and guidance support for children, teens and families."}
                     </p>
 
                     {service.primaryKeywords?.length > 0 && (
@@ -146,8 +133,9 @@ const ServicesOverview = () => {
                         {service.primaryKeywords.slice(0, 2).map((keyword) => (
                           <span
                             key={keyword}
-                            className="rounded-full bg-[#E9F8F6] px-3 py-2 text-xs font-bold text-[#0F766E]"
+                            className="inline-flex items-center gap-1 rounded-full bg-[#E9F8F6] px-3 py-2 text-xs font-bold text-[#0F766E]"
                           >
+                            <CheckCircle2 size={12} />
                             {keyword}
                           </span>
                         ))}
