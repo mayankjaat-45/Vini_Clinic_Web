@@ -17,7 +17,6 @@ import {
   Send,
   Sparkles,
 } from "lucide-react";
-
 import {
   FaFacebook,
   FaInstagram,
@@ -36,6 +35,7 @@ const initialForm = {
   preferredTime: "",
   heardFrom: "",
 };
+
 const enquiryForOptions = [
   "My child",
   "My teenager",
@@ -92,6 +92,35 @@ const faqs = [
     a: "We work on an appointment basis to ensure every family gets the full time and attention they deserve. Please reach out in advance to schedule your visit.",
   },
 ];
+
+const socialStyles = {
+  instagram: {
+    card: "hover:shadow-pink-200/70",
+    iconWrap:
+      "bg-linear-to-br from-[#F58529] via-[#DD2A7B] to-[#8134AF] text-white shadow-lg shadow-pink-500/25",
+    button:
+      "bg-linear-to-r from-[#F58529] via-[#DD2A7B] to-[#8134AF] text-white",
+    glow: "bg-pink-200/50",
+  },
+  linkedin: {
+    card: "hover:shadow-blue-200/70",
+    iconWrap: "bg-[#0A66C2] text-white shadow-lg shadow-blue-500/25",
+    button: "bg-[#0A66C2] text-white",
+    glow: "bg-blue-200/50",
+  },
+  youtube: {
+    card: "hover:shadow-red-200/70",
+    iconWrap: "bg-[#FF0000] text-white shadow-lg shadow-red-500/25",
+    button: "bg-[#FF0000] text-white",
+    glow: "bg-red-200/50",
+  },
+  facebook: {
+    card: "hover:shadow-blue-200/70",
+    iconWrap: "bg-[#1877F2] text-white shadow-lg shadow-blue-500/25",
+    button: "bg-[#1877F2] text-white",
+    glow: "bg-blue-200/50",
+  },
+};
 
 const fadeUp = {
   hidden: {
@@ -262,7 +291,6 @@ export default function ContactUsPage() {
 
   return (
     <main className="overflow-hidden bg-[#F7FBFC]">
-      {/* Hero */}
       <section className="relative px-4 py-12 sm:px-5 md:py-16">
         <motion.div
           initial={{ opacity: 0, scale: 0.75 }}
@@ -378,7 +406,6 @@ export default function ContactUsPage() {
         </div>
       </section>
 
-      {/* Form */}
       <section
         id="contact-form"
         className="relative z-10 -mt-8 px-4 pb-20 sm:px-5 md:pb-24"
@@ -536,7 +563,6 @@ export default function ContactUsPage() {
         </motion.div>
       </section>
 
-      {/* Contact Cards */}
       <section className="px-4 pb-20 sm:px-5 md:pb-24">
         <div className="mx-auto max-w-7xl">
           <SectionHeading
@@ -581,7 +607,6 @@ export default function ContactUsPage() {
         </div>
       </section>
 
-      {/* Map */}
       <section className="px-4 pb-20 sm:px-5 md:pb-24">
         <motion.div
           variants={scaleIn}
@@ -612,7 +637,6 @@ export default function ContactUsPage() {
         </motion.div>
       </section>
 
-      {/* Appointment + Online */}
       <section className="px-4 pb-20 sm:px-5 md:pb-24">
         <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-2">
           <motion.div
@@ -658,7 +682,6 @@ export default function ContactUsPage() {
         </div>
       </section>
 
-      {/* Social */}
       <section className="px-4 pb-20 sm:px-5 md:pb-24">
         <div className="mx-auto max-w-7xl">
           <SectionHeading
@@ -679,6 +702,7 @@ export default function ContactUsPage() {
               handle="@vini_thechildpsychologist"
               link="https://www.instagram.com/vini_thechildpsychologist/"
               button="Follow"
+              variant="instagram"
             />
 
             <SocialCard
@@ -687,6 +711,7 @@ export default function ContactUsPage() {
               handle="Dr. Vini Jhariya"
               link="https://www.linkedin.com/in/vini-jhariya/"
               button="Connect"
+              variant="linkedin"
             />
 
             <SocialCard
@@ -695,6 +720,7 @@ export default function ContactUsPage() {
               handle="Vini The Child Psychologist"
               link="https://www.youtube.com/@ViniTheChildPsychologist"
               button="Subscribe"
+              variant="youtube"
             />
 
             <SocialCard
@@ -703,12 +729,12 @@ export default function ContactUsPage() {
               handle="Urjasvini Child Development Centre"
               link="#"
               button="Coming Soon"
+              variant="facebook"
             />
           </motion.div>
         </div>
       </section>
 
-      {/* FAQ */}
       <section className="px-4 pb-20 sm:px-5 md:pb-24">
         <motion.div
           variants={scaleIn}
@@ -740,7 +766,6 @@ export default function ContactUsPage() {
         </motion.div>
       </section>
 
-      {/* Final CTA */}
       <section className="px-4 pb-20 sm:px-5 md:pb-24">
         <motion.div
           variants={scaleIn}
@@ -866,11 +891,13 @@ const ContactCard = ({ icon, title, text, desc, link, button }) => {
       <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#0F766E]">
         {icon}
       </div>
+
       <h3 className="text-2xl font-black text-[#102A43]">{title}</h3>
-      <p className="mt-3 wrap-break-words font-black text-[#0F3D5E]">{text}</p>
+      <p className="mt-3 wrap-break-word font-black text-[#0F3D5E]">{text}</p>
       <p className="mt-3 text-sm font-semibold leading-6 text-slate-600">
         {desc}
       </p>
+
       <a
         href={link}
         target={link?.startsWith("http") ? "_blank" : undefined}
@@ -884,26 +911,48 @@ const ContactCard = ({ icon, title, text, desc, link, button }) => {
   );
 };
 
-const SocialCard = ({ icon, title, handle, link, button }) => {
+const SocialCard = ({
+  icon,
+  title,
+  handle,
+  link,
+  button,
+  variant = "instagram",
+}) => {
+  const styles = socialStyles[variant] || socialStyles.instagram;
+  const isDisabled = link === "#";
+
   return (
     <motion.a
       variants={fadeUp}
       whileHover={{ y: -8, scale: 1.02 }}
       href={link}
-      target={link !== "#" ? "_blank" : undefined}
-      rel={link !== "#" ? "noopener noreferrer" : undefined}
-      className="rounded-4xl bg-white p-6 shadow-xl shadow-slate-900/5 transition md:rounded-[2.5rem]"
+      target={!isDisabled ? "_blank" : undefined}
+      rel={!isDisabled ? "noopener noreferrer" : undefined}
+      onClick={(e) => {
+        if (isDisabled) e.preventDefault();
+      }}
+      className={`group relative overflow-hidden rounded-4xl bg-white p-6 shadow-xl shadow-slate-900/5 transition md:rounded-[2.5rem] ${styles.card}`}
     >
-      <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#0F766E]">
+      <div
+        className={`absolute -right-10 -top-10 h-28 w-28 rounded-full opacity-70 transition duration-500 group-hover:scale-125 ${styles.glow}`}
+      />
+
+      <div
+        className={`relative mb-5 flex h-14 w-14 items-center justify-center rounded-2xl text-2xl transition duration-300 group-hover:-rotate-6 group-hover:scale-110 ${styles.iconWrap}`}
+      >
         {icon}
       </div>
 
-      <h3 className="text-xl font-black text-[#102A43]">{title}</h3>
-      <p className="mt-2 line-clamp-1 text-sm font-bold text-slate-500">
+      <h3 className="relative text-xl font-black text-[#102A43]">{title}</h3>
+
+      <p className="relative mt-2 line-clamp-1 text-sm font-bold text-slate-500">
         {handle}
       </p>
 
-      <div className="mt-5 inline-flex items-center gap-2 text-sm font-black text-[#0F3D5E]">
+      <div
+        className={`relative mt-5 inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-black transition duration-300 group-hover:translate-x-1 ${styles.button}`}
+      >
         {button}
         <ArrowRight size={15} />
       </div>
