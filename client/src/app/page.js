@@ -10,8 +10,14 @@ import StatsStrip from "@/components/home/StatsStrip";
 import Testimonials from "@/components/home/Testimonials";
 import JsonLd from "@/components/seo/JsonLd";
 
+export const revalidate = 60;
+
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://vini-clinic-web.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://thechildpsychologist.in";
+
+const apiUrl =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://vini-clinic-web-server.onrender.com";
 
 const personSchema = {
   "@context": "https://schema.org",
@@ -58,7 +64,8 @@ const medicalBusinessSchema = {
   },
   geo: {
     "@type": "GeoCoordinates",
-    address: "100-A, Baikunth Dham Colony, Old Palasia, Saket, Indore, Madhya Pradesh 452018",
+    address:
+      "100-A, Baikunth Dham Colony, Old Palasia, Saket, Indore, Madhya Pradesh 452018",
   },
   aggregateRating: {
     "@type": "AggregateRating",
@@ -116,21 +123,77 @@ const localBusinessSchema = {
   },
 };
 
-export default function Home() {
+const normalizeApiData = (json) => {
+  if (Array.isArray(json)) return json;
+
+  if (Array.isArray(json?.data)) return json.data;
+  if (Array.isArray(json?.items)) return json.items;
+  if (Array.isArray(json?.services)) return json.services;
+  if (Array.isArray(json?.courses)) return json.courses;
+  if (Array.isArray(json?.resources)) return json.resources;
+  if (Array.isArray(json?.gallery)) return json.gallery;
+  if (Array.isArray(json?.blogs)) return json.blogs;
+
+  return [];
+};
+
+const fetchCollection = async (endpoint) => {
+  try {
+    const res = await fetch(`${apiUrl}${endpoint}`, {
+      next: { revalidate: 60 },
+    });
+
+    if (!res.ok) {
+      return [];
+    }
+
+    const json = await res.json();
+    return normalizeApiData(json);
+  } catch (error) {
+    return [];
+  }
+};
+
+const getHomeData = async () => {
+  const [services, courses, resources, gallery, blogs] = await Promise.all([
+    fetchCollection("/api/services"),
+    fetchCollection("/api/courses"),
+    fetchCollection("/api/resources"),
+    fetchCollection("/api/gallery"),
+    fetchCollection("/api/blogs"),
+  ]);
+
+  return {
+    services: services.slice(0, 6),
+    courses: courses.slice(0, 3),
+    resources: resources.slice(0, 3),
+    gallery: gallery.slice(0, 6),
+    blogs: blogs.slice(0, 3),
+  };
+};
+
+export default async function Home() {
+  const { services, courses, resources, gallery, blogs } = await getHomeData();
+
   return (
     <>
       <JsonLd data={personSchema} />
       <JsonLd data={medicalBusinessSchema} />
       <JsonLd data={localBusinessSchema} />
+
       <Hero />
       <StatsStrip />
-      <ServicesOverview />
+
+      <ServicesOverview initialServices={services} />
+
       <HowWeWork />
       <Testimonials />
-      <CoursesPreview />
-      <ResourcesPreview />
-      <GalleryPreview />
-      <LatestBlogs />
+
+      <CoursesPreview initialCourses={courses} />
+      <ResourcesPreview initialResources={resources} />
+      <GalleryPreview initialGallery={gallery} />
+      <LatestBlogs initialBlogs={blogs} />
+
       <CTASection />
     </>
   );
