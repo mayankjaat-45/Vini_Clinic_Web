@@ -24,10 +24,7 @@ const mainNavLinks = [
 ];
 
 const navItemClass =
-  "inline-flex h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full px-3 text-[14px] font-extrabold text-[#213D56] transition hover:bg-[#E9F8F6] hover:text-[#0F766E] 2xl:px-3.5 2xl:text-[15px]";
-
-const iconBtnClass =
-  "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#BFE6E2] bg-white text-[#0F766E] shadow-md shadow-teal-900/10 transition hover:-translate-y-0.5 hover:border-[#168A83] hover:bg-[#E9F8F6]";
+  "inline-flex h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full px-2.5 text-[14px] font-extrabold text-[#213D56] transition hover:bg-[#E9F8F6] hover:text-[#0F766E] 2xl:px-3.5 2xl:text-[15px]";
 
 const menuGroups = [
   {
@@ -179,10 +176,10 @@ const Header = () => {
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-[#D8F0EE] bg-[#F8FEFD]/95 shadow-sm shadow-teal-900/5 backdrop-blur-2xl">
-        <div className="mx-auto flex h-19.5 w-full max-w-430 items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-[76px] w-full max-w-[1760px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-8 xl:grid xl:grid-cols-[330px_minmax(0,1fr)_250px] 2xl:grid-cols-[370px_minmax(0,1fr)_285px]">
           <a
             href="/"
-            className="group flex min-w-0 shrink-0 items-center gap-3 rounded-3xl px-1.5 py-1.5 transition hover:bg-[#E9F8F6] xl:w-75 2xl:w-82.5"
+            className="group flex min-w-0 shrink-0 items-center gap-3 rounded-3xl px-1.5 py-1.5 transition hover:bg-[#E9F8F6]"
           >
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-[#0F3D5E] via-[#168A83] to-[#54C6B8] text-xl font-black text-white shadow-lg shadow-teal-900/20 transition group-hover:-rotate-3 group-hover:scale-105 2xl:h-13 2xl:w-13">
               V
@@ -193,7 +190,7 @@ const Header = () => {
                 Dr. Vini Jhariya
               </span>
 
-              <span className="mt-1 flex min-w-0 items-center gap-2 text-[6px] font-black uppercase tracking-[0.18em] text-[#168A83] 2xl:text-[8px]">
+              <span className="mt-1 flex min-w-0 items-center gap-2 text-[7px] font-black uppercase tracking-[0.18em] text-[#168A83] 2xl:text-[8px]">
                 <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#54C6B8]" />
                 <span className="truncate">
                   Clinical and Child Psychologist
@@ -202,7 +199,7 @@ const Header = () => {
             </span>
           </a>
 
-          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 xl:flex 2xl:gap-1">
+          <nav className="hidden min-w-0 items-center justify-center gap-1 xl:flex 2xl:gap-1.5">
             {mainNavLinks.slice(0, 2).map((link) => (
               <a key={link.name} href={link.href} className={navItemClass}>
                 {link.name}
@@ -213,7 +210,7 @@ const Header = () => {
               type="button"
               onMouseEnter={() => setOpenMega(true)}
               onClick={() => setOpenMega((prev) => !prev)}
-              className="inline-flex h-10 shrink-0 items-center justify-center gap-0.5 whitespace-nowrap rounded-full px-3 text-[14px] font-extrabold text-[#213D56] transition hover:bg-[#E9F8F6] hover:text-[#0F766E] 2xl:px-3.5 2xl:text-[15px]"
+              className="inline-flex h-10 shrink-0 items-center justify-center gap-0.5 whitespace-nowrap rounded-full px-2.5 text-[14px] font-extrabold text-[#213D56] transition hover:bg-[#E9F8F6] hover:text-[#0F766E] 2xl:px-3.5 2xl:text-[15px]"
             >
               Services
               <ChevronDown
@@ -229,31 +226,14 @@ const Header = () => {
             ))}
           </nav>
 
-          <div className="hidden shrink-0 items-center gap-2 xl:flex 2xl:gap-3">
-            <a
-              href="tel:+917999215093"
-              aria-label="Call Dr. Vini Jhariya"
-              className={iconBtnClass}
-            >
-              <PhoneCall size={19} />
-            </a>
-
-            <a
-              href="https://wa.me/917999215093"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="WhatsApp Dr. Vini Jhariya"
-              className={iconBtnClass}
-            >
-              <MessageCircle size={19} />
-            </a>
-
+          <div className="hidden justify-end xl:flex">
             <a
               href="/contact-us"
-              className="hidden items-center gap-2 rounded-full bg-linear-to-r from-[#0F3D5E] to-[#168A83] px-5 py-3.5 text-[14px] font-black text-white shadow-xl shadow-teal-900/20 transition hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-teal-900/25 min-[1700px]:inline-flex"
+              aria-label="Book consultation with Dr. Vini Jhariya"
+              className="inline-flex h-13 items-center justify-center gap-2 whitespace-nowrap rounded-full bg-linear-to-r from-[#0F3D5E] to-[#168A83] px-5 text-[14px] font-black text-white shadow-xl shadow-teal-900/20 transition hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-teal-900/25 2xl:px-6 2xl:text-[15px]"
             >
               <CalendarCheck size={19} />
-              <span className="whitespace-nowrap">Book Consultation</span>
+              <span>Book Consultation</span>
             </a>
           </div>
 
@@ -376,7 +356,7 @@ const Header = () => {
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-4 py-5">
+            <div className="flex-1 overflow-y-auto px-2 py-5">
               <div className="space-y-2">
                 {mainNavLinks.slice(0, 2).map((link) => (
                   <a
