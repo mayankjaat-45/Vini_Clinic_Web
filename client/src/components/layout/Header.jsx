@@ -15,16 +15,16 @@ import { API } from "@/lib/api";
 const mainNavLinks = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about-dr-vini" },
-  { name: "Online Consultation", href: "/online-consultation" },
-  { name: "Success Stories", href: "/success-stories" },
+  { name: "Courses", href: "/courses" },
+  { name: "Internship", href: "/internship" },
   { name: "Gallery", href: "/gallery" },
   { name: "Blog", href: "/blog" },
-  { name: "Resources", href: "/free-resources" },
+  { name: "Free Resources", href: "/free-resources" },
   { name: "Contact", href: "/contact-us" },
 ];
 
 const navItemClass =
-  "inline-flex h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full px-2.5 text-[14px] font-extrabold text-[#213D56] transition hover:bg-[#E9F8F6] hover:text-[#0F766E] 2xl:px-3.5 2xl:text-[15px]";
+  "inline-flex h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full px-2 text-[13px] font-extrabold text-[#213D56] transition hover:bg-[#E9F8F6] hover:text-[#0F766E] 2xl:px-3 2xl:text-[14px]";
 
 const menuGroups = [
   {
@@ -200,7 +200,7 @@ const Header = () => {
           </a>
 
           <nav className="hidden min-w-0 items-center justify-center gap-1 xl:flex 2xl:gap-1.5">
-            {mainNavLinks.slice(0, 2).map((link) => (
+            {mainNavLinks.slice(2).map((link) => (
               <a key={link.name} href={link.href} className={navItemClass}>
                 {link.name}
               </a>
@@ -210,7 +210,7 @@ const Header = () => {
               type="button"
               onMouseEnter={() => setOpenMega(true)}
               onClick={() => setOpenMega((prev) => !prev)}
-              className="inline-flex h-10 shrink-0 items-center justify-center gap-0.5 whitespace-nowrap rounded-full px-2.5 text-[14px] font-extrabold text-[#213D56] transition hover:bg-[#E9F8F6] hover:text-[#0F766E] 2xl:px-3.5 2xl:text-[15px]"
+              className="inline-flex h-10 shrink-0 items-center justify-center gap-0.5 whitespace-nowrap rounded-full px-2 text-[13px] font-extrabold text-[#213D56] transition hover:bg-[#E9F8F6] hover:text-[#0F766E] 2xl:px-3 2xl:text-[14px]"
             >
               Services
               <ChevronDown
