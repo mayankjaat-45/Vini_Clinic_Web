@@ -219,7 +219,7 @@ const Header = () => {
               </button>
 
               {openMega && (
-                <div className="absolute left-1/2 top-full z-50 mt-4 w-[760px] -translate-x-1/2 rounded-[28px] border border-[#D8F0EE] bg-white p-7 shadow-2xl shadow-slate-900/15">
+                <div className="absolute left-1/2 top-full z-50 mt-4 w-190 -translate-x-1/2 rounded-[28px] border border-[#D8F0EE] bg-white p-7 shadow-2xl shadow-slate-900/15">
                   <button
                     type="button"
                     onClick={closeMega}

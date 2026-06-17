@@ -48,14 +48,13 @@ const getTextLines = (text = "") => {
 };
 
 const isImportantNote = (item = {}) => {
-  const title = String(item.title || "").toLowerCase();
+  const title = String(item.title || "")
+    .toLowerCase()
+    .trim();
 
-  return (
-    title.includes("important note") ||
-    title.includes("important") ||
-    title.includes("note")
-  );
+  return title.includes("important note") || title.startsWith("important:");
 };
+
 const getButtonHref = (buttonLink) => {
   if (!buttonLink) return "/contact-us";
   return buttonLink === "/contact" ? "/contact-us" : buttonLink;
@@ -426,57 +425,69 @@ function CardsSection({ section, index }) {
           const important = isImportantNote(item);
 
           if (important) {
+            const noteTitle = item.title
+              ?.replace(/important note[:\-]*/i, "")
+              ?.trim();
+
             return (
               <motion.div
                 key={idx}
                 variants={fadeUp}
-                className="relative overflow-hidden rounded-[2.5rem] border border-[#F4B183]/40 bg-linear-to-br from-[#FFF7E8] via-white to-[#E9F8F6] p-7 shadow-2xl shadow-amber-900/10 transition hover:-translate-y-1 hover:shadow-amber-900/15 sm:p-9"
+                className="group relative overflow-hidden rounded-4xl border border-[#F4B183]/35 bg-white p-1 shadow-xl shadow-amber-900/10 transition duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-900/15 sm:rounded-[2.4rem]"
               >
-                <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-[#F4B183]/25 blur-3xl" />
-                <div className="absolute -bottom-20 -left-16 h-52 w-52 rounded-full bg-[#2CB1A6]/15 blur-3xl" />
+                <div className="absolute inset-0 bg-linear-to-br from-[#FFF7E8] via-white to-[#E9F8F6]" />
+                <div className="absolute -right-20 -top-20 h-52 w-52 rounded-full bg-[#F4B183]/25 blur-3xl transition group-hover:bg-[#F4B183]/35" />
+                <div className="absolute -bottom-24 -left-20 h-56 w-56 rounded-full bg-[#2CB1A6]/15 blur-3xl" />
 
-                <div className="relative">
-                  <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-[#102A43] px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-white shadow-lg shadow-blue-950/15">
-                    <AlertTriangle size={16} className="text-[#F4B183]" />
-                    Important Note
+                <div className="relative overflow-hidden rounded-[1.8rem] border border-white/70 bg-white/75 p-6 backdrop-blur-xl sm:rounded-[2.2rem] sm:p-8">
+                  <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
+                    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl bg-[#FFF0D8] text-[#B7791F] shadow-lg shadow-amber-900/10 ring-8 ring-[#FFF7E8]">
+                      <AlertTriangle size={30} strokeWidth={2.5} />
+                    </div>
+
+                    <div>
+                      <div className="inline-flex items-center gap-2 rounded-full bg-[#FFF3DA] px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-[#9A5B00] ring-1 ring-[#F4B183]/30">
+                        Important Note
+                      </div>
+
+                      <h3 className="mt-3 text-2xl font-black leading-tight text-[#102A43] sm:text-3xl">
+                        {noteTitle || "Please Read Before Booking"}
+                      </h3>
+                    </div>
                   </div>
-
-                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-[1.4rem] bg-[#FFF0D8] text-[#B7791F] shadow-lg shadow-amber-900/10">
-                    <AlertTriangle size={32} />
-                  </div>
-
-                  <h3 className="text-3xl font-black leading-tight text-[#102A43] sm:text-4xl">
-                    {item.title}
-                  </h3>
 
                   {item.subtitle && (
-                    <p className="mt-3 text-base font-black text-[#0F766E]">
+                    <p className="rounded-2xl bg-[#E9F8F6] px-5 py-4 text-sm font-black leading-6 text-[#0F766E]">
                       {item.subtitle}
                     </p>
                   )}
 
-                  {item.description && (
-                    <p className="mt-6 whitespace-pre-line text-lg font-bold leading-9 text-slate-700">
-                      {item.description}
-                    </p>
-                  )}
+                  {(item.description || item.content) && (
+                    <div className="mt-5 rounded-3xl border border-[#F4B183]/25 bg-[#FFFBF4] p-5">
+                      {item.description && (
+                        <p className="whitespace-pre-line text-base font-bold leading-8 text-slate-700 sm:text-lg">
+                          {item.description}
+                        </p>
+                      )}
 
-                  {item.content && (
-                    <p className="mt-6 whitespace-pre-line text-lg font-bold leading-9 text-slate-700">
-                      {item.content}
-                    </p>
+                      {item.content && (
+                        <p className="whitespace-pre-line text-base font-bold leading-8 text-slate-700 sm:text-lg">
+                          {item.content}
+                        </p>
+                      )}
+                    </div>
                   )}
 
                   {Array.isArray(item.items) && item.items.length > 0 && (
-                    <ul className="mt-6 space-y-3">
+                    <ul className="mt-5 grid gap-3">
                       {item.items.map((point, pointIndex) => (
                         <li
                           key={pointIndex}
-                          className="flex gap-3 text-base font-bold leading-7 text-slate-700"
+                          className="flex gap-3 rounded-2xl bg-white px-4 py-3 text-sm font-bold leading-6 text-slate-700 shadow-sm ring-1 ring-slate-100 sm:text-base"
                         >
                           <CheckCircle2
                             size={19}
-                            className="mt-1 shrink-0 text-[#2CB1A6]"
+                            className="mt-0.5 shrink-0 text-[#2CB1A6]"
                           />
                           <span>{point}</span>
                         </li>
@@ -485,7 +496,7 @@ function CardsSection({ section, index }) {
                   )}
 
                   {item.buttonText && item.buttonLink && (
-                    <div className="mt-8">
+                    <div className="mt-7">
                       <SmartButton href={item.buttonLink} variant="primary">
                         {item.buttonText}
                         <ArrowRight size={16} />
