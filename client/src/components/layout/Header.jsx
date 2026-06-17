@@ -1,15 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import {
-  CalendarCheck,
-  ChevronDown,
-  Loader2,
-  Menu,
-  MessageCircle,
-  PhoneCall,
-  X,
-} from "lucide-react";
+import { ChevronDown, Loader2, Menu, X } from "lucide-react";
 import { API } from "@/lib/api";
 
 const mainNavLinks = [
@@ -22,9 +14,6 @@ const mainNavLinks = [
   { name: "Free Resources", href: "/free-resources" },
   { name: "Contact", href: "/contact-us" },
 ];
-
-const navItemClass =
-  "inline-flex h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full px-2 text-[13px] font-extrabold text-[#213D56] transition hover:bg-[#E9F8F6] hover:text-[#0F766E] 2xl:px-3 2xl:text-[14px]";
 
 const menuGroups = [
   {
@@ -135,7 +124,9 @@ const Header = () => {
   const fetchServices = async () => {
     try {
       setServicesLoading(true);
+
       const { data } = await API.get("/api/services");
+
       setServices(Array.isArray(data?.data) ? data.data : []);
     } catch (error) {
       console.log("HEADER SERVICES ERROR:", error);
@@ -175,68 +166,132 @@ const Header = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-[#D8F0EE] bg-[#F8FEFD]/95 shadow-sm shadow-teal-900/5 backdrop-blur-2xl">
-        <div className="mx-auto flex h-[76px] w-full max-w-[1760px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-8 xl:grid xl:grid-cols-[330px_minmax(0,1fr)_250px] 2xl:grid-cols-[370px_minmax(0,1fr)_285px]">
+      <header className="sticky top-0 z-50 border-b border-[#D8F0EE] bg-white/95 shadow-sm shadow-teal-900/5 backdrop-blur-2xl">
+        <div className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+          {/* Logo / Brand */}
           <a
             href="/"
-            className="group flex min-w-0 shrink-0 items-center gap-3 rounded-3xl px-1.5 py-1.5 transition hover:bg-[#E9F8F6]"
+            className="group flex min-w-0 shrink-0 items-center gap-3 rounded-2xl transition"
           >
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-[#0F3D5E] via-[#168A83] to-[#54C6B8] text-xl font-black text-white shadow-lg shadow-teal-900/20 transition group-hover:-rotate-3 group-hover:scale-105 2xl:h-13 2xl:w-13">
+            {/* If you have image logo, replace this V box with img */}
+            {/* <img src="/logo.png" alt="Dr. Vini Jhariya" className="h-12 w-auto" /> */}
+
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-[#0F3D5E] via-[#168A83] to-[#54C6B8] text-xl font-black text-white shadow-lg shadow-teal-900/20 transition group-hover:-rotate-3 group-hover:scale-105">
               V
             </span>
 
-            <span className="flex min-w-0 flex-1 flex-col leading-tight">
-              <span className="truncate text-[20px] font-black tracking-tight text-[#0F3D5E] transition group-hover:text-[#0F766E] 2xl:text-[23px]">
+            <span className="flex min-w-0 flex-col leading-tight">
+              <span className="truncate text-[19px] font-black tracking-tight text-[#0F3D5E] transition group-hover:text-[#0F766E] sm:text-[21px]">
                 Dr. Vini Jhariya
               </span>
 
-              <span className="mt-1 flex min-w-0 items-center gap-2 text-[7px] font-black uppercase tracking-[0.18em] text-[#168A83] 2xl:text-[8px]">
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#54C6B8]" />
-                <span className="truncate">
-                  Clinical and Child Psychologist
-                </span>
+              <span className="mt-1 truncate text-[9px] font-black uppercase tracking-[0.16em] text-[#168A83] sm:text-[10px]">
+                Clinical & Child Psychologist
               </span>
             </span>
           </a>
 
-          <nav className="hidden min-w-0 items-center justify-center gap-1 xl:flex 2xl:gap-1.5">
-            {mainNavLinks.slice(2).map((link) => (
-              <a key={link.name} href={link.href} className={navItemClass}>
-                {link.name}
-              </a>
-            ))}
+          {/* Desktop Navigation */}
+          <nav className="hidden items-center justify-end gap-1 xl:flex">
+            <a href="/" className="nav-link">
+              Home
+            </a>
 
-            <button
-              type="button"
+            <a href="/about-dr-vini" className="nav-link">
+              About
+            </a>
+
+            <div
+              className="relative"
               onMouseEnter={() => setOpenMega(true)}
-              onClick={() => setOpenMega((prev) => !prev)}
-              className="inline-flex h-10 shrink-0 items-center justify-center gap-0.5 whitespace-nowrap rounded-full px-2 text-[13px] font-extrabold text-[#213D56] transition hover:bg-[#E9F8F6] hover:text-[#0F766E] 2xl:px-3 2xl:text-[14px]"
+              onMouseLeave={closeMega}
             >
-              Services
-              <ChevronDown
-                size={17}
-                className={`transition ${openMega ? "rotate-180" : ""}`}
-              />
-            </button>
+              <button
+                type="button"
+                onClick={() => setOpenMega((prev) => !prev)}
+                className="nav-link inline-flex items-center gap-1"
+              >
+                Services
+                <ChevronDown
+                  size={16}
+                  className={`transition ${openMega ? "rotate-180" : ""}`}
+                />
+              </button>
 
-            {mainNavLinks.slice(2, 6).map((link) => (
-              <a key={link.name} href={link.href} className={navItemClass}>
-                {link.name}
-              </a>
-            ))}
+              {openMega && (
+                <div className="absolute left-1/2 top-full z-50 mt-4 w-[760px] -translate-x-1/2 rounded-[28px] border border-[#D8F0EE] bg-white p-7 shadow-2xl shadow-slate-900/15">
+                  <button
+                    type="button"
+                    onClick={closeMega}
+                    className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-[#F8FEFD] text-slate-600 transition hover:bg-[#E9F8F6]"
+                    aria-label="Close services menu"
+                  >
+                    <X size={16} />
+                  </button>
+
+                  {servicesLoading ? (
+                    <div className="flex min-h-40 items-center justify-center">
+                      <div className="text-center">
+                        <Loader2 className="mx-auto mb-3 animate-spin text-[#0F766E]" />
+                        <p className="text-sm font-bold text-slate-500">
+                          Loading services...
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-10 pr-8">
+                      {menuGroups.map((group) => (
+                        <div key={group.title}>
+                          <h3 className="mb-4 text-[12px] font-black uppercase tracking-[0.22em] text-[#0F766E]">
+                            {group.title}
+                          </h3>
+
+                          <div className="space-y-2">
+                            {group.services.map((item) => (
+                              <a
+                                key={item.label}
+                                href={getServiceHref(item, activeServices)}
+                                onClick={closeMega}
+                                className="block rounded-xl px-3 py-2 text-[15px] font-bold text-[#213D56] transition hover:bg-[#E9F8F6] hover:text-[#0F766E]"
+                              >
+                                {item.label}
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <a href="/courses" className="nav-link">
+              Courses
+            </a>
+
+            <a href="/internship" className="nav-link">
+              Internship
+            </a>
+
+            <a href="/gallery" className="nav-link">
+              Gallery
+            </a>
+
+            <a href="/blog" className="nav-link">
+              Blog
+            </a>
+
+            <a href="/free-resources" className="nav-link">
+              Free Resources
+            </a>
+
+            <a href="/contact-us" className="nav-link">
+              Contact
+            </a>
           </nav>
 
-          <div className="hidden justify-end xl:flex">
-            <a
-              href="/contact-us"
-              aria-label="Book consultation with Dr. Vini Jhariya"
-              className="inline-flex h-13 items-center justify-center gap-2 whitespace-nowrap rounded-full bg-linear-to-r from-[#0F3D5E] to-[#168A83] px-5 text-[14px] font-black text-white shadow-xl shadow-teal-900/20 transition hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-teal-900/25 2xl:px-6 2xl:text-[15px]"
-            >
-              <CalendarCheck size={19} />
-              <span>Book Consultation</span>
-            </a>
-          </div>
-
+          {/* Mobile Menu Button */}
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
@@ -248,71 +303,7 @@ const Header = () => {
         </div>
       </header>
 
-      {openMega && (
-        <div className="fixed inset-0 z-9999 hidden xl:block">
-          <button
-            type="button"
-            aria-label="Close services menu"
-            onClick={closeMega}
-            className="absolute inset-0 cursor-default bg-transparent"
-          />
-
-          <div
-            onMouseLeave={closeMega}
-            className="absolute left-1/2 top-22 w-[min(940px,calc(100vw-48px))] -translate-x-1/2"
-          >
-            <div className="relative overflow-hidden rounded-4xl border border-slate-200 bg-white shadow-2xl shadow-slate-900/15 ring-1 ring-slate-100">
-              <button
-                type="button"
-                onClick={closeMega}
-                className="absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-700 shadow-md ring-1 ring-slate-200 transition hover:bg-slate-50"
-                aria-label="Close services menu"
-              >
-                <X size={17} />
-              </button>
-
-              <div className="max-h-[calc(100vh-140px)] overflow-y-auto p-8 pr-14 [scrollbar-color:#0F766E_#E9F8F6] [scrollbar-width:thin]">
-                {servicesLoading ? (
-                  <div className="flex min-h-48 items-center justify-center">
-                    <div className="text-center">
-                      <Loader2 className="mx-auto mb-3 animate-spin text-[#0F3D5E]" />
-                      <p className="text-sm font-bold text-slate-500">
-                        Loading services...
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-2 gap-14">
-                    {menuGroups.map((group) => (
-                      <div key={group.title} className="min-w-0">
-                        <h3 className="mb-4 text-[14px] font-black uppercase tracking-[0.25em] text-slate-800">
-                          {group.title}
-                        </h3>
-
-                        <div className="mb-5 h-px w-full bg-slate-300" />
-
-                        <div className="space-y-4">
-                          {group.services.map((item) => (
-                            <a
-                              key={item.label}
-                              href={getServiceHref(item, activeServices)}
-                              onClick={closeMega}
-                              className="block text-[20px] font-semibold leading-tight tracking-wide text-slate-800 transition hover:translate-x-1 hover:text-[#0F766E]"
-                            >
-                              {item.label}
-                            </a>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
+      {/* Mobile Drawer */}
       {mobileOpen && (
         <div className="fixed inset-0 z-9999 bg-slate-950/45 backdrop-blur-sm xl:hidden">
           <button
@@ -322,24 +313,24 @@ const Header = () => {
             className="absolute inset-0 cursor-default"
           />
 
-          <div className="relative ml-auto flex h-full w-[88%] max-w-sm flex-col overflow-hidden bg-[#F8FEFD] shadow-2xl">
-            <div className="shrink-0 border-b border-[#D8F0EE] bg-[#F8FEFD]/95 px-4 py-4 backdrop-blur-xl">
+          <div className="relative ml-auto flex h-full w-[88%] max-w-sm flex-col overflow-hidden bg-white shadow-2xl">
+            <div className="shrink-0 border-b border-[#D8F0EE] px-4 py-4">
               <div className="flex items-center justify-between gap-3">
                 <a
                   href="/"
                   onClick={closeMobileMenu}
-                  className="group flex min-w-0 flex-1 items-center gap-3 rounded-2xl px-1.5 py-1 transition hover:bg-[#E9F8F6]"
+                  className="flex min-w-0 flex-1 items-center gap-3"
                 >
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-[#0F3D5E] via-[#168A83] to-[#54C6B8] text-lg font-black text-white shadow-md shadow-teal-900/20 transition group-hover:-rotate-3 group-hover:scale-105">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-[#0F3D5E] via-[#168A83] to-[#54C6B8] text-lg font-black text-white shadow-md shadow-teal-900/20">
                     V
                   </span>
 
-                  <span className="flex min-w-0 flex-1 flex-col leading-tight">
-                    <span className="truncate text-[16px] font-black tracking-tight text-[#0F3D5E] transition group-hover:text-[#0F766E]">
+                  <span className="flex min-w-0 flex-col leading-tight">
+                    <span className="truncate text-[16px] font-black tracking-tight text-[#0F3D5E]">
                       Dr. Vini Jhariya
                     </span>
 
-                    <span className="mt-1 truncate text-[10px] font-black uppercase tracking-[0.12em] text-[#168A83]">
+                    <span className="mt-1 truncate text-[9px] font-black uppercase tracking-[0.12em] text-[#168A83]">
                       Clinical & Child Psychologist
                     </span>
                   </span>
@@ -349,25 +340,30 @@ const Header = () => {
                   type="button"
                   onClick={closeMobileMenu}
                   aria-label="Close menu"
-                  className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#E9F8F6] text-[#0F766E] transition hover:bg-[#D8F0EE]"
+                  className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#E9F8F6] text-[#0F766E]"
                 >
                   <X size={20} />
                 </button>
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-2 py-5">
-              <div className="space-y-2">
-                {mainNavLinks.slice(0, 2).map((link) => (
-                  <a
-                    key={link.name}
-                    href={link.href}
-                    onClick={closeMobileMenu}
-                    className="block rounded-2xl px-4 py-3 text-base font-bold text-[#24415A] transition hover:bg-[#E9F8F6] hover:text-[#0F766E]"
-                  >
-                    {link.name}
-                  </a>
-                ))}
+            <div className="flex-1 overflow-y-auto px-3 py-5">
+              <div className="space-y-1">
+                <a
+                  href="/"
+                  onClick={closeMobileMenu}
+                  className="mobile-nav-link"
+                >
+                  Home
+                </a>
+
+                <a
+                  href="/about-dr-vini"
+                  onClick={closeMobileMenu}
+                  className="mobile-nav-link"
+                >
+                  About
+                </a>
 
                 <button
                   type="button"
@@ -385,10 +381,10 @@ const Header = () => {
                 </button>
 
                 {mobileServicesOpen && (
-                  <div className="max-h-[48vh] overflow-y-auto rounded-3xl border border-[#D8F0EE] bg-white p-4 shadow-sm [scrollbar-color:#0F766E_#E9F8F6] [scrollbar-width:thin]">
+                  <div className="my-2 max-h-[45vh] overflow-y-auto rounded-3xl border border-[#D8F0EE] bg-[#F8FEFD] p-4">
                     {servicesLoading ? (
                       <div className="py-6 text-center">
-                        <Loader2 className="mx-auto mb-3 animate-spin text-[#0F3D5E]" />
+                        <Loader2 className="mx-auto mb-3 animate-spin text-[#0F766E]" />
                         <p className="text-sm font-bold text-slate-500">
                           Loading services...
                         </p>
@@ -407,7 +403,7 @@ const Header = () => {
                                   key={item.label}
                                   href={getServiceHref(item, activeServices)}
                                   onClick={closeMobileMenu}
-                                  className="block rounded-2xl px-3 py-2.5 text-sm font-bold leading-5 text-[#24415A] transition hover:bg-[#F7FBFC] hover:text-[#0F766E]"
+                                  className="block rounded-2xl px-3 py-2.5 text-sm font-bold leading-5 text-[#24415A] transition hover:bg-white hover:text-[#0F766E]"
                                 >
                                   {item.label}
                                 </a>
@@ -425,52 +421,59 @@ const Header = () => {
                     key={link.name}
                     href={link.href}
                     onClick={closeMobileMenu}
-                    className="block rounded-2xl px-4 py-3 text-base font-bold text-[#24415A] transition hover:bg-[#E9F8F6] hover:text-[#0F766E]"
+                    className="mobile-nav-link"
                   >
                     {link.name}
                   </a>
                 ))}
               </div>
-
-              <div className="mt-8 grid grid-cols-2 gap-3">
-                <a
-                  href="tel:+917999215093"
-                  onClick={closeMobileMenu}
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-[#BFE6E2] bg-white px-4 py-3 text-sm font-bold text-[#0F766E] shadow-sm transition hover:bg-[#E9F8F6]"
-                >
-                  <PhoneCall size={17} />
-                  Call
-                </a>
-
-                <a
-                  href="https://wa.me/917999215093"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={closeMobileMenu}
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-[#BFE6E2] bg-white px-4 py-3 text-sm font-bold text-[#0F766E] shadow-sm transition hover:bg-[#E9F8F6]"
-                >
-                  <MessageCircle size={17} />
-                  WhatsApp
-                </a>
-              </div>
-
-              <a
-                href="/contact-us"
-                onClick={closeMobileMenu}
-                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-linear-to-r from-[#0F3D5E] to-[#168A83] px-5 py-4 text-sm font-bold text-white shadow-xl shadow-teal-900/20 transition hover:scale-[1.01]"
-              >
-                <CalendarCheck size={18} />
-                Book Consultation
-              </a>
-
-              <p className="mx-auto mt-5 max-w-75 text-center text-xs font-semibold leading-5 text-slate-500">
-                100-A, Baikunth Dham Colony, Old Palasia, Saket, Indore, Madhya
-                Pradesh — 452018
-              </p>
             </div>
           </div>
         </div>
       )}
+
+      <style jsx>{`
+        .nav-link {
+          display: inline-flex;
+          height: 42px;
+          align-items: center;
+          justify-content: center;
+          white-space: nowrap;
+          border-radius: 9999px;
+          padding: 0 10px;
+          font-size: 13.5px;
+          font-weight: 800;
+          color: #213d56;
+          transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+          background: #e9f8f6;
+          color: #0f766e;
+        }
+
+        .mobile-nav-link {
+          display: block;
+          border-radius: 16px;
+          padding: 12px 16px;
+          font-size: 16px;
+          font-weight: 700;
+          color: #24415a;
+          transition: all 0.2s ease;
+        }
+
+        .mobile-nav-link:hover {
+          background: #e9f8f6;
+          color: #0f766e;
+        }
+
+        @media (min-width: 1536px) {
+          .nav-link {
+            padding: 0 14px;
+            font-size: 14.5px;
+          }
+        }
+      `}</style>
     </>
   );
 };
