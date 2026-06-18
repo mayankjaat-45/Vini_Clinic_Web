@@ -8,7 +8,7 @@ const mainNavLinks = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about-dr-vini" },
   { name: "Courses", href: "/courses" },
-  { name: "Internship", href: "/internship" },
+  { name: "Internship", href: "/psychology-internship-indore" },
   { name: "Gallery", href: "/gallery" },
   { name: "Blog", href: "/blog" },
   { name: "Free Resources", href: "/free-resources" },
