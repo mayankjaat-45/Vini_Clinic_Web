@@ -403,10 +403,13 @@ function TextSection({ section, index }) {
 function CardsSection({ section, index }) {
   const items = Array.isArray(section.items) ? section.items : [];
 
+  const importantItems = items.filter((item) => isImportantNote(item));
+  const normalItems = items.filter((item) => !isImportantNote(item));
+
   const gridClass =
-    items.length === 1
+    normalItems.length === 1
       ? "mx-auto max-w-4xl"
-      : items.length === 2
+      : normalItems.length === 2
         ? "mx-auto max-w-5xl grid md:grid-cols-2"
         : "grid md:grid-cols-2 xl:grid-cols-3";
 
@@ -414,101 +417,15 @@ function CardsSection({ section, index }) {
     <SectionWrapper className={index % 2 === 0 ? "bg-white/40" : ""}>
       <SectionHeading section={section} center />
 
-      <motion.div
-        variants={staggerContainer}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.12 }}
-        className={`mt-10 gap-5 ${gridClass}`}
-      >
-        {items.map((item, idx) => {
-          const important = isImportantNote(item);
-
-          if (important) {
-            const noteTitle = item.title
-              ?.replace(/important note[:\-]*/i, "")
-              ?.trim();
-
-            return (
-              <motion.div
-                key={idx}
-                variants={fadeUp}
-                className="group relative overflow-hidden rounded-4xl border border-[#F4B183]/35 bg-white p-1 shadow-xl shadow-amber-900/10 transition duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-900/15 sm:rounded-[2.4rem]"
-              >
-                <div className="absolute inset-0 bg-linear-to-br from-[#FFF7E8] via-white to-[#E9F8F6]" />
-                <div className="absolute -right-20 -top-20 h-52 w-52 rounded-full bg-[#F4B183]/25 blur-3xl transition group-hover:bg-[#F4B183]/35" />
-                <div className="absolute -bottom-24 -left-20 h-56 w-56 rounded-full bg-[#2CB1A6]/15 blur-3xl" />
-
-                <div className="relative overflow-hidden rounded-[1.8rem] border border-white/70 bg-white/75 p-6 backdrop-blur-xl sm:rounded-[2.2rem] sm:p-8">
-                  <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
-                    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl bg-[#FFF0D8] text-[#B7791F] shadow-lg shadow-amber-900/10 ring-8 ring-[#FFF7E8]">
-                      <AlertTriangle size={30} strokeWidth={2.5} />
-                    </div>
-
-                    <div>
-                      <div className="inline-flex items-center gap-2 rounded-full bg-[#FFF3DA] px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-[#9A5B00] ring-1 ring-[#F4B183]/30">
-                        Important Note
-                      </div>
-
-                      <h3 className="mt-3 text-2xl font-black leading-tight text-[#102A43] sm:text-3xl">
-                        {noteTitle || "Please Read Before Booking"}
-                      </h3>
-                    </div>
-                  </div>
-
-                  {item.subtitle && (
-                    <p className="rounded-2xl bg-[#E9F8F6] px-5 py-4 text-sm font-black leading-6 text-[#0F766E]">
-                      {item.subtitle}
-                    </p>
-                  )}
-
-                  {(item.description || item.content) && (
-                    <div className="mt-5 rounded-3xl border border-[#F4B183]/25 bg-[#FFFBF4] p-5">
-                      {item.description && (
-                        <p className="whitespace-pre-line text-base font-bold leading-8 text-slate-700 sm:text-lg">
-                          {item.description}
-                        </p>
-                      )}
-
-                      {item.content && (
-                        <p className="whitespace-pre-line text-base font-bold leading-8 text-slate-700 sm:text-lg">
-                          {item.content}
-                        </p>
-                      )}
-                    </div>
-                  )}
-
-                  {Array.isArray(item.items) && item.items.length > 0 && (
-                    <ul className="mt-5 grid gap-3">
-                      {item.items.map((point, pointIndex) => (
-                        <li
-                          key={pointIndex}
-                          className="flex gap-3 rounded-2xl bg-white px-4 py-3 text-sm font-bold leading-6 text-slate-700 shadow-sm ring-1 ring-slate-100 sm:text-base"
-                        >
-                          <CheckCircle2
-                            size={19}
-                            className="mt-0.5 shrink-0 text-[#2CB1A6]"
-                          />
-                          <span>{point}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-
-                  {item.buttonText && item.buttonLink && (
-                    <div className="mt-7">
-                      <SmartButton href={item.buttonLink} variant="primary">
-                        {item.buttonText}
-                        <ArrowRight size={16} />
-                      </SmartButton>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            );
-          }
-
-          return (
+      {normalItems.length > 0 && (
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.12 }}
+          className={`mt-10 gap-5 ${gridClass}`}
+        >
+          {normalItems.map((item, idx) => (
             <motion.div
               key={idx}
               variants={fadeUp}
@@ -566,9 +483,44 @@ function CardsSection({ section, index }) {
                 </div>
               )}
             </motion.div>
-          );
-        })}
-      </motion.div>
+          ))}
+        </motion.div>
+      )}
+
+      {importantItems.length > 0 && (
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.12 }}
+          className="mx-auto mt-7 max-w-6xl space-y-3"
+        >
+          {importantItems.map((item, idx) => {
+            const noteText =
+              item.description ||
+              item.content ||
+              item.subtitle ||
+              "Please read this important note carefully.";
+
+            return (
+              <motion.div key={idx} variants={fadeUp} className="w-full">
+                <div className="flex w-full items-start gap-3 border-l-4 border-[#F4B183] bg-[#FFF8ED] px-4 py-3 text-left sm:items-center sm:px-5">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F4B183]/20 text-[#B7791F]">
+                    <AlertTriangle size={17} strokeWidth={2.6} />
+                  </div>
+
+                  <p className="text-sm font-bold leading-7 text-[#102A43] sm:text-base">
+                    <span className="mr-2 font-black text-[#B7791F]">
+                      Important Note:
+                    </span>
+                    {noteText}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      )}
     </SectionWrapper>
   );
 }
