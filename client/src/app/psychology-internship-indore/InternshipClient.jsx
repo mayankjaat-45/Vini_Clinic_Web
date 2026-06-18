@@ -304,7 +304,7 @@ export default function InternshipClient() {
         payload.append("resume", resume);
       }
 
-      const { data } = await API.post("/api/internships/apply", payload, {
+      const { data } = await API.post("/api/internship/apply", payload, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

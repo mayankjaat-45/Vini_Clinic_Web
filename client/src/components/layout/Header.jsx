@@ -7,7 +7,7 @@ import { API } from "@/lib/api";
 const mainNavLinks = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about-dr-vini" },
-  { name: "Courses", href: "/courses" },
+  { name: "Courses", href: "/workshops-and-courses" },
   { name: "Internship", href: "/psychology-internship-indore" },
   { name: "Gallery", href: "/gallery" },
   { name: "Blog", href: "/blog" },
@@ -201,11 +201,7 @@ const Header = () => {
               About
             </a>
 
-            <div
-              className="relative"
-              onMouseEnter={() => setOpenMega(true)}
-              onMouseLeave={closeMega}
-            >
+            <div className="relative" onMouseEnter={() => setOpenMega(true)}>
               <button
                 type="button"
                 onClick={() => setOpenMega((prev) => !prev)}
@@ -266,11 +262,11 @@ const Header = () => {
               )}
             </div>
 
-            <a href="/courses" className="nav-link">
+            <a href="/workshops-and-courses" className="nav-link">
               Courses
             </a>
 
-            <a href="/internship" className="nav-link">
+            <a href="/psychology-internship-indore" className="nav-link">
               Internship
             </a>
 

@@ -40,10 +40,12 @@ const internshipApplicationSchema = new mongoose.Schema(
     programInterested: {
       type: String,
       enum: [
-        "Child Psychology Internship",
-        "Clinical Psychology Internship",
-        "School Psychology Internship",
-        "Special Education Internship",
+        "Class 11 & 12 Students",
+        "Undergraduate Students",
+        "Postgraduate Students",
+        "M.Phil Clinical Psychology Students",
+        "BEd Special Education Students",
+        "NRI & International Psychology Students",
         "Not Sure",
       ],
       default: "Not Sure",
@@ -51,7 +53,7 @@ const internshipApplicationSchema = new mongoose.Schema(
 
     preferredMode: {
       type: String,
-      enum: ["Online", "Offline", "Hybrid", "Not Sure"],
+      enum: ["Online", "Offline / In-clinic", "Hybrid", "Not Sure"],
       default: "Not Sure",
     },
 
@@ -84,9 +86,8 @@ const internshipApplicationSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-const InternshipApplication = mongoose.model(
-  "InternshipApplication",
-  internshipApplicationSchema,
-);
+const InternshipApplication =
+  mongoose.models.InternshipApplication ||
+  mongoose.model("InternshipApplication", internshipApplicationSchema);
 
 export default InternshipApplication;
