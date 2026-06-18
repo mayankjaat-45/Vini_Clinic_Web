@@ -41,7 +41,7 @@ export default function AdminInternshipsPage() {
     try {
       setLoading(true);
 
-      const { data } = await API.get("/api/internships/admin/all", {
+      const { data } = await API.get("/api/internship/admin/all", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -87,7 +87,7 @@ export default function AdminInternshipsPage() {
     try {
       setUpdatingId(id);
 
-      await API.patch(`/api/internships/admin/${id}/status`, payload, {
+      await API.patch(`/api/internship/admin/${id}/status`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -113,7 +113,7 @@ export default function AdminInternshipsPage() {
     const token = getToken();
 
     try {
-      await API.delete(`/api/internships/admin/${id}`, {
+      await API.delete(`/api/internship/admin/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
