@@ -776,8 +776,7 @@ export default function InternshipClient() {
               </button>
 
               <p className="text-sm font-semibold leading-6 text-slate-500">
-                WhatsApp: +91 7999215093 | Email:
-                thechildpsychologistvini@gmail.com
+                WhatsApp: +91 7999215093 | Email: dr.vinijhariya@gmail.com
               </p>
             </form>
           </motion.div>
