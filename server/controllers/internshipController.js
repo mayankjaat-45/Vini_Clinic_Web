@@ -4,6 +4,7 @@ import sendMail from "../utils/sendMail.js";
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
 
 // Public
+// Public
 export const createInternshipApplication = async (req, res) => {
   try {
     const {
@@ -55,145 +56,164 @@ export const createInternshipApplication = async (req, res) => {
       resume,
     });
 
-    // Mail to client/admin
-    await sendMail({
-      to: process.env.CLIENT_MAIL,
-      subject: "New Internship Application Received",
-      html: `
-        <div style="font-family: Arial, sans-serif; background:#f6f9fc; padding:20px;">
-          <div style="max-width:650px; margin:auto; background:#ffffff; border-radius:12px; padding:24px; border:1px solid #e5e7eb;">
-            
-            <h2 style="color:#0F3D5E; margin-top:0;">
-              New Internship Application
-            </h2>
-
-            <p style="font-size:15px; color:#334155;">
-              A new student has submitted an internship application from the website.
-            </p>
-
-            <table style="width:100%; border-collapse:collapse; margin-top:20px;">
-              <tr>
-                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Full Name</td>
-                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${fullName}</td>
-              </tr>
-
-              <tr>
-                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Email</td>
-                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${email}</td>
-              </tr>
-
-              <tr>
-                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Phone</td>
-                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${phone}</td>
-              </tr>
-
-              <tr>
-                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">City</td>
-                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${city || "Not provided"}</td>
-              </tr>
-
-              <tr>
-                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Qualification</td>
-                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${qualification}</td>
-              </tr>
-
-              <tr>
-                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">College / University</td>
-                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${college || "Not provided"}</td>
-              </tr>
-
-              <tr>
-                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Internship Category</td>
-                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${programInterested || "Not Sure"}</td>
-              </tr>
-
-              <tr>
-                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Preferred Format</td>
-                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${preferredMode || "Not Sure"}</td>
-              </tr>
-
-              <tr>
-                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Preferred Duration</td>
-                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${duration || "Not provided"}</td>
-              </tr>
-
-              <tr>
-                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Message</td>
-                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${message || "Not provided"}</td>
-              </tr>
-
-              <tr>
-                <td style="padding:10px; font-weight:bold;">Resume</td>
-                <td style="padding:10px;">
-                  ${
-                    resume?.url
-                      ? `<a href="${resume.url}" target="_blank" style="color:#0F766E; font-weight:bold;">View Resume</a>`
-                      : "No resume uploaded"
-                  }
-                </td>
-              </tr>
-            </table>
-
-            <p style="margin-top:24px; font-size:13px; color:#64748b;">
-              This application was submitted from the Urjasvini CDC website internship form.
-            </p>
-
-          </div>
-        </div>
-      `,
+    console.log("MAIL ENV CHECK:", {
+      MAIL_HOST: process.env.MAIL_HOST,
+      MAIL_PORT: process.env.MAIL_PORT,
+      MAIL_USER: process.env.MAIL_USER,
+      CLIENT_MAIL: process.env.CLIENT_MAIL,
+      HAS_MAIL_PASS: Boolean(process.env.MAIL_PASS),
     });
 
-    // Confirmation mail to student
-    await sendMail({
-      to: email,
-      subject: "Your Internship Application Has Been Received",
-      html: `
-        <div style="font-family: Arial, sans-serif; background:#f6f9fc; padding:20px;">
-          <div style="max-width:650px; margin:auto; background:#ffffff; border-radius:12px; padding:24px; border:1px solid #e5e7eb;">
-            
-            <h2 style="color:#0F3D5E; margin-top:0;">
-              Thank you for applying, ${fullName}
-            </h2>
+    const adminMailHtml = `
+      <div style="font-family: Arial, sans-serif; background:#f6f9fc; padding:20px;">
+        <div style="max-width:650px; margin:auto; background:#ffffff; border-radius:12px; padding:24px; border:1px solid #e5e7eb;">
+          
+          <h2 style="color:#0F3D5E; margin-top:0;">
+            New Internship Application
+          </h2>
 
-            <p style="font-size:15px; color:#334155; line-height:1.7;">
-              We have received your internship application at Urjasvini Child Development Centre.
-            </p>
+          <p style="font-size:15px; color:#334155;">
+            A new student has submitted an internship application from the website.
+          </p>
 
-            <p style="font-size:15px; color:#334155; line-height:1.7;">
-              Our team will review your details and contact you shortly regarding the internship structure, fee details, documentation requirements, and next steps.
-            </p>
+          <table style="width:100%; border-collapse:collapse; margin-top:20px;">
+            <tr>
+              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Full Name</td>
+              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${fullName}</td>
+            </tr>
 
-            <div style="background:#E9F8F6; border-radius:12px; padding:16px; margin-top:20px;">
-              <p style="margin:0; font-size:14px; color:#0F3D5E;">
-                <strong>Applied Category:</strong> ${programInterested || "Not Sure"}
-              </p>
-              <p style="margin:8px 0 0; font-size:14px; color:#0F3D5E;">
-                <strong>Preferred Format:</strong> ${preferredMode || "Not Sure"}
-              </p>
-              <p style="margin:8px 0 0; font-size:14px; color:#0F3D5E;">
-                <strong>Qualification:</strong> ${qualification}
-              </p>
-            </div>
+            <tr>
+              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Email</td>
+              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${email}</td>
+            </tr>
 
-            <p style="font-size:15px; color:#334155; line-height:1.7; margin-top:20px;">
-              For urgent queries, you can contact us on WhatsApp:
-              <strong>+91 7999215093</strong>
-            </p>
+            <tr>
+              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Phone</td>
+              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${phone}</td>
+            </tr>
 
-            <p style="margin-top:24px; font-size:14px; color:#64748b;">
-              Regards,<br/>
-              Team Urjasvini CDC
-            </p>
+            <tr>
+              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">City</td>
+              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${city || "Not provided"}</td>
+            </tr>
 
-          </div>
+            <tr>
+              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Qualification</td>
+              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${qualification}</td>
+            </tr>
+
+            <tr>
+              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">College / University</td>
+              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${college || "Not provided"}</td>
+            </tr>
+
+            <tr>
+              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Internship Category</td>
+              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${programInterested || "Not Sure"}</td>
+            </tr>
+
+            <tr>
+              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Preferred Format</td>
+              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${preferredMode || "Not Sure"}</td>
+            </tr>
+
+            <tr>
+              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Preferred Duration</td>
+              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${duration || "Not provided"}</td>
+            </tr>
+
+            <tr>
+              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Message</td>
+              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${message || "Not provided"}</td>
+            </tr>
+
+            <tr>
+              <td style="padding:10px; font-weight:bold;">Resume</td>
+              <td style="padding:10px;">
+                ${
+                  resume?.url
+                    ? `<a href="${resume.url}" target="_blank" style="color:#0F766E; font-weight:bold;">View Resume</a>`
+                    : "No resume uploaded"
+                }
+              </td>
+            </tr>
+          </table>
+
+          <p style="margin-top:24px; font-size:13px; color:#64748b;">
+            This application was submitted from the Urjasvini CDC website internship form.
+          </p>
+
         </div>
-      `,
-    });
+      </div>
+    `;
+
+    const studentMailHtml = `
+      <div style="font-family: Arial, sans-serif; background:#f6f9fc; padding:20px;">
+        <div style="max-width:650px; margin:auto; background:#ffffff; border-radius:12px; padding:24px; border:1px solid #e5e7eb;">
+          
+          <h2 style="color:#0F3D5E; margin-top:0;">
+            Thank you for applying, ${fullName}
+          </h2>
+
+          <p style="font-size:15px; color:#334155; line-height:1.7;">
+            We have received your internship application at Urjasvini Child Development Centre.
+          </p>
+
+          <p style="font-size:15px; color:#334155; line-height:1.7;">
+            Our team will review your details and contact you shortly regarding the internship structure, fee details, documentation requirements, and next steps.
+          </p>
+
+          <div style="background:#E9F8F6; border-radius:12px; padding:16px; margin-top:20px;">
+            <p style="margin:0; font-size:14px; color:#0F3D5E;">
+              <strong>Applied Category:</strong> ${programInterested || "Not Sure"}
+            </p>
+            <p style="margin:8px 0 0; font-size:14px; color:#0F3D5E;">
+              <strong>Preferred Format:</strong> ${preferredMode || "Not Sure"}
+            </p>
+            <p style="margin:8px 0 0; font-size:14px; color:#0F3D5E;">
+              <strong>Qualification:</strong> ${qualification}
+            </p>
+          </div>
+
+          <p style="font-size:15px; color:#334155; line-height:1.7; margin-top:20px;">
+            For urgent queries, you can contact us on WhatsApp:
+            <strong>+91 7999215093</strong>
+          </p>
+
+          <p style="margin-top:24px; font-size:14px; color:#64748b;">
+            Regards,<br/>
+            Team Urjasvini CDC
+          </p>
+
+        </div>
+      </div>
+    `;
+
+    const mailResults = await Promise.allSettled([
+      sendMail({
+        to: process.env.CLIENT_MAIL,
+        subject: "New Internship Application Received",
+        html: adminMailHtml,
+        replyTo: email,
+      }),
+
+      sendMail({
+        to: email,
+        subject: "Your Internship Application Has Been Received",
+        html: studentMailHtml,
+      }),
+    ]);
+
+    console.log("INTERNSHIP MAIL RESULTS:", mailResults);
 
     res.status(201).json({
       success: true,
       message: "Internship application submitted successfully",
       data: application,
+      mailStatus: mailResults.map((result) => ({
+        status: result.status,
+        reason: result.reason?.message || null,
+      })),
     });
   } catch (error) {
     console.log("INTERNSHIP APPLICATION ERROR:", error);
