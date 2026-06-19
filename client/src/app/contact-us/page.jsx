@@ -221,7 +221,11 @@ export default function ContactUsPage() {
       return "Please enter a valid 10-digit phone number.";
     }
 
-    if (formData.email && !/^\S+@\S+\.\S+$/.test(formData.email)) {
+    if (!formData.email.trim()) {
+      return "Please enter your email address.";
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
       return "Please enter a valid email address.";
     }
 
@@ -229,6 +233,10 @@ export default function ContactUsPage() {
 
     if (showChildAge && !formData.childAge.trim()) {
       return "Please enter child / teenager age.";
+    }
+
+    if (!formData.concern.trim()) {
+      return "Please enter your primary concern.";
     }
 
     if (!formData.preferredMode) {
@@ -255,15 +263,18 @@ export default function ContactUsPage() {
         name: formData.name.trim(),
         phone: formData.phone.trim(),
         email: formData.email.trim(),
-        enquiryFor: formData.enquiryFor,
-        childAge: showChildAge ? formData.childAge.trim() : "",
-        message: formData.concern.trim(),
-        concern: formData.concern.trim(),
         consultationType: formData.enquiryFor,
         preferredMode: formData.preferredMode,
-        preferredTime: formData.preferredTime,
-        preferredDate: formData.preferredTime,
-        heardFrom: formData.heardFrom,
+        preferredDate: formData.preferredTime || "Not provided",
+        message: `
+Enquiry For: ${formData.enquiryFor}
+${showChildAge ? `Child / Teenager Age: ${formData.childAge}` : ""}
+Preferred Time: ${formData.preferredTime || "Not provided"}
+Heard From: ${formData.heardFrom || "Not provided"}
+
+Concern:
+${formData.concern}
+  `.trim(),
       };
 
       const { data } = await API.post("/api/contact-enquiries", payload);
@@ -439,7 +450,7 @@ export default function ContactUsPage() {
 
             <div className="grid gap-5 md:grid-cols-2">
               <FormInput
-                label="Email Address"
+                label="Email Address *"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
