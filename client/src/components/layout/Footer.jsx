@@ -291,9 +291,17 @@ const Footer = () => {
         <div className="mt-8 border-t border-white/10 pt-6">
           <div className="flex flex-col gap-3 text-center text-xs font-semibold text-white/45 sm:flex-row sm:items-center sm:justify-between sm:text-left">
             <p>© 2026 Dr. Vini Jhariya. All rights reserved.</p>
+
             <p>
-              Urjasvini Child Development Centre | Clinical & Child Psychologist
-              in Indore
+              Designed and Developed by{" "}
+              <a
+                href="https://maytech-solutions.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-black text-[#A8F0E9] transition hover:text-white"
+              >
+                Maytech Solution
+              </a>
             </p>
           </div>
         </div>
