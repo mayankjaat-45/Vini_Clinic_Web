@@ -6,11 +6,16 @@ import {
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
+  Brain,
+  CalendarCheck,
   CheckCircle2,
   ClipboardCheck,
   HelpCircle,
+  HeartHandshake,
   MessageCircle,
   Quote,
+  Route,
+  ShieldCheck,
   Sparkles,
 } from "lucide-react";
 
@@ -67,17 +72,12 @@ const isExternalLink = (link = "") => {
 function SmartButton({ href, children, variant = "primary" }) {
   const classes =
     variant === "secondary"
-      ? "inline-flex items-center justify-center gap-2 rounded-full border border-[#0F3D5E]/15 bg-white px-6 py-3 text-sm font-black text-[#0F3D5E] shadow-sm transition hover:-translate-y-1 hover:border-[#2CB1A6] hover:text-[#2CB1A6]"
+      ? "inline-flex items-center justify-center gap-2 rounded-full border border-[#0F3D5E]/15 bg-white px-6 py-3 text-sm font-black text-[#0F3D5E] shadow-sm transition hover:-translate-y-1 hover:border-[#2CB1A6] hover:bg-[#E9F8F6] hover:text-[#0F766E]"
       : "inline-flex items-center justify-center gap-2 rounded-full bg-[#0F3D5E] px-6 py-3 text-sm font-black text-white shadow-xl shadow-blue-950/15 transition hover:-translate-y-1 hover:bg-[#102A43]";
 
   if (isExternalLink(href)) {
     return (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={classes}
-      >
+      <a href={href} target="_blank" rel="noopener noreferrer" className={classes}>
         {children}
       </a>
     );
@@ -100,11 +100,15 @@ export default function ServiceDetailClient({ service }) {
           transition={{ duration: 0.45 }}
           className="max-w-xl rounded-4xl bg-white p-8 text-center shadow-xl sm:p-10 md:rounded-[3rem]"
         >
+          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-red-50 text-red-500">
+            <AlertTriangle size={32} />
+          </div>
+
           <h1 className="text-3xl font-black text-[#102A43]">
             Service not found
           </h1>
 
-          <p className="mt-3 text-slate-600">
+          <p className="mt-3 font-semibold leading-7 text-slate-600">
             This service may have been removed or hidden.
           </p>
 
@@ -143,7 +147,7 @@ export default function ServiceDetailClient({ service }) {
 
   return (
     <main className="overflow-hidden bg-[#F7FBFC]">
-      <section className="relative px-4 py-20 sm:px-5 md:py-24">
+      <section className="relative px-4 pb-16 pt-20 sm:px-5 md:pb-20 md:pt-24">
         <motion.div
           initial={{ opacity: 0, scale: 0.75 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -162,19 +166,15 @@ export default function ServiceDetailClient({ service }) {
           <motion.div variants={fadeUp} initial="hidden" animate="show">
             <Link
               href="/services"
-              className="mb-8 inline-flex items-center gap-2 text-sm font-black text-[#0F3D5E] transition hover:text-[#2CB1A6]"
+              className="mb-8 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-[#0F3D5E] shadow-sm transition hover:text-[#2CB1A6]"
             >
               <ArrowLeft size={16} />
               Back to Services
             </Link>
           </motion.div>
 
-          <div className="grid gap-10 lg:grid-cols-[1fr_430px] lg:items-center">
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              animate="show"
-            >
+          <div className="grid gap-10 lg:grid-cols-[1fr_440px] lg:items-center">
+            <motion.div variants={staggerContainer} initial="hidden" animate="show">
               <motion.div
                 variants={fadeUp}
                 className="mb-6 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm sm:text-sm"
@@ -193,7 +193,7 @@ export default function ServiceDetailClient({ service }) {
               {heroSubtitle && (
                 <motion.p
                   variants={fadeUp}
-                  className="mt-6 text-lg font-black leading-8 text-[#0F3D5E] sm:text-xl md:leading-9"
+                  className="mt-6 max-w-4xl text-lg font-black leading-8 text-[#0F3D5E] sm:text-xl md:leading-9"
                 >
                   {heroSubtitle}
                 </motion.p>
@@ -202,7 +202,7 @@ export default function ServiceDetailClient({ service }) {
               {heroParagraph && (
                 <motion.div
                   variants={fadeUp}
-                  className="mt-5 space-y-4 text-base font-semibold leading-8 text-slate-600 sm:text-lg"
+                  className="mt-5 max-w-4xl space-y-4 text-base font-semibold leading-8 text-slate-600 sm:text-lg"
                 >
                   {getTextLines(heroParagraph).map((line, index) => (
                     <p key={index}>{line}</p>
@@ -210,10 +210,29 @@ export default function ServiceDetailClient({ service }) {
                 </motion.div>
               )}
 
+              <motion.div
+                variants={fadeUp}
+                className="mt-7 grid gap-3 sm:grid-cols-3"
+              >
+                {[
+                  "Clear guidance",
+                  "Parent-friendly approach",
+                  "Online + Indore support",
+                ].map((point) => (
+                  <div
+                    key={point}
+                    className="flex items-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-black text-[#0F3D5E] shadow-sm"
+                  >
+                    <CheckCircle2 size={17} className="text-[#2CB1A6]" />
+                    {point}
+                  </div>
+                ))}
+              </motion.div>
+
               {hero.trustLine && (
                 <motion.p
                   variants={fadeUp}
-                  className="mt-6 rounded-2xl bg-white px-5 py-4 text-sm font-black leading-6 text-[#0F3D5E] shadow-sm"
+                  className="mt-6 rounded-2xl border border-[#2CB1A6]/15 bg-white px-5 py-4 text-sm font-black leading-6 text-[#0F3D5E] shadow-sm"
                 >
                   {hero.trustLine}
                 </motion.p>
@@ -245,43 +264,79 @@ export default function ServiceDetailClient({ service }) {
               variants={fadeRight}
               initial="hidden"
               animate="show"
-              className="rounded-4xl bg-white p-5 shadow-2xl shadow-slate-900/10 md:rounded-[3rem]"
+              className="rounded-4xl bg-white p-4 shadow-2xl shadow-slate-900/10 md:rounded-[3rem] md:p-5"
             >
-              <div className="relative overflow-hidden rounded-[1.6rem] bg-linear-to-br from-[#0F3D5E] to-[#168A83] p-8 text-white md:rounded-[2.4rem]">
-                <motion.div
-                  animate={{ y: [0, -8, 0] }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                  className="mb-8 inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-white/15"
-                >
-                  <Sparkles size={34} className="text-[#F4B183]" />
-                </motion.div>
+              <div className="relative overflow-hidden rounded-[1.6rem] bg-linear-to-br from-[#0F3D5E] to-[#168A83] p-7 text-white md:rounded-[2.4rem] md:p-8">
+                <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
+                <div className="absolute -bottom-20 left-10 h-56 w-56 rounded-full bg-[#F4B183]/20 blur-3xl" />
 
-                <p className="text-sm font-bold uppercase tracking-[0.25em] text-white/60">
-                  Dr. Vini Jhariya
-                </p>
+                <div className="relative">
+                  <motion.div
+                    animate={{ y: [0, -8, 0] }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    className="mb-8 inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-white/15"
+                  >
+                    <HeartHandshake size={34} className="text-[#F4B183]" />
+                  </motion.div>
 
-                <h2 className="mt-4 text-3xl font-black leading-tight sm:text-4xl">
-                  Listen. Assess. Understand. Plan.
-                </h2>
-
-                <p className="mt-5 text-sm font-semibold leading-7 text-white/75 sm:text-base">
-                  The right support begins with understanding the real reason
-                  behind behaviour, emotions, learning or developmental
-                  concerns.
-                </p>
-
-                <div className="mt-8 rounded-3xl bg-white/10 p-5">
-                  <p className="text-sm font-black text-[#F4B183]">
-                    Available in Indore & Online
+                  <p className="text-sm font-bold uppercase tracking-[0.25em] text-white/60">
+                    Dr. Vini Jhariya
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-white/75">
-                    Clinical support for children, adolescents, adults, couples
-                    and families.
+
+                  <h2 className="mt-4 text-3xl font-black leading-tight sm:text-4xl">
+                    Understand first. Then support.
+                  </h2>
+
+                  <p className="mt-5 text-sm font-semibold leading-7 text-white/75 sm:text-base">
+                    The right support begins with understanding the real reason
+                    behind behaviour, emotions, learning or developmental
+                    concerns.
                   </p>
+
+                  <div className="mt-8 space-y-3">
+                    {[
+                      {
+                        icon: Brain,
+                        title: "Assessment-led clarity",
+                      },
+                      {
+                        icon: Route,
+                        title: "Personalised care plan",
+                      },
+                      {
+                        icon: ShieldCheck,
+                        title: "Safe and confidential support",
+                      },
+                    ].map((item) => {
+                      const Icon = item.icon;
+
+                      return (
+                        <div
+                          key={item.title}
+                          className="flex items-center gap-3 rounded-2xl bg-white/10 px-4 py-3"
+                        >
+                          <Icon size={19} className="text-[#F4B183]" />
+                          <span className="text-sm font-black">
+                            {item.title}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className="mt-8 rounded-3xl bg-white/10 p-5">
+                    <p className="text-sm font-black text-[#F4B183]">
+                      Available in Indore & Online
+                    </p>
+                    <p className="mt-2 text-sm font-semibold leading-6 text-white/75">
+                      Clinical support for children, adolescents, adults,
+                      couples and families.
+                    </p>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -310,7 +365,7 @@ export default function ServiceDetailClient({ service }) {
 
 function SectionWrapper({ children, className = "" }) {
   return (
-    <section className={`px-4 py-14 sm:px-5 md:py-18 ${className}`}>
+    <section className={`px-4 py-14 sm:px-5 md:py-20 ${className}`}>
       <div className="mx-auto max-w-7xl">{children}</div>
     </section>
   );
@@ -325,6 +380,15 @@ function SectionHeading({ section, center = false }) {
       viewport={{ once: true, amount: 0.2 }}
       className={center ? "mx-auto max-w-4xl text-center" : "max-w-4xl"}
     >
+      <div
+        className={`mb-5 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm ${
+          center ? "mx-auto" : ""
+        }`}
+      >
+        <Sparkles size={15} className="text-[#2CB1A6]" />
+        Service Guide
+      </div>
+
       <h2 className="whitespace-pre-line text-3xl font-black leading-tight text-[#102A43] sm:text-4xl md:text-5xl">
         {section.title}
       </h2>
@@ -377,7 +441,7 @@ function TextSection({ section, index }) {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
-          className="rounded-4xl bg-white p-6 shadow-xl shadow-slate-900/5 sm:p-8"
+          className="rounded-4xl border border-white bg-white p-6 shadow-xl shadow-slate-900/5 sm:p-8"
         >
           {section.content && (
             <div className="space-y-4 text-base font-semibold leading-8 text-slate-600">
@@ -429,9 +493,9 @@ function CardsSection({ section, index }) {
             <motion.div
               key={idx}
               variants={fadeUp}
-              className="rounded-4xl bg-white p-6 shadow-xl shadow-slate-900/5 transition hover:-translate-y-1 hover:shadow-2xl sm:p-8"
+              className="group rounded-4xl border border-white bg-white p-6 shadow-xl shadow-slate-900/5 transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-900/10 sm:p-8"
             >
-              <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#0F766E]">
+              <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#0F766E] transition group-hover:bg-[#0F3D5E] group-hover:text-white">
                 <CheckCircle2 size={24} />
               </div>
 
@@ -504,9 +568,9 @@ function CardsSection({ section, index }) {
 
             return (
               <motion.div key={idx} variants={fadeUp} className="w-full">
-                <div className="flex w-full items-start gap-3 border-l-4 border-[#F4B183] bg-[#FFF8ED] px-4 py-3 text-left sm:items-center sm:px-5">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F4B183]/20 text-[#B7791F]">
-                    <AlertTriangle size={17} strokeWidth={2.6} />
+                <div className="flex w-full items-start gap-3 rounded-3xl border border-[#F4B183]/30 bg-[#FFF8ED] px-4 py-4 text-left shadow-sm sm:items-center sm:px-5">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#F4B183]/20 text-[#B7791F]">
+                    <AlertTriangle size={18} strokeWidth={2.6} />
                   </div>
 
                   <p className="text-sm font-bold leading-7 text-[#102A43] sm:text-base">
@@ -538,7 +602,7 @@ function StepsSection({ section, index }) {
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.15 }}
-            className="grid gap-5 rounded-4xl bg-white p-6 shadow-xl shadow-slate-900/5 sm:grid-cols-[80px_1fr] sm:p-7"
+            className="grid gap-5 rounded-4xl border border-white bg-white p-6 shadow-xl shadow-slate-900/5 sm:grid-cols-[80px_1fr] sm:p-7"
           >
             <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-[#0F3D5E] text-2xl font-black text-white">
               {idx + 1}
@@ -595,7 +659,7 @@ function ToolsSection({ section, index }) {
           <motion.div
             key={idx}
             variants={fadeUp}
-            className="flex gap-4 rounded-3xl bg-white p-5 shadow-lg shadow-slate-900/5"
+            className="flex gap-4 rounded-3xl border border-white bg-white p-5 shadow-lg shadow-slate-900/5"
           >
             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#0F766E]">
               <ClipboardCheck size={22} />
@@ -774,7 +838,7 @@ function TwoColumnSection({ section, index }) {
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.15 }}
-            className="rounded-4xl bg-white p-7 shadow-xl shadow-slate-900/5"
+            className="rounded-4xl border border-white bg-white p-7 shadow-xl shadow-slate-900/5"
           >
             <h3 className="text-2xl font-black text-[#102A43]">{item.title}</h3>
 
@@ -873,7 +937,7 @@ function FallbackSections({ points, process }) {
             {points.map((point, idx) => (
               <div
                 key={idx}
-                className="rounded-4xl bg-white p-6 shadow-xl shadow-slate-900/5"
+                className="rounded-4xl border border-white bg-white p-6 shadow-xl shadow-slate-900/5"
               >
                 <CheckCircle2 className="text-[#2CB1A6]" size={26} />
                 <p className="mt-4 text-sm font-semibold leading-7 text-slate-600">
@@ -901,7 +965,7 @@ function FallbackSections({ points, process }) {
             {process.map((step, idx) => (
               <div
                 key={idx}
-                className="grid gap-5 rounded-4xl bg-white p-6 shadow-xl shadow-slate-900/5 sm:grid-cols-[70px_1fr]"
+                className="grid gap-5 rounded-4xl border border-white bg-white p-6 shadow-xl shadow-slate-900/5 sm:grid-cols-[70px_1fr]"
               >
                 <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-[#0F3D5E] text-xl font-black text-white">
                   {idx + 1}
@@ -978,35 +1042,45 @@ function BottomCTA({ service }) {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.2 }}
-        className="mx-auto max-w-6xl rounded-4xl bg-[#102A43] p-7 text-center text-white shadow-2xl shadow-slate-900/20 sm:p-10 md:rounded-[3rem]"
+        className="relative mx-auto max-w-6xl overflow-hidden rounded-4xl bg-linear-to-br from-[#102A43] to-[#168A83] p-7 text-center text-white shadow-2xl shadow-slate-900/20 sm:p-10 md:rounded-[3rem]"
       >
-        <h2 className="text-3xl font-black leading-tight sm:text-4xl">
-          Ready to take the first step?
-        </h2>
+        <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+        <div className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-[#F4B183]/20 blur-3xl" />
 
-        <p className="mx-auto mt-4 max-w-2xl text-base font-semibold leading-8 text-white/75">
-          Book a consultation with Dr. Vini Jhariya and get clear guidance for
-          your next step.
-        </p>
+        <div className="relative">
+          <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-3xl bg-white/15 text-[#F4B183]">
+            <CalendarCheck size={28} />
+          </div>
 
-        <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-          <Link
-            href="/contact-us"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-4 text-sm font-black text-[#102A43] transition hover:-translate-y-1"
-          >
-            Book Consultation
-            <ArrowRight size={18} />
-          </Link>
+          <h2 className="text-3xl font-black leading-tight sm:text-4xl">
+            Not sure whether this is the right service?
+          </h2>
 
-          <a
-            href={`https://wa.me/917999215093?text=${whatsappMessage}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-7 py-4 text-sm font-black text-white transition hover:-translate-y-1"
-          >
-            <MessageCircle size={18} />
-            WhatsApp Us
-          </a>
+          <p className="mx-auto mt-4 max-w-2xl text-base font-semibold leading-8 text-white/75">
+            Share what you are noticing. We will help you understand whether
+            this service, an assessment, counselling, therapy or parent guidance
+            is the right next step.
+          </p>
+
+          <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
+            <Link
+              href="/contact-us"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-4 text-sm font-black text-[#102A43] transition hover:-translate-y-1 hover:bg-[#E9F8F6]"
+            >
+              Book Consultation
+              <ArrowRight size={18} />
+            </Link>
+
+            <a
+              href={`https://wa.me/917999215093?text=${whatsappMessage}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-7 py-4 text-sm font-black text-white transition hover:-translate-y-1"
+            >
+              <MessageCircle size={18} />
+              WhatsApp Us
+            </a>
+          </div>
         </div>
       </motion.div>
     </section>

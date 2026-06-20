@@ -1,6 +1,7 @@
 import ContactEnquiry from "../models/ContactEnquiry.js";
+import sendMail from "../utils/sendMail.js";
 
-//Public: create ContactEnquiry
+// Public: Create Contact Enquiry
 export const createContactEnquiry = async (req, res) => {
   try {
     const {
@@ -25,7 +26,7 @@ export const createContactEnquiry = async (req, res) => {
       phone,
       email,
       consultationType,
-      preferredMode,
+      preferredMode: preferredMode || "Not Sure",
       preferredDate,
       message,
     });
@@ -47,7 +48,7 @@ export const createContactEnquiry = async (req, res) => {
               consultationType || "Not provided"
             }</p>
             <p><strong>Preferred Mode:</strong> ${
-              preferredMode || "Not provided"
+              preferredMode || "Not Sure"
             }</p>
             <p><strong>Preferred Time / Date:</strong> ${
               preferredDate || "Not provided"
@@ -93,7 +94,7 @@ export const createContactEnquiry = async (req, res) => {
               consultationType || "Not provided"
             }</p>
             <p><strong>Preferred Mode:</strong> ${
-              preferredMode || "Not provided"
+              preferredMode || "Not Sure"
             }</p>
             <p><strong>Preferred Time / Date:</strong> ${
               preferredDate || "Not provided"
@@ -120,28 +121,101 @@ export const createContactEnquiry = async (req, res) => {
       </div>
     `;
 
+    let clientMailSent = false;
+    let userMailSent = false;
+
     try {
-      await sendMail({
-        to: process.env.CLIENT_MAIL,
-        subject: `New Contact Enquiry from ${name}`,
-        html: viniMailHtml,
-        replyTo: email || process.env.MAIL_USER,
-      });
+      if (!process.env.CLIENT_MAIL) {
+        console.log("CLIENT_MAIL is missing in environment variables");
+      } else {
+        console.log(
+          "Sending contact enquiry mail to client:",
+          process.env.CLIENT_MAIL,
+        );
+
+        await sendMail({
+          to: process.env.CLIENT_MAIL,
+          subject: `New Contact Enquiry from ${name}`,
+          html: viniMailHtml,
+          replyTo: email || process.env.MAIL_USER,
+        });
+
+        clientMailSent = true;
+        console.log("Client contact enquiry mail sent successfully");
+      }
 
       if (email) {
+        console.log("Sending confirmation mail to user:", email);
+
         await sendMail({
           to: email,
           subject: "We received your enquiry - Dr. Vini Jhariya",
           html: userMailHtml,
         });
+
+        userMailSent = true;
+        console.log("User confirmation mail sent successfully");
       }
     } catch (mailError) {
-      console.log("Mail sending error:", mailError.message);
+      console.log("Contact enquiry mail sending error:", mailError.message);
     }
 
     return res.status(201).json({
       success: true,
       message: "Enquiry submitted successfully",
+      mailStatus: {
+        clientMailSent,
+        userMailSent,
+      },
+      data: enquiry,
+    });
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Admin: Get All Enquiries
+export const getContactEnquiries = async (req, res) => {
+  try {
+    const enquiries = await ContactEnquiry.find().sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: enquiries.length,
+      data: enquiries,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Admin: Get Single Contact Enquiry
+export const getContactEnquiryById = async (req, res) => {
+  try {
+    const enquiry = await ContactEnquiry.findById(req.params.id);
+
+    if (!enquiry) {
+      return res.status(404).json({
+        success: false,
+        message: "Enquiry not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
       data: enquiry,
     });
   } catch (error) {
@@ -152,48 +226,7 @@ export const createContactEnquiry = async (req, res) => {
   }
 };
 
-// Admin : Get All Enquiry
-export const getContactEnquiries = async (req, res) => {
-  try {
-    const enquiries = await ContactEnquiry.find().sort({ createdAt: -1 });
-    res.status(200).json({
-      success: true,
-      count: enquiries.length,
-      data: enquiries,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
-//Admin : get Single ContactEnquiry
-export const getContactEnquiryById = async (req, res) => {
-  try {
-    const enquiry = await ContactEnquiry.findById(req.params.id);
-
-    if (!enquiry) {
-      res.status(404).json({
-        success: true,
-        message: "Enquiry not found",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      data: enquiry,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
-//Admin : Update Enquiry status
+// Admin: Update Enquiry Status
 export const updateContactEnquiryStatus = async (req, res) => {
   try {
     const { status } = req.body;
@@ -203,54 +236,61 @@ export const updateContactEnquiryStatus = async (req, res) => {
     if (!allowedStatus.includes(status)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid Status",
+        message: "Invalid status",
       });
     }
 
     const enquiry = await ContactEnquiry.findByIdAndUpdate(
       req.params.id,
       { status },
-      { new: true },
+      { new: true, runValidators: true },
     );
 
     if (!enquiry) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
-        message: "enquiry not Found",
+        message: "Enquiry not found",
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "Status Updated Successfully",
+      message: "Status updated successfully",
       data: enquiry,
     });
   } catch (error) {
-    res.status(500).json({
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
 
-// Admin : Delete Enquiry
+// Admin: Delete Enquiry
 export const deleteContactEnquiry = async (req, res) => {
   try {
     const enquiry = await ContactEnquiry.findByIdAndDelete(req.params.id);
 
     if (!enquiry) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         message: "Enquiry not found",
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "Enquiry Deleted Successfully",
+      message: "Enquiry deleted successfully",
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });

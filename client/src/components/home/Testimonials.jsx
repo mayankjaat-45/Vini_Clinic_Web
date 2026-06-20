@@ -51,8 +51,8 @@ const successStories = [
 const Testimonials = () => {
   return (
     <section className="relative overflow-hidden bg-white px-4 py-14 sm:px-5 sm:py-18 md:py-22">
-      <div className="absolute -left-30 top-20 h-72 w-72 rounded-full bg-teal-100/70 blur-3xl" />
-      <div className="absolute bottom-20 -right-30 h-72 w-72 rounded-full bg-orange-100/70 blur-3xl" />
+      <div className="absolute -left-30 top-20 h-72 w-72 rounded-full bg-[#2CB1A6]/10 blur-3xl" />
+      <div className="absolute -right-30 bottom-20 h-72 w-72 rounded-full bg-[#F4B183]/20 blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl">
         <motion.div
@@ -64,20 +64,20 @@ const Testimonials = () => {
         >
           <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full bg-[#F7FBFC] px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm sm:text-sm">
             <HeartHandshake size={16} className="text-[#2CB1A6]" />
-            Trusted by families
+            Trusted by Families
           </div>
 
           <h2 className="text-3xl font-black tracking-tight text-[#102A43] sm:text-4xl md:text-6xl">
-            Real support for children,{" "}
+            Stories of clarity, care and{" "}
             <span className="bg-linear-to-r from-[#0F3D5E] to-[#2CB1A6] bg-clip-text text-transparent">
-              parents and families.
+              small progress.
             </span>
           </h2>
 
           <p className="mx-auto mt-5 max-w-3xl text-base font-semibold leading-8 text-slate-600 sm:text-lg">
             Families come to Urjasvini Child Development Centre when they need
-            clarity, clinical understanding and a supportive plan for the next
-            step.
+            more than advice — they need understanding, direction, and a care
+            plan that feels practical.
           </p>
 
           <div className="mt-6 flex flex-wrap justify-center gap-3">
@@ -93,7 +93,7 @@ const Testimonials = () => {
 
             <span className="inline-flex items-center gap-2 rounded-full border border-[#0F3D5E]/10 bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm sm:text-sm">
               <Sparkles size={16} className="text-[#2CB1A6]" />
-              Since 2013
+              Trusted Since 2013
             </span>
           </div>
         </motion.div>
@@ -124,7 +124,7 @@ const Testimonials = () => {
                   ))}
                 </div>
 
-                <p className="min-h-auto text-sm font-semibold leading-7 text-slate-600 sm:min-h-44 sm:text-base sm:leading-8">
+                <p className="text-sm font-semibold leading-7 text-slate-600 sm:min-h-44 sm:text-base sm:leading-8">
                   “{item.text}”
                 </p>
 
@@ -157,17 +157,17 @@ const Testimonials = () => {
             <div>
               <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm sm:text-sm">
                 <Sparkles size={16} className="text-[#2CB1A6]" />
-                Success stories
+                Progress Stories
               </div>
 
               <h3 className="text-3xl font-black leading-tight text-[#102A43] sm:text-4xl">
-                Small changes can create meaningful progress.
+                Progress does not always begin with big changes.
               </h3>
 
               <p className="mt-4 text-sm font-semibold leading-7 text-slate-600 sm:text-base">
-                Every child and family journey is different. These stories show
-                how the right assessment, counselling and parent guidance can
-                bring clarity and confidence.
+                Sometimes progress begins when parents understand the reason
+                behind behaviour, learning difficulty, emotional outbursts, or
+                attention concerns.
               </p>
 
               <a
@@ -217,19 +217,20 @@ const Testimonials = () => {
           <div className="grid gap-7 md:grid-cols-[1.2fr_0.8fr] md:items-center">
             <div>
               <h3 className="text-2xl font-black leading-tight sm:text-3xl">
-                Ready to speak with Dr. Vini Jhariya?
+                Not sure what your child needs?
               </h3>
 
               <p className="mt-3 max-w-2xl text-sm font-semibold leading-7 text-white/70 sm:text-base">
-                Book a consultation or send a WhatsApp message to understand the
-                right next step for your child or family.
+                Book a consultation or send a WhatsApp message. Share what you
+                are noticing, and we will help you understand the right next
+                step.
               </p>
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row md:justify-end">
               <a
                 href="/contact-us"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-4 text-sm font-black text-[#0F3D5E] transition hover:-translate-y-1"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-4 text-sm font-black text-[#0F3D5E] transition hover:-translate-y-1 hover:bg-[#E9F8F6]"
               >
                 <CalendarCheck size={18} />
                 Book Consultation

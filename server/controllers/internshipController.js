@@ -3,8 +3,7 @@ import InternshipApplication from "../models/InternshipApplication.js";
 import sendMail from "../utils/sendMail.js";
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
 
-// Public
-// Public
+// Public: Create Internship Application
 export const createInternshipApplication = async (req, res) => {
   try {
     const {
@@ -56,6 +55,8 @@ export const createInternshipApplication = async (req, res) => {
       resume,
     });
 
+    console.log("INTERNSHIP APPLICATION SAVED:", application._id);
+
     console.log("MAIL ENV CHECK:", {
       MAIL_HOST: process.env.MAIL_HOST,
       MAIL_PORT: process.env.MAIL_PORT,
@@ -65,187 +66,248 @@ export const createInternshipApplication = async (req, res) => {
     });
 
     const adminMailHtml = `
-      <div style="font-family: Arial, sans-serif; background:#f6f9fc; padding:20px;">
-        <div style="max-width:650px; margin:auto; background:#ffffff; border-radius:12px; padding:24px; border:1px solid #e5e7eb;">
+      <div style="font-family: Arial, sans-serif; background:#f6f9fc; padding:24px;">
+        <div style="max-width:650px; margin:auto; background:#ffffff; border-radius:14px; overflow:hidden; border:1px solid #e5e7eb;">
           
-          <h2 style="color:#0F3D5E; margin-top:0;">
-            New Internship Application
-          </h2>
+          <div style="background:#0F3D5E; color:#ffffff; padding:20px 24px;">
+            <h2 style="margin:0;">New Internship Application</h2>
+            <p style="margin:6px 0 0;">Received from Dr. Vini Jhariya website</p>
+          </div>
 
-          <p style="font-size:15px; color:#334155;">
-            A new student has submitted an internship application from the website.
-          </p>
+          <div style="padding:24px;">
+            <p style="font-size:15px; color:#334155; line-height:1.7;">
+              A new student has submitted an internship application from the website.
+            </p>
 
-          <table style="width:100%; border-collapse:collapse; margin-top:20px;">
-            <tr>
-              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Full Name</td>
-              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${fullName}</td>
-            </tr>
+            <table style="width:100%; border-collapse:collapse; margin-top:20px;">
+              <tr>
+                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Full Name</td>
+                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${fullName}</td>
+              </tr>
 
-            <tr>
-              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Email</td>
-              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${email}</td>
-            </tr>
+              <tr>
+                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Email</td>
+                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${email}</td>
+              </tr>
 
-            <tr>
-              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Phone</td>
-              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${phone}</td>
-            </tr>
+              <tr>
+                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Phone</td>
+                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${phone}</td>
+              </tr>
 
-            <tr>
-              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">City</td>
-              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${city || "Not provided"}</td>
-            </tr>
+              <tr>
+                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">City</td>
+                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${
+                  city || "Not provided"
+                }</td>
+              </tr>
 
-            <tr>
-              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Qualification</td>
-              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${qualification}</td>
-            </tr>
+              <tr>
+                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Qualification</td>
+                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${qualification}</td>
+              </tr>
 
-            <tr>
-              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">College / University</td>
-              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${college || "Not provided"}</td>
-            </tr>
+              <tr>
+                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">College / University</td>
+                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${
+                  college || "Not provided"
+                }</td>
+              </tr>
 
-            <tr>
-              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Internship Category</td>
-              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${programInterested || "Not Sure"}</td>
-            </tr>
+              <tr>
+                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Internship Category</td>
+                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${
+                  programInterested || "Not Sure"
+                }</td>
+              </tr>
 
-            <tr>
-              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Preferred Format</td>
-              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${preferredMode || "Not Sure"}</td>
-            </tr>
+              <tr>
+                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Preferred Format</td>
+                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${
+                  preferredMode || "Not Sure"
+                }</td>
+              </tr>
 
-            <tr>
-              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Preferred Duration</td>
-              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${duration || "Not provided"}</td>
-            </tr>
+              <tr>
+                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Preferred Duration</td>
+                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${
+                  duration || "Not provided"
+                }</td>
+              </tr>
 
-            <tr>
-              <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Message</td>
-              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${message || "Not provided"}</td>
-            </tr>
+              <tr>
+                <td style="padding:10px; font-weight:bold; border-bottom:1px solid #e5e7eb;">Message</td>
+                <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${
+                  message || "Not provided"
+                }</td>
+              </tr>
 
-            <tr>
-              <td style="padding:10px; font-weight:bold;">Resume</td>
-              <td style="padding:10px;">
-                ${
-                  resume?.url
-                    ? `<a href="${resume.url}" target="_blank" style="color:#0F766E; font-weight:bold;">View Resume</a>`
-                    : "No resume uploaded"
-                }
-              </td>
-            </tr>
-          </table>
+              <tr>
+                <td style="padding:10px; font-weight:bold;">Resume</td>
+                <td style="padding:10px;">
+                  ${
+                    resume?.url
+                      ? `<a href="${resume.url}" target="_blank" style="color:#0F766E; font-weight:bold;">View Resume</a>`
+                      : "No resume uploaded"
+                  }
+                </td>
+              </tr>
+            </table>
 
-          <p style="margin-top:24px; font-size:13px; color:#64748b;">
-            This application was submitted from the Urjasvini CDC website internship form.
-          </p>
-
+            <div style="margin-top:24px; padding:16px; background:#E9F8F6; border-radius:12px;">
+              <p style="margin:0; color:#0F766E; font-weight:bold;">
+                Please review this internship application as soon as possible.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     `;
 
     const studentMailHtml = `
-      <div style="font-family: Arial, sans-serif; background:#f6f9fc; padding:20px;">
-        <div style="max-width:650px; margin:auto; background:#ffffff; border-radius:12px; padding:24px; border:1px solid #e5e7eb;">
+      <div style="font-family: Arial, sans-serif; background:#f6f9fc; padding:24px;">
+        <div style="max-width:650px; margin:auto; background:#ffffff; border-radius:14px; overflow:hidden; border:1px solid #e5e7eb;">
           
-          <h2 style="color:#0F3D5E; margin-top:0;">
-            Thank you for applying, ${fullName}
-          </h2>
-
-          <p style="font-size:15px; color:#334155; line-height:1.7;">
-            We have received your internship application at Urjasvini Child Development Centre.
-          </p>
-
-          <p style="font-size:15px; color:#334155; line-height:1.7;">
-            Our team will review your details and contact you shortly regarding the internship structure, fee details, documentation requirements, and next steps.
-          </p>
-
-          <div style="background:#E9F8F6; border-radius:12px; padding:16px; margin-top:20px;">
-            <p style="margin:0; font-size:14px; color:#0F3D5E;">
-              <strong>Applied Category:</strong> ${programInterested || "Not Sure"}
-            </p>
-            <p style="margin:8px 0 0; font-size:14px; color:#0F3D5E;">
-              <strong>Preferred Format:</strong> ${preferredMode || "Not Sure"}
-            </p>
-            <p style="margin:8px 0 0; font-size:14px; color:#0F3D5E;">
-              <strong>Qualification:</strong> ${qualification}
-            </p>
+          <div style="background:#0F3D5E; color:#ffffff; padding:20px 24px;">
+            <h2 style="margin:0;">Thank you for applying, ${fullName}</h2>
           </div>
 
-          <p style="font-size:15px; color:#334155; line-height:1.7; margin-top:20px;">
-            For urgent queries, you can contact us on WhatsApp:
-            <strong>+91 7999215093</strong>
-          </p>
+          <div style="padding:24px;">
+            <p style="font-size:15px; color:#334155; line-height:1.7;">
+              We have received your internship application at Urjasvini Child Development Centre.
+            </p>
 
-          <p style="margin-top:24px; font-size:14px; color:#64748b;">
-            Regards,<br/>
-            Team Urjasvini CDC
-          </p>
+            <p style="font-size:15px; color:#334155; line-height:1.7;">
+              Our team will review your details and contact you shortly regarding internship structure, fee details, documentation requirements, and next steps.
+            </p>
 
+            <p><strong>Your submitted details:</strong></p>
+
+            <p><strong>Name:</strong> ${fullName}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Phone:</strong> ${phone}</p>
+            <p><strong>City:</strong> ${city || "Not provided"}</p>
+            <p><strong>Qualification:</strong> ${qualification}</p>
+            <p><strong>College:</strong> ${college || "Not provided"}</p>
+            <p><strong>Applied Category:</strong> ${
+              programInterested || "Not Sure"
+            }</p>
+            <p><strong>Preferred Format:</strong> ${
+              preferredMode || "Not Sure"
+            }</p>
+            <p><strong>Preferred Duration:</strong> ${
+              duration || "Not provided"
+            }</p>
+
+            <hr style="border:none; border-top:1px solid #e5e7eb; margin:20px 0;" />
+
+            <p><strong>Your Message:</strong></p>
+            <p style="white-space:pre-line; line-height:1.7;">${
+              message || "Not provided"
+            }</p>
+
+            <div style="margin-top:24px; padding:16px; background:#E9F8F6; border-radius:12px;">
+              <p style="margin:0; color:#0F766E; font-weight:bold;">
+                For urgent queries, you can WhatsApp us at +91 7999215093.
+              </p>
+            </div>
+
+            <p style="margin-top:24px;">
+              Regards,<br/>
+              <strong>Dr. Vini Jhariya Team</strong><br/>
+              Urjasvini Child Development Centre, Indore
+            </p>
+          </div>
         </div>
       </div>
     `;
 
-    const mailResults = await Promise.allSettled([
-      sendMail({
-        to: process.env.CLIENT_MAIL,
-        subject: "New Internship Application Received",
-        html: adminMailHtml,
-        replyTo: email,
-      }),
+    let clientMailSent = false;
+    let userMailSent = false;
 
-      sendMail({
-        to: email,
-        subject: "Your Internship Application Has Been Received",
-        html: studentMailHtml,
-      }),
-    ]);
+    try {
+      if (!process.env.CLIENT_MAIL) {
+        console.log("CLIENT_MAIL is missing in environment variables");
+      } else {
+        console.log(
+          "Sending internship application mail to client:",
+          process.env.CLIENT_MAIL,
+        );
 
-    console.log("INTERNSHIP MAIL RESULTS:", mailResults);
+        await sendMail({
+          to: process.env.CLIENT_MAIL,
+          subject: `New Internship Application from ${fullName}`,
+          html: adminMailHtml,
+          replyTo: email || process.env.MAIL_USER,
+        });
 
-    res.status(201).json({
+        clientMailSent = true;
+        console.log("Client internship mail sent successfully");
+      }
+
+      if (email) {
+        console.log("Sending internship confirmation mail to student:", email);
+
+        await sendMail({
+          to: email,
+          subject: "Your Internship Application Has Been Received",
+          html: studentMailHtml,
+        });
+
+        userMailSent = true;
+        console.log("Student confirmation mail sent successfully");
+      }
+    } catch (mailError) {
+      console.log("Internship mail sending error:", mailError.message);
+    }
+
+    return res.status(201).json({
       success: true,
       message: "Internship application submitted successfully",
+      mailStatus: {
+        clientMailSent,
+        userMailSent,
+      },
       data: application,
-      mailStatus: mailResults.map((result) => ({
-        status: result.status,
-        reason: result.reason?.message || null,
-      })),
     });
   } catch (error) {
     console.log("INTERNSHIP APPLICATION ERROR:", error);
 
-    res.status(500).json({
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
 
-// Admin
+// Admin: Get All Internship Applications
 export const getAllInternshipApplications = async (req, res) => {
   try {
     const applications = await InternshipApplication.find().sort({
       createdAt: -1,
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       count: applications.length,
       data: applications,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
 
-// Admin
+// Admin: Update Internship Application Status
 export const updateInternshipApplicationStatus = async (req, res) => {
   try {
     const { status, adminNote } = req.body;
@@ -264,20 +326,27 @@ export const updateInternshipApplicationStatus = async (req, res) => {
 
     await application.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Application updated successfully",
       data: application,
     });
   } catch (error) {
-    res.status(500).json({
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
 
-// Admin
+// Admin: Delete Internship Application
 export const deleteInternshipApplication = async (req, res) => {
   try {
     const application = await InternshipApplication.findById(req.params.id);
@@ -297,12 +366,12 @@ export const deleteInternshipApplication = async (req, res) => {
 
     await application.deleteOne();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Application deleted successfully",
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });

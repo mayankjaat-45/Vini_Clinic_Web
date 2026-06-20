@@ -7,7 +7,9 @@ import {
   CalendarDays,
   HeartHandshake,
   ShieldCheck,
+  Sparkles,
   Star,
+  Users,
 } from "lucide-react";
 
 const stats = [
@@ -17,23 +19,23 @@ const stats = [
     suffix: "",
     label: "Trusted since",
     displayValue: "2013",
-    description: "Serving families with care",
+    description: "Consistent care for children, teens, and parents",
   },
   {
     icon: HeartHandshake,
     value: 5000,
     suffix: "+",
-    label: "Children & Families",
+    label: "Families supported",
     displayValue: "5,000+",
-    description: "Supported through counselling & therapy",
+    description: "Through counselling, therapy, and guidance",
   },
   {
     icon: Award,
     value: 10,
     suffix: "+",
-    label: "Over a decade",
+    label: "Years of experience",
     displayValue: "10+",
-    description: "Clinical experience & guidance",
+    description: "Clinical experience with child development concerns",
   },
   {
     icon: Star,
@@ -41,9 +43,16 @@ const stats = [
     suffix: "★",
     label: "Google rating",
     displayValue: "4.9★",
-    description: "Trusted by parents in Indore",
+    description: "Trusted by parents looking for clear guidance",
     decimal: true,
   },
+];
+
+const trustNotes = [
+  "RCI Registered",
+  "TEDx Speaker",
+  "Published Researcher",
+  "Parent-first approach",
 ];
 
 const formatNumber = (value) => {
@@ -78,13 +87,19 @@ const CountUp = ({
       if (decimal) {
         setCount(currentValue.toFixed(1));
       } else {
-        setCount(formatNumber(Math.floor(currentValue)));
+        setCount(
+          fallback === "2013"
+            ? String(Math.floor(currentValue))
+            : formatNumber(Math.floor(currentValue))
+        );
       }
 
       if (progress < 1) {
         frameRef.current = requestAnimationFrame(animate);
       } else {
-        setCount(decimal ? end.toFixed(1) : formatNumber(end));
+        setCount(
+          decimal ? end.toFixed(1) : fallback ? fallback : formatNumber(end)
+        );
       }
     };
 
@@ -95,7 +110,7 @@ const CountUp = ({
         cancelAnimationFrame(frameRef.current);
       }
     };
-  }, [start, end, decimal]);
+  }, [start, end, decimal, fallback]);
 
   return (
     <span>
@@ -120,7 +135,28 @@ const StatsStrip = () => {
       className="relative z-20 -mt-8 px-4 sm:px-5 md:-mt-12"
     >
       <div className="mx-auto max-w-7xl overflow-hidden rounded-4xl border border-white/80 bg-white/90 p-3 shadow-2xl shadow-slate-900/10 backdrop-blur-xl sm:p-4 md:rounded-[2.5rem]">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Creative Top Intro */}
+        <div className="grid gap-4 rounded-[1.7rem] bg-[#0F3D5E] p-5 text-white sm:p-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+          <div>
+            <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-black text-[#F4B183]">
+              <Sparkles size={15} />
+              Why parents feel safe here
+            </p>
+
+            <h2 className="mt-4 text-2xl font-black leading-tight sm:text-3xl">
+              Care that begins with listening, not labelling.
+            </h2>
+          </div>
+
+          <p className="text-sm font-semibold leading-7 text-white/75 sm:text-base">
+            Every child’s concern is different. Some families come for therapy,
+            some for assessments, and some simply need clarity about what their
+            child is going through.
+          </p>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((item, index) => {
             const Icon = item.icon;
             const isRating = item.label.toLowerCase().includes("rating");
@@ -141,10 +177,10 @@ const StatsStrip = () => {
                 <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#2CB1A6]/10 transition group-hover:bg-[#2CB1A6]/20" />
 
                 <div className="relative flex items-start gap-4 sm:block">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#0F3D5E] text-white shadow-lg shadow-[#0F3D5E]/20 transition duration-300 group-hover:bg-[#2CB1A6] sm:mb-5">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-[#0F3D5E] shadow-lg shadow-slate-900/5 ring-1 ring-[#0F3D5E]/10 transition duration-300 group-hover:bg-[#2CB1A6] group-hover:text-white sm:mb-5">
                     <Icon
                       size={22}
-                      className={isRating ? "fill-white text-white" : ""}
+                      className={isRating ? "fill-current" : ""}
                     />
                   </div>
 
@@ -173,12 +209,17 @@ const StatsStrip = () => {
           })}
         </div>
 
-        <div className="mt-3 rounded-3xl bg-[#0F3D5E] px-5 py-4 text-center text-sm font-bold leading-6 text-white sm:text-base">
-          <span className="inline-flex items-center justify-center gap-2">
-            <ShieldCheck size={18} className="text-[#F4B183]" />
-            RCI Registered • TEDx Speaker • Published Researcher • Parent-first
-            clinical support
-          </span>
+        {/* Bottom Trust Notes */}
+        <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {trustNotes.map((note) => (
+            <div
+              key={note}
+              className="flex items-center justify-center gap-2 rounded-2xl border border-[#2CB1A6]/15 bg-white px-4 py-3 text-sm font-black text-[#0F3D5E]"
+            >
+              <ShieldCheck size={17} className="text-[#2CB1A6]" />
+              {note}
+            </div>
+          ))}
         </div>
       </div>
     </section>

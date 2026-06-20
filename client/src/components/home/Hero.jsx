@@ -9,6 +9,7 @@ import {
   MapPin,
   MessageCircle,
   ShieldCheck,
+  Sparkles,
   Star,
   Users,
 } from "lucide-react";
@@ -28,6 +29,15 @@ const trustItems = [
   },
 ];
 
+const concernItems = [
+  "My child is not listening",
+  "My child is very hyperactive",
+  "My child avoids studies",
+  "My child has speech delay",
+  "My teenager feels low",
+  "I need parenting guidance",
+];
+
 const supportItems = [
   "Autism, ADHD & dyslexia support",
   "Child & adolescent counselling",
@@ -43,36 +53,59 @@ const Hero = () => {
       <div className="absolute -right-24 top-32 h-96 w-96 rounded-full bg-[#0F3D5E]/10 blur-3xl" />
       <div className="absolute bottom-0 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-[#F4B183]/20 blur-3xl" />
 
-      <section className="relative mx-auto grid min-h-screen max-w-7xl items-center gap-10 px-5 pb-16 pt-10 sm:px-6 sm:pt-22 md:py-13 lg:grid-cols-[1.08fr_0.92fr] lg:px-8 lg:pt-24">
+      <section className="relative mx-auto grid min-h-screen max-w-7xl items-center gap-12 px-5 pb-16 pt-10 sm:px-6 sm:pt-22 md:py-13 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:pt-24">
         {/* Left Content */}
         <div className="text-center lg:text-left">
           <p className="inline-flex items-center gap-2 rounded-full border border-[#2CB1A6]/20 bg-white px-4 py-2 text-xs font-bold text-[#2CB1A6] shadow-sm sm:text-sm">
             <HeartHandshake size={16} />
-            Clinical & Child Psychologist in Indore
+            Child Psychology, Therapy & Parent Guidance
           </p>
 
           <h1 className="mx-auto mt-5 max-w-4xl text-4xl font-black leading-[1.08] tracking-tight text-[#102A43] sm:text-5xl md:text-6xl lg:mx-0 lg:text-7xl">
-            Your child does not have to carry this{" "}
+            Helping children feel{" "}
             <span className="bg-linear-to-r from-[#0F3D5E] to-[#2CB1A6] bg-clip-text text-transparent">
-              alone.
+              understood
             </span>
-            <br />
-            Neither do you.
+            , not judged.
           </h1>
 
           <h2 className="mx-auto mt-5 max-w-2xl text-base font-bold leading-7 text-[#0F3D5E] sm:text-xl sm:leading-8 lg:mx-0">
-            Whatever your child is going through, there is support available.
-            The earlier that support begins, the easier the journey becomes.
+            When your child is struggling with behaviour, emotions, learning,
+            attention, speech, or confidence, you do not have to figure it out
+            alone.
           </h2>
 
           <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base sm:leading-8 lg:mx-0">
-            Dr. Vini Jhariya and the Urjasvini Child Development Centre team
-            help children, adolescents and families through clinical assessment,
-            counselling, therapy planning and parent guidance in Indore and
-            online across India.
+            At Urjasvini Child Development Centre, Dr. Vini Jhariya helps
+            parents understand the reason behind their child’s challenges
+            through counselling, assessment, therapy planning, and practical
+            parent guidance in Indore and online.
           </p>
 
-          {/* Trust Line Above Fold */}
+          {/* Parent Concern Creative Block */}
+          <div className="mx-auto mt-7 max-w-2xl rounded-4xl border border-white bg-white/80 p-4 shadow-xl shadow-slate-900/5 backdrop-blur lg:mx-0">
+            <div className="mb-3 flex items-center justify-center gap-2 lg:justify-start">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#E9F8F6] text-[#2CB1A6]">
+                <Sparkles size={16} />
+              </span>
+              <p className="text-sm font-black text-[#102A43]">
+                Many parents come to us saying...
+              </p>
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-2 lg:justify-start">
+              {concernItems.map((item) => (
+                <span
+                  key={item}
+                  className="rounded-full border border-[#0F3D5E]/10 bg-[#F7FBFC] px-3 py-2 text-xs font-bold text-slate-600"
+                >
+                  “{item}”
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Trust Line */}
           <div className="mx-auto mt-6 flex flex-wrap items-center justify-center gap-3 lg:mx-0 lg:justify-start">
             {trustItems.map((item) => {
               const Icon = item.icon;
@@ -157,31 +190,31 @@ const Hero = () => {
             </div>
           </div>
 
-          <div className="absolute -right-2 bottom-20 z-10 hidden rounded-3xl bg-[#0F3D5E] p-5 text-white shadow-2xl shadow-blue-950/20 sm:block lg:-right-8">
+          <div className="absolute -right-2 bottom-24 z-10 hidden rounded-3xl bg-[#0F3D5E] p-5 text-white shadow-2xl shadow-blue-950/20 sm:block lg:-right-8">
             <div className="flex items-center gap-1 text-[#F4B183]">
-              <Star size={15} className="fill-[#F4B183]" />
-              <Star size={15} className="fill-[#F4B183]" />
-              <Star size={15} className="fill-[#F4B183]" />
-              <Star size={15} className="fill-[#F4B183]" />
-              <Star size={15} className="fill-[#F4B183]" />
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star key={star} size={15} className="fill-[#F4B183]" />
+              ))}
             </div>
             <p className="mt-3 text-2xl font-black">4.9★</p>
-            <p className="mt-1 text-xs text-white/70">237 Google reviews</p>
+            <p className="mt-1 text-xs text-white/70">Google rating</p>
           </div>
 
-          <div className="relative overflow-hidden rounded-4xl border-[7px] border-white bg-white shadow-2xl shadow-slate-900/15 sm:rounded-[3rem] sm:border-10">
-            <div className="relative aspect-4/5 w-full">
-              <Image
-                src="/images/vini-pic.jpeg"
-                alt="Dr. Vini Jhariya, Clinical & Child Psychologist in Indore"
-                fill
-                priority
-                sizes="(max-width: 768px) 90vw, 520px"
-                className="object-cover object-center"
-              />
+          <div className="relative rounded-[2.5rem] bg-white p-3 shadow-2xl shadow-slate-900/15 sm:rounded-[3rem] sm:p-4">
+            <div className="relative overflow-hidden rounded-4xl sm:rounded-[2.5rem]">
+              <div className="relative aspect-4/5 w-full">
+                <Image
+                  src="/images/vini-pic.jpeg"
+                  alt="Dr. Vini Jhariya, Clinical and Child Psychologist in Indore"
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 90vw, 520px"
+                  className="object-cover object-center"
+                />
+              </div>
             </div>
 
-            <div className="absolute inset-x-3 bottom-3 rounded-3xl bg-white/90 p-4 backdrop-blur-xl sm:inset-x-6 sm:bottom-6 sm:p-5">
+            <div className="absolute inset-x-6 bottom-6 rounded-[1.75rem] bg-white/92 p-4 shadow-lg backdrop-blur-xl sm:inset-x-8 sm:bottom-8 sm:p-5">
               <p className="text-sm font-black leading-6 text-[#0F3D5E] sm:text-base">
                 “Every child deserves to be understood before being corrected.”
               </p>
@@ -189,6 +222,17 @@ const Hero = () => {
                 — Dr. Vini Jhariya
               </p>
             </div>
+          </div>
+
+          {/* Creative Bottom Note */}
+          <div className="mx-auto mt-5 max-w-[92%] rounded-4xl border border-[#2CB1A6]/15 bg-white px-5 py-4 text-center shadow-sm">
+            <p className="text-sm font-black text-[#102A43]">
+              Not sure which service your child needs?
+            </p>
+            <p className="mt-1 text-xs font-semibold leading-5 text-slate-500">
+              Share what you are noticing. We will guide you toward the right
+              next step.
+            </p>
           </div>
 
           {/* Mobile cards */}
@@ -209,19 +253,6 @@ const Hero = () => {
           </div>
         </div>
       </section>
-
-      {/* Mobile Sticky WhatsApp */}
-      {/* <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/20 bg-white/90 p-3 shadow-[0_-12px_30px_rgba(15,61,94,0.12)] backdrop-blur-md md:hidden">
-        <a
-          href="https://wa.me/917999215093"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-[#0F3D5E] px-5 py-3 text-sm font-black text-white"
-        >
-          <MessageCircle size={18} />
-          WhatsApp Us
-        </a>
-      </div> */}
     </div>
   );
 };

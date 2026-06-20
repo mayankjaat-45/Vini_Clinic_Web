@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -12,6 +13,8 @@ import {
   MessageCircle,
   Sparkles,
   Users,
+  HeartHandshake,
+  MapPin,
 } from "lucide-react";
 
 const fallbackGallery = [
@@ -91,31 +94,50 @@ export default function GalleryPreview({ initialGallery = [] }) {
       <div className="absolute -right-28 bottom-20 h-80 w-80 rounded-full bg-[#0F3D5E]/10 blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl">
-        <div className="mb-10 flex flex-col gap-6 md:mb-12 md:flex-row md:items-end md:justify-between">
+        <div className="mb-10 grid gap-8 lg:grid-cols-[1fr_0.85fr] lg:items-end">
           <div>
             <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm sm:text-sm">
               <Sparkles size={16} className="text-[#2CB1A6]" />
-              Gallery
+              Clinic Moments
             </div>
 
             <h2 className="max-w-4xl text-3xl font-black leading-tight text-[#102A43] sm:text-4xl md:text-6xl">
-              A glimpse into our clinic, events and milestones.
+              A glimpse of our clinic, learning spaces and milestones.
             </h2>
 
             <p className="mt-5 max-w-3xl text-base font-semibold leading-8 text-slate-600 sm:text-lg">
-              Explore moments from Urjasvini Child Development Centre, therapy
-              spaces, workshops, training programs, awards, TEDx stage and team
-              activities.
+              Explore moments from Urjasvini Child Development Centre —
+              consultation spaces, workshops, awareness events, awards, TEDx
+              stage and training programs.
             </p>
           </div>
 
-          <Link
-            href="/gallery"
-            className="inline-flex w-fit items-center gap-2 rounded-full bg-[#0F3D5E] px-6 py-4 text-sm font-black text-white shadow-xl shadow-blue-950/15 transition hover:-translate-y-1"
-          >
-            View Full Gallery
-            <ArrowRight size={17} />
-          </Link>
+          <div className="rounded-4xl border border-[#2CB1A6]/15 bg-white p-5 shadow-xl shadow-slate-900/5">
+            <div className="flex items-start gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#2CB1A6]">
+                <HeartHandshake size={24} />
+              </div>
+
+              <div>
+                <h3 className="text-lg font-black text-[#102A43]">
+                  A space designed for care
+                </h3>
+
+                <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
+                  The clinic environment is calm, child-friendly and supportive
+                  for children, teens, parents and families.
+                </p>
+
+                <Link
+                  href="/gallery"
+                  className="mt-4 inline-flex items-center gap-2 text-sm font-black text-[#0F3D5E]"
+                >
+                  View Full Gallery
+                  <ArrowRight size={15} />
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -131,30 +153,36 @@ export default function GalleryPreview({ initialGallery = [] }) {
               <Link
                 href="/gallery"
                 key={item._id || item.slug || item.title}
-                className={`group relative overflow-hidden rounded-4xl bg-[#102A43] shadow-xl shadow-slate-900/5 transition duration-300 hover:-translate-y-2 hover:shadow-2xl ${
+                className={`group relative overflow-hidden rounded-4xl bg-[#102A43] shadow-xl shadow-slate-900/5 transition duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-slate-900/10 ${
                   index === 0 ? "sm:col-span-2 sm:row-span-2" : ""
                 }`}
               >
                 {hasImage ? (
-                  <img
-                    src={imageUrl}
-                    alt={
-                      item.alt ||
-                      `${item.title}, Urjasvini Child Development Centre gallery`
-                    }
-                    loading="lazy"
-                    decoding="async"
-                    className={`w-full object-cover transition duration-500 group-hover:scale-105 ${
+                  <div
+                    className={`relative w-full overflow-hidden ${
                       index === 0 ? "h-90 sm:h-115" : "h-56"
                     }`}
-                  />
+                  >
+                    <Image
+                      src={imageUrl}
+                      alt={
+                        item.alt ||
+                        `${item.title}, Urjasvini Child Development Centre gallery`
+                      }
+                      fill
+                      sizes={
+                        index === 0
+                          ? "(max-width: 768px) 100vw, 600px"
+                          : "(max-width: 768px) 100vw, 320px"
+                      }
+                      className="object-cover transition duration-500 group-hover:scale-105"
+                    />
+                  </div>
                 ) : (
                   <div
-                    className={`flex ${
+                    className={`flex w-full items-center justify-center bg-linear-to-br ${
                       index === 0 ? "h-90 sm:h-115" : "h-56"
-                    } w-full items-center justify-center bg-linear-to-br ${
-                      item.gradient || "from-[#0F3D5E] to-[#2CB1A6]"
-                    }`}
+                    } ${item.gradient || "from-[#0F3D5E] to-[#2CB1A6]"}`}
                   >
                     <Icon size={46} className="text-white/90" />
                   </div>
@@ -194,10 +222,15 @@ export default function GalleryPreview({ initialGallery = [] }) {
             in-clinic or online consultation.
           </p>
 
+          <div className="mt-5 flex items-center justify-center gap-2 text-sm font-bold text-slate-500">
+            <MapPin size={16} className="text-[#F4B183]" />
+            <span>Old Palasia, Indore</span>
+          </div>
+
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
             <Link
               href="/contact-us"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0F3D5E] px-7 py-4 text-sm font-black text-white transition hover:-translate-y-1"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0F3D5E] px-7 py-4 text-sm font-black text-white transition hover:-translate-y-1 hover:bg-[#102A43]"
             >
               <CalendarCheck size={17} />
               Book Consultation

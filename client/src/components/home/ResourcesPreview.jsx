@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -11,6 +12,9 @@ import {
   HeartHandshake,
   MessageCircle,
   Sparkles,
+  ClipboardCheck,
+  SearchCheck,
+  ShieldCheck,
 } from "lucide-react";
 
 const fallbackResources = [
@@ -55,6 +59,24 @@ const fallbackResources = [
   },
 ];
 
+const resourceBenefits = [
+  {
+    icon: SearchCheck,
+    title: "Notice early signs",
+    text: "Understand patterns in behaviour, attention, emotions and learning.",
+  },
+  {
+    icon: ClipboardCheck,
+    title: "Track observations",
+    text: "Use simple checklists before consultation or school discussion.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Know the next step",
+    text: "Learn when professional assessment or guidance may be helpful.",
+  },
+];
+
 const formatBytes = (bytes) => {
   if (!bytes) return "";
 
@@ -85,31 +107,68 @@ export default function ResourcesPreview({ initialResources = [] }) {
       <div className="absolute -right-28 bottom-20 h-80 w-80 rounded-full bg-[#0F3D5E]/10 blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl">
-        <div className="mb-10 flex flex-col gap-6 md:mb-12 md:flex-row md:items-end md:justify-between">
+        <div className="mb-10 grid gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-end">
           <div>
             <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm sm:text-sm">
               <Sparkles size={16} className="text-[#2CB1A6]" />
-              Free Resources
+              Free Parent Resources
             </div>
 
             <h2 className="max-w-4xl text-3xl font-black leading-tight text-[#102A43] sm:text-4xl md:text-6xl">
-              Download helpful guides and parent resources.
+              Helpful guides for parents who want clarity before the next step.
             </h2>
 
             <p className="mt-5 max-w-3xl text-base font-semibold leading-8 text-slate-600 sm:text-lg">
-              Explore parent guides, worksheets and resources for child
-              development, autism, ADHD, dyslexia, emotional wellbeing and early
-              support.
+              Download parent-friendly guides, checklists and worksheets for
+              child development, autism, ADHD, dyslexia, emotional wellbeing and
+              early support.
             </p>
           </div>
 
-          <Link
-            href="/free-resources"
-            className="inline-flex w-fit items-center gap-2 rounded-full bg-[#0F3D5E] px-6 py-4 text-sm font-black text-white shadow-xl shadow-blue-950/15 transition hover:-translate-y-1"
-          >
-            View All Resources
-            <ArrowRight size={17} />
-          </Link>
+          <div className="rounded-4xl border border-[#2CB1A6]/15 bg-white p-5 shadow-xl shadow-slate-900/5">
+            <h3 className="text-lg font-black text-[#102A43]">
+              Resources are for awareness
+            </h3>
+
+            <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
+              These guides can help you observe and understand concerns, but
+              they do not replace professional consultation or assessment.
+            </p>
+
+            <Link
+              href="/free-resources"
+              className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#0F3D5E] px-5 py-3 text-sm font-black text-white shadow-xl shadow-blue-950/15 transition hover:-translate-y-1"
+            >
+              View All Resources
+              <ArrowRight size={16} />
+            </Link>
+          </div>
+        </div>
+
+        {/* Resource Benefits */}
+        <div className="mb-10 grid gap-4 md:grid-cols-3">
+          {resourceBenefits.map((benefit) => {
+            const Icon = benefit.icon;
+
+            return (
+              <div
+                key={benefit.title}
+                className="rounded-3xl border border-white bg-white/85 p-5 shadow-sm backdrop-blur transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10"
+              >
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-[#0F3D5E] text-white">
+                  <Icon size={21} />
+                </div>
+
+                <h3 className="text-lg font-black text-[#102A43]">
+                  {benefit.title}
+                </h3>
+
+                <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
+                  {benefit.text}
+                </p>
+              </div>
+            );
+          })}
         </div>
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -124,11 +183,12 @@ export default function ResourcesPreview({ initialResources = [] }) {
               >
                 <div className="relative h-52 overflow-hidden bg-linear-to-br from-[#0F3D5E] to-[#168A83]">
                   {item.coverImage?.url ? (
-                    <img
+                    <Image
                       src={item.coverImage.url}
                       alt={`${item.title}, free child psychology resource by Dr. Vini Jhariya`}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 420px"
+                      className="object-cover transition duration-500 group-hover:scale-105"
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center text-white/80">
@@ -139,6 +199,12 @@ export default function ResourcesPreview({ initialResources = [] }) {
                   <div className="absolute left-5 top-5 rounded-full bg-white/90 px-4 py-2 text-xs font-black text-[#0F3D5E]">
                     {item.file?.format?.toUpperCase() || "PDF"}
                   </div>
+
+                  {item.isFeatured && (
+                    <div className="absolute right-5 top-5 rounded-full bg-[#FFF4EA] px-4 py-2 text-xs font-black text-[#9A5A22]">
+                      Featured
+                    </div>
+                  )}
                 </div>
 
                 <div className="p-6">
@@ -147,9 +213,9 @@ export default function ResourcesPreview({ initialResources = [] }) {
                       {item.category || "Resource"}
                     </span>
 
-                    {item.isFeatured && (
-                      <span className="rounded-full bg-yellow-100 px-3 py-1 text-xs font-black text-yellow-700">
-                        Featured
+                    {formatBytes(item.file?.bytes) && (
+                      <span className="rounded-full bg-[#F7FBFC] px-3 py-1 text-xs font-black text-slate-500">
+                        {formatBytes(item.file?.bytes)}
                       </span>
                     )}
                   </div>
@@ -163,16 +229,12 @@ export default function ResourcesPreview({ initialResources = [] }) {
                       "Helpful parent-friendly guidance for child development, learning and emotional wellbeing."}
                   </p>
 
-                  <div className="mt-5 min-h-4 text-xs font-bold text-slate-400">
-                    {formatBytes(item.file?.bytes)}
-                  </div>
-
                   {hasRealFile ? (
                     <a
                       href={item.file.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#0F3D5E] px-5 py-3 text-sm font-black text-white transition hover:-translate-y-1"
+                      className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#0F3D5E] px-5 py-3 text-sm font-black text-white transition hover:-translate-y-1 hover:bg-[#102A43]"
                     >
                       <Download size={16} />
                       Download
@@ -181,7 +243,7 @@ export default function ResourcesPreview({ initialResources = [] }) {
                   ) : (
                     <Link
                       href="/free-resources"
-                      className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#0F3D5E] px-5 py-3 text-sm font-black text-white transition hover:-translate-y-1"
+                      className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#0F3D5E] px-5 py-3 text-sm font-black text-white transition hover:-translate-y-1 hover:bg-[#102A43]"
                     >
                       View Resource
                       <ArrowRight size={15} />
@@ -201,15 +263,16 @@ export default function ResourcesPreview({ initialResources = [] }) {
               </h3>
 
               <p className="mt-3 max-w-2xl text-sm font-semibold leading-7 text-white/70 sm:text-base">
-                Free resources are helpful for awareness, but they do not
-                replace professional assessment or consultation.
+                Free resources are helpful for awareness, but every child’s
+                situation is different. A consultation can help you understand
+                what your child actually needs.
               </p>
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row md:justify-end">
               <Link
                 href="/contact-us"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-4 text-sm font-black text-[#0F3D5E] transition hover:-translate-y-1"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-4 text-sm font-black text-[#0F3D5E] transition hover:-translate-y-1 hover:bg-[#E9F8F6]"
               >
                 <CalendarCheck size={18} />
                 Book Consultation

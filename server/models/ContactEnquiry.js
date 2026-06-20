@@ -7,16 +7,19 @@ const contactEnquirySchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+
     phone: {
       type: String,
       required: true,
       trim: true,
     },
+
     email: {
       type: String,
       trim: true,
       lowercase: true,
     },
+
     consultationType: {
       type: String,
       trim: true,
@@ -24,7 +27,13 @@ const contactEnquirySchema = new mongoose.Schema(
 
     preferredMode: {
       type: String,
-      enum: ["In-clinic at Urjasvini CDC, Indore", "Online Consultation", "Not Sure", ""],
+      enum: [
+        "Clinic Visit",
+        "In-clinic at Urjasvini CDC, Indore",
+        "Online Consultation",
+        "Not Sure",
+        "",
+      ],
       default: "Not Sure",
     },
 

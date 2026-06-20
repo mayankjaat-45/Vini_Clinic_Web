@@ -8,44 +8,51 @@ import {
   HeartHandshake,
   ArrowRight,
   Sparkles,
+  CheckCircle2,
 } from "lucide-react";
 
 const steps = [
   {
     number: "01",
-    title: "Share your concern",
+    title: "Tell us what you are noticing",
     description:
-      "Parents or clients share their concern through the booking form, WhatsApp or direct consultation request.",
+      "Share your child’s behaviour, emotional concern, learning difficulty, developmental issue, or family situation through the form, WhatsApp, or consultation request.",
     icon: MessageCircleHeart,
   },
   {
     number: "02",
-    title: "Initial understanding",
+    title: "We understand the full picture",
     description:
-      "The concern is understood carefully through history, symptoms, behaviour patterns and family context.",
+      "The concern is explored with care through history, observations, symptoms, school context, family patterns, and the child’s emotional needs.",
     icon: ClipboardCheck,
   },
   {
     number: "03",
-    title: "Personalised care plan",
+    title: "A clear care plan is suggested",
     description:
-      "A therapy, counselling, assessment or intervention pathway is suggested based on the client’s needs.",
+      "Based on the concern, we guide you toward counselling, therapy, psychological assessment, parent guidance, or an intervention plan.",
     icon: Route,
   },
   {
     number: "04",
-    title: "Ongoing support",
+    title: "Support continues with follow-up",
     description:
-      "Progress is reviewed with follow-ups, parent guidance, home strategies and continued emotional support.",
+      "Progress is reviewed with follow-up sessions, home strategies, parent guidance, and practical support for everyday challenges.",
     icon: HeartHandshake,
   },
 ];
 
+const carePoints = [
+  "No pressure to know the diagnosis before reaching out",
+  "Parent-friendly explanation of the concern",
+  "Practical home strategies wherever needed",
+];
+
 const HowWeWork = () => {
   return (
-    <section className="relative overflow-hidden bg-[#F7FBFC] px-5 py-18">
-      <div className="absolute -left-30 top-20 h-80 w-80 rounded-full bg-blue-100 blur-3xl" />
-      <div className="absolute -right-30 bottom-20 h-80 w-80 rounded-full bg-teal-100 blur-3xl" />
+    <section className="relative overflow-hidden bg-[#F7FBFC] px-5 py-16">
+      <div className="absolute -left-30 top-20 h-80 w-80 rounded-full bg-[#2CB1A6]/10 blur-3xl" />
+      <div className="absolute -right-30 bottom-20 h-80 w-80 rounded-full bg-[#0F3D5E]/10 blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl">
         <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
@@ -58,29 +65,46 @@ const HowWeWork = () => {
           >
             <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold text-[#0F3D5E] shadow-sm">
               <Sparkles size={16} className="text-[#2CB1A6]" />
-              How we work
+              How We Work
             </div>
 
             <h2 className="text-4xl font-black tracking-tight text-[#102A43] md:text-6xl">
-              A calm, clear &{" "}
+              From worry to clarity,{" "}
               <span className="bg-linear-to-r from-[#0F3D5E] to-[#2CB1A6] bg-clip-text text-transparent">
-                guided journey.
+                step by step.
               </span>
             </h2>
 
-            <p className="mt-6 text-lg leading-8 text-slate-600">
-              The website should make parents feel supported from the first
-              click. This section explains the process in a simple and premium
-              way.
+            <p className="mt-6 text-base font-semibold leading-8 text-slate-600 sm:text-lg">
+              Parents often come with confusion: is it behaviour, attention,
+              anxiety, learning difficulty, speech delay, or something else? Our
+              process helps you understand the concern and choose the right next
+              step with confidence.
             </p>
 
-            <div className="mt-8 rounded-4xl border border-white bg-white/80 p-6 shadow-xl shadow-slate-900/5 backdrop-blur-xl">
+            <div className="mt-8 rounded-4xl border border-white bg-white/85 p-6 shadow-xl shadow-slate-900/5 backdrop-blur-xl">
               <p className="text-lg font-bold leading-8 text-[#0F3D5E]">
                 “Every child deserves to be understood before being corrected.”
               </p>
+
               <p className="mt-3 text-sm font-semibold text-slate-500">
                 — Dr. Vini Jhariya
               </p>
+
+              <div className="mt-5 space-y-3">
+                {carePoints.map((point) => (
+                  <div
+                    key={point}
+                    className="flex items-start gap-2 text-sm font-bold leading-6 text-slate-600"
+                  >
+                    <CheckCircle2
+                      size={17}
+                      className="mt-1 shrink-0 text-[#2CB1A6]"
+                    />
+                    <span>{point}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </motion.div>
 
@@ -110,6 +134,7 @@ const HowWeWork = () => {
                           <span className="text-sm font-black text-[#2CB1A6]">
                             {step.number}
                           </span>
+
                           <span className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
                             Step
                           </span>
@@ -119,7 +144,7 @@ const HowWeWork = () => {
                           {step.title}
                         </h3>
 
-                        <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">
+                        <p className="mt-3 max-w-2xl text-base font-semibold leading-7 text-slate-600">
                           {step.description}
                         </p>
                       </div>
@@ -140,18 +165,17 @@ const HowWeWork = () => {
               transition={{ duration: 0.55 }}
               className="mt-8 rounded-4xl bg-linear-to-br from-[#0F3D5E] to-[#2CB1A6] p-8 text-white shadow-2xl shadow-blue-950/20 md:ml-14"
             >
-              <h3 className="text-2xl font-black">
-                Ready to begin the right care journey?
-              </h3>
+              <h3 className="text-2xl font-black">Not sure where to begin?</h3>
 
-              <p className="mt-3 text-sm leading-6 text-white/75">
-                Visitors can book a consultation, send a WhatsApp message or
-                explore services before deciding.
+              <p className="mt-3 text-sm font-semibold leading-6 text-white/75">
+                You do not need to know the exact service or diagnosis first.
+                Share your concern, and we will help you understand the right
+                starting point.
               </p>
 
               <a
-                href="/contact"
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-black text-[#0F3D5E] transition hover:-translate-y-1"
+                href="/contact-us"
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-black text-[#0F3D5E] transition hover:-translate-y-1 hover:bg-[#E9F8F6]"
               >
                 Book Consultation
                 <ArrowRight size={16} />

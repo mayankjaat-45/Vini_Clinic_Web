@@ -6,6 +6,15 @@ const nextConfig = {
     "https://activities-saves-see-procedure.trycloudflare.com",
     "*.trycloudflare.com",
   ],
+
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
