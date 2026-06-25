@@ -12,6 +12,12 @@ const sendMail = async ({ to, subject, html, replyTo }) => {
 
     const mailPort = Number(process.env.MAIL_PORT) || 465;
 
+    console.log("MAIL CONFIG", {
+      host: process.env.MAIL_HOST,
+      port: process.env.MAIL_PORT,
+      user: process.env.MAIL_USER,
+      hasPass: !!process.env.MAIL_PASS,
+    });
     const transporter = nodemailer.createTransport({
       host: process.env.MAIL_HOST,
       port: Number(process.env.MAIL_PORT),
@@ -22,6 +28,7 @@ const sendMail = async ({ to, subject, html, replyTo }) => {
       },
     });
 
+    console.log("Checking SMTP connection...");
     await transporter.verify();
     console.log("SMTP VERIFIED");
 
