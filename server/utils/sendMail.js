@@ -13,14 +13,17 @@ const sendMail = async ({ to, subject, html, replyTo }) => {
     const mailPort = Number(process.env.MAIL_PORT) || 465;
 
     const transporter = nodemailer.createTransport({
-      host: process.env.MAIL_HOST || "smtp.gmail.com",
-      port: mailPort,
-      secure: mailPort === 465,
+      host: process.env.MAIL_HOST,
+      port: Number(process.env.MAIL_PORT),
+      secure: true,
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
       },
     });
+
+    await transporter.verify();
+    console.log("SMTP VERIFIED");
 
     const info = await transporter.sendMail({
       from: `"Dr. Vini Website" <${process.env.MAIL_USER}>`,
@@ -34,7 +37,7 @@ const sendMail = async ({ to, subject, html, replyTo }) => {
 
     return info;
   } catch (error) {
-    console.log("MAIL SEND ERROR:", error.message);
+    console.error("MAIL SEND ERROR FULL:", error);
     throw error;
   }
 };
