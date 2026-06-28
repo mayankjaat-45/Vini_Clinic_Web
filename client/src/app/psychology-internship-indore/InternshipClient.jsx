@@ -9,6 +9,7 @@ import {
   Award,
   BookOpen,
   CheckCircle2,
+  ChevronDown,
   ClipboardCheck,
   GraduationCap,
   HelpCircle,
@@ -259,6 +260,7 @@ export default function InternshipClient() {
   const [formData, setFormData] = useState(initialForm);
   const [resume, setResume] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [openFaq, setOpenFaq] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -332,11 +334,11 @@ export default function InternshipClient() {
   return (
     <main className="overflow-hidden bg-[#F7FBFC]">
       {/* Hero */}
-      <section className="relative px-4 py-20 sm:px-5 md:py-24">
-        <div className="absolute -left-28 -top-28 h-80 w-80 rounded-full bg-[#2CB1A6]/20 blur-3xl md:h-96 md:w-96" />
-        <div className="absolute -right-28 top-20 h-80 w-80 rounded-full bg-[#0F3D5E]/10 blur-3xl md:h-96 md:w-96" />
+      <section className="relative px-4 py-10 sm:px-5 md:py-14">
+        <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[#2CB1A6]/20 blur-3xl" />
+        <div className="absolute -right-24 top-10 h-72 w-72 rounded-full bg-[#0F3D5E]/10 blur-3xl" />
 
-        <div className="relative mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1fr_0.85fr] lg:items-center">
+        <div className="relative mx-auto grid max-w-7xl gap-7 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <motion.div
             variants={staggerContainer}
             initial="hidden"
@@ -345,7 +347,7 @@ export default function InternshipClient() {
           >
             <motion.div
               variants={fadeUp}
-              className="mb-6 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm sm:text-sm"
+              className="mb-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm sm:text-sm"
             >
               <Sparkles size={16} className="text-[#2CB1A6]" />
               Psychology Internship Indore
@@ -353,40 +355,43 @@ export default function InternshipClient() {
 
             <motion.h1
               variants={fadeUp}
-              className="whitespace-pre-line text-4xl font-black leading-tight text-[#102A43] sm:text-5xl md:text-6xl lg:text-7xl"
+              className="mx-auto max-w-4xl text-3xl font-black leading-[1.12] text-[#102A43] sm:text-4xl md:text-5xl lg:mx-0 lg:text-6xl"
             >
-              This is not a certificate programme.{"\n"}This is real clinical
-              training.
+              Real Clinical Internship for Psychology Students
             </motion.h1>
 
             <motion.p
               variants={fadeUp}
-              className="mx-auto mt-6 max-w-3xl text-lg font-black leading-8 text-[#0F3D5E] sm:text-xl lg:mx-0"
+              className="mx-auto mt-4 max-w-3xl text-base font-bold leading-7 text-[#0F3D5E] sm:text-lg lg:mx-0"
             >
-              A supervised, structured internship at Urjasvini Child Development
-              Centre — under Dr. Vini Jhariya, Clinical & Child Psychologist,
-              RCI Registered, TEDx Speaker, Published Researcher.
+              Not just a certificate programme — get supervised exposure to real
+              cases, clinical discussions, assessments, and structured learning
+              under Dr. Vini Jhariya.
             </motion.p>
 
             <motion.div
               variants={fadeUp}
-              className="mx-auto mt-5 max-w-3xl space-y-4 text-base font-semibold leading-8 text-slate-600 sm:text-lg lg:mx-0"
+              className="mt-5 grid gap-3 sm:grid-cols-2 lg:max-w-2xl"
             >
-              <p>
-                Every psychology student in India today can get an internship
-                certificate. But certificates do not make clinicians. Real
-                clinical exposure does.
-              </p>
-              <p>
-                Real children. Real adults. Real assessments. Real therapy. Real
-                clinical decisions — explained, discussed, and supervised by Dr.
-                Vini Jhariya herself.
-              </p>
+              {[
+                "RCI Registered Clinical Psychologist",
+                "Real clinical case exposure",
+                "Syllabus-based learning",
+                "Online & in-clinic options",
+              ].map((item) => (
+                <div
+                  key={item}
+                  className="flex items-center gap-2 rounded-2xl bg-white px-4 py-3 text-left text-sm font-black text-slate-700 shadow-sm"
+                >
+                  <CheckCircle2 size={18} className="shrink-0 text-[#2CB1A6]" />
+                  {item}
+                </div>
+              ))}
             </motion.div>
 
             <motion.div
               variants={fadeUp}
-              className="mt-9 flex flex-col justify-center gap-4 sm:flex-row lg:justify-start"
+              className="mt-7 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start"
             >
               <a
                 href="#apply"
@@ -403,7 +408,7 @@ export default function InternshipClient() {
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-7 py-4 text-sm font-black text-white shadow-xl shadow-green-900/15 transition hover:-translate-y-1 hover:bg-[#1fb85a]"
               >
                 <MessageCircle size={18} />
-                WhatsApp Us for Details
+                WhatsApp Details
               </a>
             </motion.div>
           </motion.div>
@@ -412,17 +417,35 @@ export default function InternshipClient() {
             initial={{ opacity: 0, x: 35 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.65, ease: "easeOut" }}
-            className="rounded-4xl bg-white p-5 shadow-2xl shadow-slate-900/10 md:rounded-[3rem]"
+            className="rounded-4xl bg-white p-4 shadow-2xl shadow-slate-900/10"
           >
-            <div className="rounded-[1.6rem] bg-linear-to-br from-[#0F3D5E] to-[#168A83] p-7 text-white md:rounded-[2.4rem] md:p-8">
-              <GraduationCap className="mb-6 text-[#F4B183]" size={48} />
-              <h2 className="text-3xl font-black leading-tight">
+            <div className="rounded-3xl bg-linear-to-br from-[#0F3D5E] to-[#168A83] p-6 text-white sm:p-7">
+              <GraduationCap className="mb-4 text-[#F4B183]" size={42} />
+
+              <h2 className="text-2xl font-black leading-tight sm:text-3xl">
                 Real children. Real cases. Real learning.
               </h2>
-              <p className="mt-4 text-sm font-semibold leading-7 text-white/75 sm:text-base">
-                Built around your level of training, university syllabus, and
-                learning goals — with real supervision and clinical discussion.
+
+              <p className="mt-3 text-sm font-semibold leading-7 text-white/75">
+                Built around your qualification, university syllabus, learning
+                goals, and required internship format.
               </p>
+
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                {[
+                  "Observation",
+                  "Case Discussion",
+                  "Assessment Exposure",
+                  "Supervision",
+                ].map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-2xl bg-white/10 px-4 py-3 text-sm font-black text-white"
+                  >
+                    {item}
+                  </div>
+                ))}
+              </div>
             </div>
           </motion.div>
         </div>
@@ -618,7 +641,7 @@ export default function InternshipClient() {
       </SectionWrapper>
 
       {/* How to Apply + Form */}
-      <section id="apply" className="px-4 pb-20 sm:px-5 md:pb-24">
+      <section id="apply" className="px-4 pb-14 sm:px-5 md:pb-16">
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="lg:sticky lg:top-28 lg:h-fit">
             <SectionHeading
@@ -788,25 +811,61 @@ export default function InternshipClient() {
         <SectionHeading badge="FAQs" title="Questions students ask most." />
 
         <div className="mx-auto max-w-5xl space-y-4">
-          {faqs.map((faq) => (
-            <details
-              key={faq.q}
-              className="group rounded-2xl bg-white p-5 shadow-lg shadow-slate-900/5"
-            >
-              <summary className="flex cursor-pointer list-none gap-3 font-black leading-6 text-[#102A43]">
-                <HelpCircle size={22} className="shrink-0 text-[#2CB1A6]" />
-                {faq.q}
-              </summary>
-              <p className="mt-4 pl-9 text-sm font-semibold leading-7 text-slate-600">
-                {faq.a}
-              </p>
-            </details>
-          ))}
+          {faqs.map((faq, index) => {
+            const isOpen = openFaq === index;
+
+            return (
+              <motion.div
+                key={faq.q}
+                initial={false}
+                className={`overflow-hidden rounded-3xl border bg-white shadow-lg shadow-slate-900/5 transition ${
+                  isOpen ? "border-[#2CB1A6]" : "border-slate-100"
+                }`}
+              >
+                <button
+                  type="button"
+                  onClick={() => setOpenFaq(isOpen ? null : index)}
+                  aria-expanded={isOpen}
+                  className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left"
+                >
+                  <span className="flex items-start gap-3 text-base font-black leading-6 text-[#102A43]">
+                    <HelpCircle
+                      size={22}
+                      className="mt-0.5 shrink-0 text-[#2CB1A6]"
+                    />
+                    {faq.q}
+                  </span>
+
+                  <span
+                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#E9F8F6] text-[#0F766E] transition ${
+                      isOpen ? "rotate-180" : ""
+                    }`}
+                  >
+                    <ChevronDown size={20} />
+                  </span>
+                </button>
+
+                <motion.div
+                  initial={false}
+                  animate={{
+                    height: isOpen ? "auto" : 0,
+                    opacity: isOpen ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                  className="overflow-hidden"
+                >
+                  <p className="px-5 pb-5 pl-14 text-sm font-semibold leading-7 text-slate-600">
+                    {faq.a}
+                  </p>
+                </motion.div>
+              </motion.div>
+            );
+          })}
         </div>
       </SectionWrapper>
 
       {/* Final CTA */}
-      <section className="px-4 pb-20 sm:px-5 md:pb-24">
+      <section className="px-4 pb-14 sm:px-5 md:pb-16">
         <div className="mx-auto max-w-7xl rounded-4xl bg-[#102A43] p-7 text-center text-white shadow-2xl shadow-slate-900/20 sm:p-10 md:rounded-[3rem] md:p-16">
           <h2 className="text-3xl font-black leading-tight sm:text-4xl md:text-6xl">
             The certificate is the smallest thing you will take away.
@@ -854,7 +913,7 @@ export default function InternshipClient() {
 
 const SectionWrapper = ({ children }) => {
   return (
-    <section className="px-4 pb-20 sm:px-5 md:pb-24">
+    <section className="px-4 pb-14 sm:px-5 md:pb-16">
       <div className="mx-auto max-w-7xl">{children}</div>
     </section>
   );

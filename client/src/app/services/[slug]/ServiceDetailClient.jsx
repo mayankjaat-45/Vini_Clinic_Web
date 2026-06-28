@@ -6,58 +6,53 @@ import {
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
-  Brain,
   CalendarCheck,
   CheckCircle2,
-  ClipboardCheck,
-  HelpCircle,
+  ChevronDown,
   HeartHandshake,
+  HelpCircle,
   MessageCircle,
-  Quote,
   Route,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
+  hidden: { opacity: 0, y: 22 },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.55, ease: "easeOut" },
+    transition: { duration: 0.5, ease: "easeOut" },
   },
 };
 
 const fadeRight = {
-  hidden: { opacity: 0, x: 35 },
+  hidden: { opacity: 0, x: 28 },
   show: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
+    transition: { duration: 0.55, ease: "easeOut" },
   },
 };
 
 const staggerContainer = {
   hidden: {},
   show: {
-    transition: {
-      staggerChildren: 0.08,
-    },
+    transition: { staggerChildren: 0.07 },
   },
 };
 
 const getTextLines = (text = "") => {
   return String(text)
     .split("\n")
-    .filter((line) => line.trim());
+    .map((line) => line.trim())
+    .filter(Boolean);
 };
 
-const isImportantNote = (item = {}) => {
-  const title = String(item.title || "")
-    .toLowerCase()
-    .trim();
-
-  return title.includes("important note") || title.startsWith("important:");
+const truncateText = (text = "", limit = 180) => {
+  const cleanText = getTextLines(text).join(" ");
+  if (cleanText.length <= limit) return cleanText;
+  return `${cleanText.slice(0, limit).trim()}...`;
 };
 
 const getButtonHref = (buttonLink) => {
@@ -69,15 +64,154 @@ const isExternalLink = (link = "") => {
   return link.startsWith("http") || link.startsWith("https://wa.me");
 };
 
+const isImportantNote = (item = {}) => {
+  const title = String(item.title || "")
+    .toLowerCase()
+    .trim();
+  return title.includes("important note") || title.startsWith("important:");
+};
+
+const normalizeItem = (item) => {
+  if (typeof item === "string") {
+    return {
+      title: item,
+      description: "",
+    };
+  }
+
+  return {
+    title:
+      item?.title || item?.subtitle || item?.description || "Support point",
+    description:
+      item?.description ||
+      item?.content ||
+      (Array.isArray(item?.items) ? item.items.slice(0, 2).join(" • ") : ""),
+  };
+};
+
+const getCompactHighlights = (sections = [], fallbackPoints = []) => {
+  const highlightTypes = ["cards", "tools", "badges", "two-column", "text"];
+
+  const sectionItems = sections
+    .filter((section) => highlightTypes.includes(section?.type || "text"))
+    .flatMap((section) => {
+      const items = Array.isArray(section?.items) ? section.items : [];
+      const contentItem = section?.content
+        ? [
+            {
+              title: section.title,
+              description: section.content,
+            },
+          ]
+        : [];
+
+      return [...contentItem, ...items];
+    })
+    .filter((item) => !isImportantNote(item))
+    .map(normalizeItem)
+    .filter((item) => item.title);
+
+  const fallbackItems = fallbackPoints.map(normalizeItem);
+
+  const allItems = [...sectionItems, ...fallbackItems];
+
+  if (allItems.length > 0) return allItems.slice(0, 6);
+
+  return [
+    {
+      title: "Understand the concern clearly",
+      description:
+        "A calm first conversation to understand symptoms, behaviour, emotions and family concerns.",
+    },
+    {
+      title: "Personalised guidance plan",
+      description:
+        "Support is planned according to the child, adult, couple or family need.",
+    },
+    {
+      title: "Follow-up support",
+      description:
+        "Clear next steps after consultation so families know what to do next.",
+    },
+  ];
+};
+
+const getCompactSteps = (sections = [], fallbackProcess = []) => {
+  const stepSection = sections.find((section) => section?.type === "steps");
+  const sectionSteps = Array.isArray(stepSection?.items)
+    ? stepSection.items
+    : [];
+
+  const steps = sectionSteps.length > 0 ? sectionSteps : fallbackProcess;
+
+  if (steps.length > 0) {
+    return steps.slice(0, 4).map((step, index) => {
+      if (typeof step === "string") {
+        return {
+          title: `Step ${index + 1}`,
+          description: step,
+        };
+      }
+
+      return {
+        title: step?.title || `Step ${index + 1}`,
+        description:
+          step?.description ||
+          step?.content ||
+          (Array.isArray(step?.items)
+            ? step.items.slice(0, 2).join(" • ")
+            : ""),
+      };
+    });
+  }
+
+  return [
+    {
+      title: "Book consultation",
+      description: "Share your concern through the contact form or WhatsApp.",
+    },
+    {
+      title: "Understand the concern",
+      description:
+        "The issue is discussed carefully before suggesting the right support.",
+    },
+    {
+      title: "Plan the next step",
+      description:
+        "You receive practical guidance, therapy direction or assessment advice.",
+    },
+  ];
+};
+
+const getImportantNote = (sections = []) => {
+  const importantItem = sections
+    .flatMap((section) => (Array.isArray(section?.items) ? section.items : []))
+    .find((item) => isImportantNote(item));
+
+  if (!importantItem) return "";
+
+  return (
+    importantItem.description ||
+    importantItem.content ||
+    importantItem.subtitle ||
+    "Please read this important note carefully."
+  );
+};
+
 function SmartButton({ href, children, variant = "primary" }) {
   const classes =
     variant === "secondary"
-      ? "inline-flex items-center justify-center gap-2 rounded-full border border-[#0F3D5E]/15 bg-white px-6 py-3 text-sm font-black text-[#0F3D5E] shadow-sm transition hover:-translate-y-1 hover:border-[#2CB1A6] hover:bg-[#E9F8F6] hover:text-[#0F766E]"
-      : "inline-flex items-center justify-center gap-2 rounded-full bg-[#0F3D5E] px-6 py-3 text-sm font-black text-white shadow-xl shadow-blue-950/15 transition hover:-translate-y-1 hover:bg-[#102A43]";
+      ? "inline-flex items-center justify-center gap-2 rounded-full border border-[#0F3D5E]/15 bg-white px-5 py-3 text-sm font-black text-[#0F3D5E] shadow-sm transition hover:-translate-y-1 hover:border-[#2CB1A6] hover:bg-[#E9F8F6] hover:text-[#0F766E]"
+      : "inline-flex items-center justify-center gap-2 rounded-full bg-[#0F3D5E] px-5 py-3 text-sm font-black text-white shadow-xl shadow-blue-950/15 transition hover:-translate-y-1 hover:bg-[#102A43]";
 
   if (isExternalLink(href)) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={classes}>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={classes}
+      >
         {children}
       </a>
     );
@@ -130,13 +264,17 @@ export default function ServiceDetailClient({ service }) {
     ? [...service.sections].sort((a, b) => (a.order || 0) - (b.order || 0))
     : [];
 
-  const faqs = Array.isArray(service.faqs) ? service.faqs : [];
+  const faqs = Array.isArray(service.faqs) ? service.faqs.slice(0, 5) : [];
   const fallbackPoints = Array.isArray(service.points) ? service.points : [];
   const fallbackProcess = Array.isArray(service.process) ? service.process : [];
 
   const heroTitle = hero.headline || service.title;
   const heroSubtitle = hero.subHeadline || service.shortDescription;
   const heroParagraph = hero.paragraph || service.description;
+
+  const highlights = getCompactHighlights(sections, fallbackPoints);
+  const steps = getCompactSteps(sections, fallbackProcess);
+  const importantNote = getImportantNote(sections);
 
   const whatsappMessage = encodeURIComponent(
     `Hello, I want to know more about ${service.title}`,
@@ -147,37 +285,30 @@ export default function ServiceDetailClient({ service }) {
 
   return (
     <main className="overflow-hidden bg-[#F7FBFC]">
-      <section className="relative px-4 pb-16 pt-20 sm:px-5 md:pb-20 md:pt-24">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.75 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.1, ease: "easeOut" }}
-          className="absolute -left-28 -top-28 h-80 w-80 rounded-full bg-[#2CB1A6]/20 blur-3xl md:h-96 md:w-96"
-        />
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.75 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.1, delay: 0.15, ease: "easeOut" }}
-          className="absolute -right-28 top-20 h-80 w-80 rounded-full bg-[#0F3D5E]/10 blur-3xl md:h-96 md:w-96"
-        />
+      <section className="relative px-4 pb-10 pt-16 sm:px-5 md:pb-14 md:pt-20">
+        <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[#2CB1A6]/20 blur-3xl" />
+        <div className="absolute -right-24 top-24 h-72 w-72 rounded-full bg-[#0F3D5E]/10 blur-3xl" />
 
         <div className="relative mx-auto max-w-7xl">
           <motion.div variants={fadeUp} initial="hidden" animate="show">
             <Link
               href="/services"
-              className="mb-8 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-[#0F3D5E] shadow-sm transition hover:text-[#2CB1A6]"
+              className="mb-7 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-[#0F3D5E] shadow-sm transition hover:text-[#2CB1A6]"
             >
               <ArrowLeft size={16} />
               Back to Services
             </Link>
           </motion.div>
 
-          <div className="grid gap-10 lg:grid-cols-[1fr_440px] lg:items-center">
-            <motion.div variants={staggerContainer} initial="hidden" animate="show">
+          <div className="grid gap-7 lg:grid-cols-[1fr_390px] lg:items-center">
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              animate="show"
+            >
               <motion.div
                 variants={fadeUp}
-                className="mb-6 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm sm:text-sm"
+                className="mb-5 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm sm:text-sm"
               >
                 <Sparkles size={16} className="text-[#2CB1A6]" />
                 {service.category || "Therapy & Counselling Service"}
@@ -185,7 +316,7 @@ export default function ServiceDetailClient({ service }) {
 
               <motion.h1
                 variants={fadeUp}
-                className="whitespace-pre-line text-4xl font-black leading-tight text-[#102A43] sm:text-5xl md:text-6xl"
+                className="max-w-4xl whitespace-pre-line text-3xl font-black leading-tight text-[#102A43] sm:text-5xl md:text-6xl"
               >
                 {heroTitle}
               </motion.h1>
@@ -193,46 +324,44 @@ export default function ServiceDetailClient({ service }) {
               {heroSubtitle && (
                 <motion.p
                   variants={fadeUp}
-                  className="mt-6 max-w-4xl text-lg font-black leading-8 text-[#0F3D5E] sm:text-xl md:leading-9"
+                  className="mt-5 max-w-3xl text-base font-black leading-7 text-[#0F3D5E] sm:text-xl sm:leading-8"
                 >
                   {heroSubtitle}
                 </motion.p>
               )}
 
               {heroParagraph && (
-                <motion.div
+                <motion.p
                   variants={fadeUp}
-                  className="mt-5 max-w-4xl space-y-4 text-base font-semibold leading-8 text-slate-600 sm:text-lg"
+                  className="mt-4 max-w-3xl text-sm font-semibold leading-7 text-slate-600 sm:text-base sm:leading-8"
                 >
-                  {getTextLines(heroParagraph).map((line, index) => (
-                    <p key={index}>{line}</p>
-                  ))}
-                </motion.div>
+                  {truncateText(heroParagraph, 260)}
+                </motion.p>
               )}
 
               <motion.div
                 variants={fadeUp}
-                className="mt-7 grid gap-3 sm:grid-cols-3"
+                className="mt-6 flex flex-wrap gap-3"
               >
                 {[
                   "Clear guidance",
-                  "Parent-friendly approach",
+                  "Personalised plan",
                   "Online + Indore support",
                 ].map((point) => (
-                  <div
+                  <span
                     key={point}
-                    className="flex items-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-black text-[#0F3D5E] shadow-sm"
+                    className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm sm:text-sm"
                   >
-                    <CheckCircle2 size={17} className="text-[#2CB1A6]" />
+                    <CheckCircle2 size={16} className="text-[#2CB1A6]" />
                     {point}
-                  </div>
+                  </span>
                 ))}
               </motion.div>
 
               {hero.trustLine && (
                 <motion.p
                   variants={fadeUp}
-                  className="mt-6 rounded-2xl border border-[#2CB1A6]/15 bg-white px-5 py-4 text-sm font-black leading-6 text-[#0F3D5E] shadow-sm"
+                  className="mt-5 max-w-3xl rounded-2xl border border-[#2CB1A6]/15 bg-white px-5 py-4 text-sm font-black leading-6 text-[#0F3D5E] shadow-sm"
                 >
                   {hero.trustLine}
                 </motion.p>
@@ -240,7 +369,7 @@ export default function ServiceDetailClient({ service }) {
 
               <motion.div
                 variants={fadeUp}
-                className="mt-9 flex flex-col gap-4 sm:flex-row"
+                className="mt-7 flex flex-col gap-3 sm:flex-row"
               >
                 <SmartButton href={getButtonHref(primaryHeroButton?.link)}>
                   {primaryHeroButton?.text || "Book Consultation"}
@@ -260,56 +389,37 @@ export default function ServiceDetailClient({ service }) {
               </motion.div>
             </motion.div>
 
-            <motion.div
-              variants={fadeRight}
-              initial="hidden"
-              animate="show"
-              className="rounded-4xl bg-white p-4 shadow-2xl shadow-slate-900/10 md:rounded-[3rem] md:p-5"
-            >
-              <div className="relative overflow-hidden rounded-[1.6rem] bg-linear-to-br from-[#0F3D5E] to-[#168A83] p-7 text-white md:rounded-[2.4rem] md:p-8">
-                <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
-                <div className="absolute -bottom-20 left-10 h-56 w-56 rounded-full bg-[#F4B183]/20 blur-3xl" />
+            <motion.div variants={fadeRight} initial="hidden" animate="show">
+              <div className="relative overflow-hidden rounded-4xl bg-linear-to-br from-[#0F3D5E] to-[#168A83] p-6 text-white shadow-2xl shadow-blue-950/20 md:rounded-[3rem] md:p-7">
+                <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-white/10 blur-3xl" />
+                <div className="absolute -bottom-20 left-10 h-52 w-52 rounded-full bg-[#F4B183]/20 blur-3xl" />
 
                 <div className="relative">
-                  <motion.div
-                    animate={{ y: [0, -8, 0] }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                    className="mb-8 inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-white/15"
-                  >
-                    <HeartHandshake size={34} className="text-[#F4B183]" />
-                  </motion.div>
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-3xl bg-white/15 text-[#F4B183]">
+                    <HeartHandshake size={30} />
+                  </div>
 
-                  <p className="text-sm font-bold uppercase tracking-[0.25em] text-white/60">
-                    Dr. Vini Jhariya
+                  <p className="text-xs font-bold uppercase tracking-[0.25em] text-white/60">
+                    Quick support path
                   </p>
 
-                  <h2 className="mt-4 text-3xl font-black leading-tight sm:text-4xl">
-                    Understand first. Then support.
+                  <h2 className="mt-3 text-2xl font-black leading-tight sm:text-3xl">
+                    Less reading. More clarity.
                   </h2>
 
-                  <p className="mt-5 text-sm font-semibold leading-7 text-white/75 sm:text-base">
-                    The right support begins with understanding the real reason
-                    behind behaviour, emotions, learning or developmental
-                    concerns.
-                  </p>
-
-                  <div className="mt-8 space-y-3">
+                  <div className="mt-6 space-y-3">
                     {[
                       {
-                        icon: Brain,
-                        title: "Assessment-led clarity",
+                        icon: CalendarCheck,
+                        title: "Book a consultation",
                       },
                       {
                         icon: Route,
-                        title: "Personalised care plan",
+                        title: "Get the right next step",
                       },
                       {
                         icon: ShieldCheck,
-                        title: "Safe and confidential support",
+                        title: "Safe, confidential support",
                       },
                     ].map((item) => {
                       const Icon = item.icon;
@@ -319,7 +429,7 @@ export default function ServiceDetailClient({ service }) {
                           key={item.title}
                           className="flex items-center gap-3 rounded-2xl bg-white/10 px-4 py-3"
                         >
-                          <Icon size={19} className="text-[#F4B183]" />
+                          <Icon size={18} className="text-[#F4B183]" />
                           <span className="text-sm font-black">
                             {item.title}
                           </span>
@@ -328,13 +438,13 @@ export default function ServiceDetailClient({ service }) {
                     })}
                   </div>
 
-                  <div className="mt-8 rounded-3xl bg-white/10 p-5">
+                  <div className="mt-6 rounded-3xl bg-white/10 p-4">
                     <p className="text-sm font-black text-[#F4B183]">
                       Available in Indore & Online
                     </p>
                     <p className="mt-2 text-sm font-semibold leading-6 text-white/75">
-                      Clinical support for children, adolescents, adults,
-                      couples and families.
+                      Suitable for children, adults, couples and families based
+                      on the concern.
                     </p>
                   </div>
                 </div>
@@ -344,17 +454,103 @@ export default function ServiceDetailClient({ service }) {
         </div>
       </section>
 
-      {sections.length > 0 ? (
-        sections.map((section, index) => (
-          <ServiceSection
-            key={`${section.title}-${index}`}
-            section={section}
-            index={index}
+      <section className="px-4 py-10 sm:px-5 md:py-14">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeader
+            eyebrow="Quick overview"
+            title="What you get in this service"
+            subtitle="Only the most useful points are shown here so visitors can decide quickly."
           />
-        ))
-      ) : (
-        <FallbackSections points={fallbackPoints} process={fallbackProcess} />
-      )}
+
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.15 }}
+            className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {highlights.map((item, index) => (
+              <motion.div
+                key={`${item.title}-${index}`}
+                variants={fadeUp}
+                className="group rounded-3xl border border-white bg-white p-5 shadow-lg shadow-slate-900/5 transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10"
+              >
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#0F766E] transition group-hover:bg-[#0F3D5E] group-hover:text-white">
+                  <CheckCircle2 size={22} />
+                </div>
+
+                <h3 className="text-lg font-black leading-snug text-[#102A43]">
+                  {item.title}
+                </h3>
+
+                {item.description && (
+                  <p className="mt-3 text-sm font-semibold leading-6 text-slate-600">
+                    {truncateText(item.description, 135)}
+                  </p>
+                )}
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {importantNote && (
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.2 }}
+              className="mt-5 rounded-3xl border border-[#F4B183]/30 bg-[#FFF8ED] p-4 shadow-sm sm:flex sm:items-start sm:gap-3"
+            >
+              <div className="mb-3 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#F4B183]/20 text-[#B7791F] sm:mb-0">
+                <AlertTriangle size={18} strokeWidth={2.6} />
+              </div>
+
+              <p className="text-sm font-bold leading-7 text-[#102A43]">
+                <span className="font-black text-[#B7791F]">
+                  Important Note:{" "}
+                </span>
+                {truncateText(importantNote, 230)}
+              </p>
+            </motion.div>
+          )}
+        </div>
+      </section>
+
+      <section className="bg-white/55 px-4 py-10 sm:px-5 md:py-14">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeader
+            eyebrow="Simple process"
+            title="How it works"
+            subtitle="A short, clear flow from first contact to the right support plan."
+          />
+
+          <div className="mt-8 grid gap-4 lg:grid-cols-4">
+            {steps.map((step, index) => (
+              <motion.div
+                key={`${step.title}-${index}`}
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.18 }}
+                className="rounded-3xl bg-white p-5 shadow-lg shadow-slate-900/5"
+              >
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-[#0F3D5E] text-sm font-black text-white">
+                  {index + 1}
+                </div>
+
+                <h3 className="text-lg font-black text-[#102A43]">
+                  {step.title}
+                </h3>
+
+                {step.description && (
+                  <p className="mt-3 text-sm font-semibold leading-6 text-slate-600">
+                    {truncateText(step.description, 125)}
+                  </p>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {faqs.length > 0 && <FaqSection faqs={faqs} />}
 
@@ -363,666 +559,70 @@ export default function ServiceDetailClient({ service }) {
   );
 }
 
-function SectionWrapper({ children, className = "" }) {
-  return (
-    <section className={`px-4 py-14 sm:px-5 md:py-20 ${className}`}>
-      <div className="mx-auto max-w-7xl">{children}</div>
-    </section>
-  );
-}
-
-function SectionHeading({ section, center = false }) {
+function SectionHeader({ eyebrow, title, subtitle }) {
   return (
     <motion.div
       variants={fadeUp}
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.2 }}
-      className={center ? "mx-auto max-w-4xl text-center" : "max-w-4xl"}
+      className="mx-auto max-w-3xl text-center"
     >
-      <div
-        className={`mb-5 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm ${
-          center ? "mx-auto" : ""
-        }`}
-      >
+      <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm">
         <Sparkles size={15} className="text-[#2CB1A6]" />
-        Service Guide
+        {eyebrow}
       </div>
 
-      <h2 className="whitespace-pre-line text-3xl font-black leading-tight text-[#102A43] sm:text-4xl md:text-5xl">
-        {section.title}
+      <h2 className="text-2xl font-black leading-tight text-[#102A43] sm:text-4xl">
+        {title}
       </h2>
 
-      {section.subtitle && (
-        <p className="mt-5 text-base font-semibold leading-8 text-slate-600 sm:text-lg">
-          {section.subtitle}
+      {subtitle && (
+        <p className="mt-3 text-sm font-semibold leading-7 text-slate-600 sm:text-base">
+          {subtitle}
         </p>
       )}
-
-      {section.content &&
-        section.type !== "story" &&
-        section.type !== "quote" && (
-          <div className="mt-5 space-y-4 text-base font-semibold leading-8 text-slate-600">
-            {getTextLines(section.content).map((line, index) => (
-              <p key={index}>{line}</p>
-            ))}
-          </div>
-        )}
     </motion.div>
-  );
-}
-
-function ServiceSection({ section, index }) {
-  const type = section.type || "text";
-
-  if (type === "cards") return <CardsSection section={section} index={index} />;
-  if (type === "steps") return <StepsSection section={section} index={index} />;
-  if (type === "tools") return <ToolsSection section={section} index={index} />;
-  if (type === "badges")
-    return <BadgesSection section={section} index={index} />;
-  if (type === "story") return <StorySection section={section} index={index} />;
-  if (type === "quote") return <QuoteSection section={section} index={index} />;
-  if (type === "cta") return <CTASection section={section} index={index} />;
-  if (type === "two-column")
-    return <TwoColumnSection section={section} index={index} />;
-  if (type === "faq") return null;
-
-  return <TextSection section={section} index={index} />;
-}
-
-function TextSection({ section, index }) {
-  return (
-    <SectionWrapper className={index % 2 === 0 ? "bg-white/40" : ""}>
-      <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-        <SectionHeading section={{ ...section, content: "" }} />
-
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
-          className="rounded-4xl border border-white bg-white p-6 shadow-xl shadow-slate-900/5 sm:p-8"
-        >
-          {section.content && (
-            <div className="space-y-4 text-base font-semibold leading-8 text-slate-600">
-              {getTextLines(section.content).map((line, idx) => (
-                <p key={idx}>{line}</p>
-              ))}
-            </div>
-          )}
-
-          {Array.isArray(section.items) && section.items.length > 0 && (
-            <div className="mt-7 space-y-4">
-              {section.items.map((item, idx) => (
-                <ContentItem key={idx} item={item} />
-              ))}
-            </div>
-          )}
-        </motion.div>
-      </div>
-    </SectionWrapper>
-  );
-}
-
-function CardsSection({ section, index }) {
-  const items = Array.isArray(section.items) ? section.items : [];
-
-  const importantItems = items.filter((item) => isImportantNote(item));
-  const normalItems = items.filter((item) => !isImportantNote(item));
-
-  const gridClass =
-    normalItems.length === 1
-      ? "mx-auto max-w-4xl"
-      : normalItems.length === 2
-        ? "mx-auto max-w-5xl grid md:grid-cols-2"
-        : "grid md:grid-cols-2 xl:grid-cols-3";
-
-  return (
-    <SectionWrapper className={index % 2 === 0 ? "bg-white/40" : ""}>
-      <SectionHeading section={section} center />
-
-      {normalItems.length > 0 && (
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.12 }}
-          className={`mt-10 gap-5 ${gridClass}`}
-        >
-          {normalItems.map((item, idx) => (
-            <motion.div
-              key={idx}
-              variants={fadeUp}
-              className="group rounded-4xl border border-white bg-white p-6 shadow-xl shadow-slate-900/5 transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-900/10 sm:p-8"
-            >
-              <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#0F766E] transition group-hover:bg-[#0F3D5E] group-hover:text-white">
-                <CheckCircle2 size={24} />
-              </div>
-
-              <h3 className="text-xl font-black leading-snug text-[#102A43] sm:text-2xl">
-                {item.title}
-              </h3>
-
-              {item.subtitle && (
-                <p className="mt-2 text-sm font-black text-[#2CB1A6]">
-                  {item.subtitle}
-                </p>
-              )}
-
-              {item.description && (
-                <p className="mt-4 whitespace-pre-line text-sm font-semibold leading-7 text-slate-600 sm:text-base sm:leading-8">
-                  {item.description}
-                </p>
-              )}
-
-              {item.content && (
-                <p className="mt-4 whitespace-pre-line text-sm font-semibold leading-7 text-slate-600 sm:text-base sm:leading-8">
-                  {item.content}
-                </p>
-              )}
-
-              {Array.isArray(item.items) && item.items.length > 0 && (
-                <ul className="mt-5 space-y-3">
-                  {item.items.map((point, pointIndex) => (
-                    <li
-                      key={pointIndex}
-                      className="flex gap-3 text-sm font-semibold leading-6 text-slate-600"
-                    >
-                      <CheckCircle2
-                        size={17}
-                        className="mt-1 shrink-0 text-[#2CB1A6]"
-                      />
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-
-              {item.buttonText && item.buttonLink && (
-                <div className="mt-6">
-                  <SmartButton href={item.buttonLink} variant="secondary">
-                    {item.buttonText}
-                    <ArrowRight size={16} />
-                  </SmartButton>
-                </div>
-              )}
-            </motion.div>
-          ))}
-        </motion.div>
-      )}
-
-      {importantItems.length > 0 && (
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.12 }}
-          className="mx-auto mt-7 max-w-6xl space-y-3"
-        >
-          {importantItems.map((item, idx) => {
-            const noteText =
-              item.description ||
-              item.content ||
-              item.subtitle ||
-              "Please read this important note carefully.";
-
-            return (
-              <motion.div key={idx} variants={fadeUp} className="w-full">
-                <div className="flex w-full items-start gap-3 rounded-3xl border border-[#F4B183]/30 bg-[#FFF8ED] px-4 py-4 text-left shadow-sm sm:items-center sm:px-5">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#F4B183]/20 text-[#B7791F]">
-                    <AlertTriangle size={18} strokeWidth={2.6} />
-                  </div>
-
-                  <p className="text-sm font-bold leading-7 text-[#102A43] sm:text-base">
-                    <span className="mr-2 font-black text-[#B7791F]">
-                      Important Note:
-                    </span>
-                    {noteText}
-                  </p>
-                </div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
-      )}
-    </SectionWrapper>
-  );
-}
-
-function StepsSection({ section, index }) {
-  return (
-    <SectionWrapper className={index % 2 === 0 ? "bg-white/40" : ""}>
-      <SectionHeading section={section} center />
-
-      <div className="mx-auto mt-12 max-w-5xl space-y-5">
-        {(section.items || []).map((item, idx) => (
-          <motion.div
-            key={idx}
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.15 }}
-            className="grid gap-5 rounded-4xl border border-white bg-white p-6 shadow-xl shadow-slate-900/5 sm:grid-cols-[80px_1fr] sm:p-7"
-          >
-            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-[#0F3D5E] text-2xl font-black text-white">
-              {idx + 1}
-            </div>
-
-            <div>
-              <h3 className="text-xl font-black text-[#102A43]">
-                {item.title}
-              </h3>
-
-              {item.description && (
-                <p className="mt-3 whitespace-pre-line text-sm font-semibold leading-7 text-slate-600 sm:text-base">
-                  {item.description}
-                </p>
-              )}
-
-              {Array.isArray(item.items) && item.items.length > 0 && (
-                <ul className="mt-4 space-y-2">
-                  {item.items.map((point, pointIndex) => (
-                    <li
-                      key={pointIndex}
-                      className="flex gap-3 text-sm font-semibold text-slate-600"
-                    >
-                      <CheckCircle2
-                        size={17}
-                        className="mt-0.5 shrink-0 text-[#2CB1A6]"
-                      />
-                      {point}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </SectionWrapper>
-  );
-}
-
-function ToolsSection({ section, index }) {
-  return (
-    <SectionWrapper className={index % 2 === 0 ? "bg-white/40" : ""}>
-      <SectionHeading section={section} center />
-
-      <motion.div
-        variants={staggerContainer}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.12 }}
-        className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-      >
-        {(section.items || []).map((item, idx) => (
-          <motion.div
-            key={idx}
-            variants={fadeUp}
-            className="flex gap-4 rounded-3xl border border-white bg-white p-5 shadow-lg shadow-slate-900/5"
-          >
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#0F766E]">
-              <ClipboardCheck size={22} />
-            </div>
-
-            <p className="text-sm font-black leading-6 text-[#102A43]">
-              {item.title}
-            </p>
-          </motion.div>
-        ))}
-      </motion.div>
-    </SectionWrapper>
-  );
-}
-
-function BadgesSection({ section, index }) {
-  return (
-    <SectionWrapper className={index % 2 === 0 ? "bg-white/40" : ""}>
-      <SectionHeading section={section} center />
-
-      <motion.div
-        variants={staggerContainer}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.12 }}
-        className="mx-auto mt-10 flex max-w-6xl flex-wrap justify-center gap-3"
-      >
-        {(section.items || []).map((item, idx) => (
-          <motion.div
-            key={idx}
-            variants={fadeUp}
-            className="rounded-full border border-[#0F3D5E]/10 bg-white px-5 py-3 text-sm font-black leading-6 text-[#0F3D5E] shadow-sm"
-          >
-            {item.title}
-          </motion.div>
-        ))}
-      </motion.div>
-    </SectionWrapper>
-  );
-}
-
-function StorySection({ section, index }) {
-  return (
-    <SectionWrapper className={index % 2 === 0 ? "bg-white/40" : ""}>
-      <motion.div
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.18 }}
-        className="mx-auto max-w-5xl overflow-hidden rounded-4xl bg-[#0F3D5E] p-7 text-white shadow-2xl shadow-blue-950/20 sm:p-10 md:rounded-[3rem]"
-      >
-        <div className="mb-7 inline-flex h-14 w-14 items-center justify-center rounded-3xl bg-white/15">
-          <Quote size={28} className="text-[#F4B183]" />
-        </div>
-
-        <h2 className="whitespace-pre-line text-3xl font-black leading-tight sm:text-4xl">
-          {section.title}
-        </h2>
-
-        {section.subtitle && (
-          <p className="mt-4 text-base font-semibold leading-7 text-white/70">
-            {section.subtitle}
-          </p>
-        )}
-
-        {section.content && (
-          <div className="mt-7 space-y-4 text-base font-semibold leading-8 text-white/80">
-            {getTextLines(section.content).map((line, idx) => (
-              <p key={idx}>{line}</p>
-            ))}
-          </div>
-        )}
-
-        {Array.isArray(section.items) &&
-          section.items.map((item, idx) =>
-            item.buttonText && item.buttonLink ? (
-              <div key={idx} className="mt-8">
-                <SmartButton href={item.buttonLink} variant="secondary">
-                  {item.buttonText}
-                  <ArrowRight size={16} />
-                </SmartButton>
-              </div>
-            ) : null,
-          )}
-      </motion.div>
-    </SectionWrapper>
-  );
-}
-
-function QuoteSection({ section, index }) {
-  return (
-    <SectionWrapper className={index % 2 === 0 ? "bg-white/40" : ""}>
-      <motion.div
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.18 }}
-        className="mx-auto max-w-5xl rounded-4xl border border-[#0F3D5E]/10 bg-white p-7 shadow-xl shadow-slate-900/5 sm:p-10 md:rounded-[3rem]"
-      >
-        <Quote size={42} className="text-[#2CB1A6]" />
-
-        <h2 className="mt-5 whitespace-pre-line text-3xl font-black leading-tight text-[#102A43] sm:text-4xl">
-          {section.title}
-        </h2>
-
-        {section.content && (
-          <div className="mt-7 space-y-4 text-base font-semibold leading-8 text-slate-600 sm:text-lg">
-            {getTextLines(section.content).map((line, idx) => (
-              <p key={idx}>{line}</p>
-            ))}
-          </div>
-        )}
-      </motion.div>
-    </SectionWrapper>
-  );
-}
-
-function CTASection({ section, index }) {
-  return (
-    <SectionWrapper className={index % 2 === 0 ? "bg-white/40" : ""}>
-      <motion.div
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.18 }}
-        className="relative overflow-hidden rounded-4xl bg-linear-to-br from-[#0F3D5E] to-[#168A83] p-7 text-center text-white shadow-2xl shadow-blue-950/20 sm:p-10 md:rounded-[3rem]"
-      >
-        <div className="absolute -left-16 -top-16 h-52 w-52 rounded-full bg-white/10 blur-3xl" />
-        <div className="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-[#F4B183]/20 blur-3xl" />
-
-        <div className="relative mx-auto max-w-4xl">
-          <h2 className="whitespace-pre-line text-3xl font-black leading-tight sm:text-4xl md:text-5xl">
-            {section.title}
-          </h2>
-
-          {section.content && (
-            <div className="mt-6 space-y-4 text-base font-semibold leading-8 text-white/80 sm:text-lg">
-              {getTextLines(section.content).map((line, idx) => (
-                <p key={idx}>{line}</p>
-              ))}
-            </div>
-          )}
-
-          {Array.isArray(section.items) && section.items.length > 0 && (
-            <div className="mt-9 flex flex-col justify-center gap-4 sm:flex-row">
-              {section.items.map((item, idx) =>
-                item.buttonText && item.buttonLink ? (
-                  <SmartButton
-                    key={idx}
-                    href={item.buttonLink}
-                    variant={idx === 0 ? "secondary" : "primary"}
-                  >
-                    {item.buttonText}
-                    <ArrowRight size={16} />
-                  </SmartButton>
-                ) : null,
-              )}
-            </div>
-          )}
-        </div>
-      </motion.div>
-    </SectionWrapper>
-  );
-}
-
-function TwoColumnSection({ section, index }) {
-  return (
-    <SectionWrapper className={index % 2 === 0 ? "bg-white/40" : ""}>
-      <SectionHeading section={section} center />
-
-      <div className="mt-10 grid gap-6 lg:grid-cols-2">
-        {(section.items || []).map((item, idx) => (
-          <motion.div
-            key={idx}
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.15 }}
-            className="rounded-4xl border border-white bg-white p-7 shadow-xl shadow-slate-900/5"
-          >
-            <h3 className="text-2xl font-black text-[#102A43]">{item.title}</h3>
-
-            {item.description && (
-              <div className="mt-4 space-y-4 text-sm font-semibold leading-7 text-slate-600 sm:text-base">
-                {getTextLines(item.description).map((line, lineIndex) => (
-                  <p key={lineIndex}>{line}</p>
-                ))}
-              </div>
-            )}
-
-            {Array.isArray(item.items) && item.items.length > 0 && (
-              <ul className="mt-5 space-y-3">
-                {item.items.map((point, pointIndex) => (
-                  <li
-                    key={pointIndex}
-                    className="flex gap-3 text-sm font-semibold leading-6 text-slate-600"
-                  >
-                    <CheckCircle2
-                      size={17}
-                      className="mt-1 shrink-0 text-[#2CB1A6]"
-                    />
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </motion.div>
-        ))}
-      </div>
-    </SectionWrapper>
-  );
-}
-
-function ContentItem({ item }) {
-  return (
-    <div className="rounded-3xl border border-slate-100 bg-[#F7FBFC] p-5">
-      {item.title && (
-        <h3 className="text-lg font-black text-[#102A43]">{item.title}</h3>
-      )}
-
-      {item.subtitle && (
-        <p className="mt-1 text-sm font-black text-[#2CB1A6]">
-          {item.subtitle}
-        </p>
-      )}
-
-      {item.description && (
-        <p className="mt-3 whitespace-pre-line text-sm font-semibold leading-7 text-slate-600">
-          {item.description}
-        </p>
-      )}
-
-      {item.content && (
-        <p className="mt-3 whitespace-pre-line text-sm font-semibold leading-7 text-slate-600">
-          {item.content}
-        </p>
-      )}
-
-      {Array.isArray(item.items) && item.items.length > 0 && (
-        <ul className="mt-4 space-y-2">
-          {item.items.map((point, idx) => (
-            <li
-              key={idx}
-              className="flex gap-3 text-sm font-semibold leading-6 text-slate-600"
-            >
-              <CheckCircle2
-                size={17}
-                className="mt-1 shrink-0 text-[#2CB1A6]"
-              />
-              {point}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-}
-
-function FallbackSections({ points, process }) {
-  return (
-    <>
-      {points.length > 0 && (
-        <SectionWrapper>
-          <SectionHeading
-            center
-            section={{
-              type: "highlights",
-              title: "How this service can help",
-              subtitle:
-                "Support designed around the real needs of the child, adult, couple or family.",
-            }}
-          />
-
-          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {points.map((point, idx) => (
-              <div
-                key={idx}
-                className="rounded-4xl border border-white bg-white p-6 shadow-xl shadow-slate-900/5"
-              >
-                <CheckCircle2 className="text-[#2CB1A6]" size={26} />
-                <p className="mt-4 text-sm font-semibold leading-7 text-slate-600">
-                  {point}
-                </p>
-              </div>
-            ))}
-          </div>
-        </SectionWrapper>
-      )}
-
-      {process.length > 0 && (
-        <SectionWrapper className="bg-white/40">
-          <SectionHeading
-            center
-            section={{
-              type: "process",
-              title: "Our process",
-              subtitle:
-                "A clear, supportive and clinically grounded process from the first consultation.",
-            }}
-          />
-
-          <div className="mx-auto mt-10 max-w-5xl space-y-5">
-            {process.map((step, idx) => (
-              <div
-                key={idx}
-                className="grid gap-5 rounded-4xl border border-white bg-white p-6 shadow-xl shadow-slate-900/5 sm:grid-cols-[70px_1fr]"
-              >
-                <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-[#0F3D5E] text-xl font-black text-white">
-                  {idx + 1}
-                </div>
-                <p className="text-sm font-semibold leading-7 text-slate-600 sm:text-base">
-                  {step}
-                </p>
-              </div>
-            ))}
-          </div>
-        </SectionWrapper>
-      )}
-    </>
   );
 }
 
 function FaqSection({ faqs }) {
   return (
-    <section className="bg-white px-4 py-16 sm:px-5 md:py-20">
+    <section className="px-4 py-10 sm:px-5 md:py-14">
       <div className="mx-auto max-w-5xl">
-        <SectionHeading
-          center
-          section={{
-            type: "faq",
-            title: "Frequently Asked Questions",
-            subtitle:
-              "Clear answers to common questions families ask before booking.",
-          }}
-        />
+        <SectionHeader eyebrow="Questions" title="Common questions" />
 
-        <div className="mt-10 space-y-4">
+        <div className="mt-8 space-y-3">
           {faqs.map((faq, index) => (
-            <motion.div
+            <motion.details
               key={index}
               variants={fadeUp}
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, amount: 0.2 }}
-              className="rounded-4xl bg-[#F7FBFC] p-6 shadow-sm"
+              className="group rounded-3xl bg-white p-5 shadow-sm open:shadow-lg open:shadow-slate-900/5"
             >
-              <div className="flex gap-4">
-                <HelpCircle
-                  size={24}
-                  className="mt-1 shrink-0 text-[#2CB1A6]"
-                />
-
-                <div>
-                  <h3 className="text-lg font-black text-[#102A43]">
+              <summary className="flex cursor-pointer list-none items-start justify-between gap-4">
+                <span className="flex gap-3">
+                  <HelpCircle
+                    size={21}
+                    className="mt-0.5 shrink-0 text-[#2CB1A6]"
+                  />
+                  <span className="text-base font-black leading-6 text-[#102A43]">
                     {faq.question}
-                  </h3>
+                  </span>
+                </span>
 
-                  <p className="mt-3 whitespace-pre-line text-sm font-semibold leading-7 text-slate-600 sm:text-base">
-                    {faq.answer}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
+                <ChevronDown
+                  size={20}
+                  className="shrink-0 text-[#0F3D5E] transition group-open:rotate-180"
+                />
+              </summary>
+
+              <p className="mt-4 pl-9 text-sm font-semibold leading-7 text-slate-600">
+                {faq.answer}
+              </p>
+            </motion.details>
           ))}
         </div>
       </div>
@@ -1036,36 +636,35 @@ function BottomCTA({ service }) {
   );
 
   return (
-    <section className="px-4 py-16 sm:px-5 md:py-20">
+    <section className="px-4 pb-14 pt-6 sm:px-5 md:pb-18">
       <motion.div
         variants={fadeUp}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.2 }}
-        className="relative mx-auto max-w-6xl overflow-hidden rounded-4xl bg-linear-to-br from-[#102A43] to-[#168A83] p-7 text-center text-white shadow-2xl shadow-slate-900/20 sm:p-10 md:rounded-[3rem]"
+        className="relative mx-auto max-w-6xl overflow-hidden rounded-4xl bg-linear-to-br from-[#102A43] to-[#168A83] p-7 text-center text-white shadow-2xl shadow-slate-900/20 sm:p-9 md:rounded-[3rem]"
       >
         <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
         <div className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-[#F4B183]/20 blur-3xl" />
 
-        <div className="relative">
+        <div className="relative mx-auto max-w-3xl">
           <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-3xl bg-white/15 text-[#F4B183]">
             <CalendarCheck size={28} />
           </div>
 
-          <h2 className="text-3xl font-black leading-tight sm:text-4xl">
-            Not sure whether this is the right service?
+          <h2 className="text-2xl font-black leading-tight sm:text-4xl">
+            Not sure if this is the right service?
           </h2>
 
-          <p className="mx-auto mt-4 max-w-2xl text-base font-semibold leading-8 text-white/75">
-            Share what you are noticing. We will help you understand whether
-            this service, an assessment, counselling, therapy or parent guidance
-            is the right next step.
+          <p className="mx-auto mt-4 max-w-2xl text-sm font-semibold leading-7 text-white/75 sm:text-base">
+            Share what you are noticing. We will help you choose the right next
+            step.
           </p>
 
-          <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
+          <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
             <Link
               href="/contact-us"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-4 text-sm font-black text-[#102A43] transition hover:-translate-y-1 hover:bg-[#E9F8F6]"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-black text-[#102A43] transition hover:-translate-y-1 hover:bg-[#E9F8F6]"
             >
               Book Consultation
               <ArrowRight size={18} />
@@ -1075,7 +674,7 @@ function BottomCTA({ service }) {
               href={`https://wa.me/917999215093?text=${whatsappMessage}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-7 py-4 text-sm font-black text-white transition hover:-translate-y-1"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-black text-white transition hover:-translate-y-1"
             >
               <MessageCircle size={18} />
               WhatsApp Us

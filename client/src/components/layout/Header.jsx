@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, Loader2, Menu, X } from "lucide-react";
 import { API } from "@/lib/api";
 
@@ -113,6 +113,8 @@ const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
 
+  const servicesMenuRef = useRef(null);
+
   const closeMega = () => setOpenMega(false);
 
   const closeMobileMenu = () => {
@@ -149,7 +151,27 @@ const Header = () => {
     };
 
     window.addEventListener("keydown", handleEsc);
-    return () => window.removeEventListener("keydown", handleEsc);
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        servicesMenuRef.current &&
+        !servicesMenuRef.current.contains(event.target)
+      ) {
+        setOpenMega(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   useEffect(() => {
@@ -201,10 +223,13 @@ const Header = () => {
               About
             </a>
 
-            <div className="relative" onMouseEnter={() => setOpenMega(true)}>
+            {/* Services Click Menu */}
+            <div className="relative" ref={servicesMenuRef}>
               <button
                 type="button"
                 onClick={() => setOpenMega((prev) => !prev)}
+                aria-expanded={openMega}
+                aria-haspopup="true"
                 className="nav-link inline-flex items-center gap-1"
               >
                 Services
@@ -215,7 +240,7 @@ const Header = () => {
               </button>
 
               {openMega && (
-                <div className="absolute left-1/2 top-full z-50 mt-4 w-190 -translate-x-1/2 rounded-[28px] border border-[#D8F0EE] bg-white p-7 shadow-2xl shadow-slate-900/15">
+                <div className="absolute left-1/2 top-full z-50 mt-4 w-190 max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-[28px] border border-[#D8F0EE] bg-white p-7 shadow-2xl shadow-slate-900/15">
                   <button
                     type="button"
                     onClick={closeMega}
