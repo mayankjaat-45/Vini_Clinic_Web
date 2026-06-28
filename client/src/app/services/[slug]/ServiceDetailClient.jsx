@@ -411,9 +411,9 @@ export default function ServiceDetailClient({ service }) {
                 className="mt-6 flex flex-wrap gap-3"
               >
                 {[
-                  "Complete content",
-                  "Short visible layout",
-                  "Read more sections",
+                  "Clear guidance",
+                  "Personalised plan",
+                  "Online + Indore support",
                 ].map((point) => (
                   <span
                     key={point}
@@ -453,8 +453,13 @@ export default function ServiceDetailClient({ service }) {
               </motion.div>
             </motion.div>
 
-            <motion.div variants={fadeRight} initial="hidden" animate="show">
-              <div className="relative overflow-hidden rounded-4xl bg-linear-to-br from-[#0F3D5E] to-[#168A83] p-6 text-white shadow-2xl shadow-blue-950/20 md:rounded-[3rem] md:p-7">
+            <motion.div
+              variants={fadeRight}
+              initial="hidden"
+              animate="show"
+              className="mx-auto w-full max-w-md lg:max-w-none"
+            >
+              <div className="relative overflow-hidden rounded-4xl bg-linear-to-br from-[#0F3D5E] via-[#126071] to-[#168A83] p-5 text-white shadow-2xl shadow-blue-950/20 sm:p-6 md:rounded-[2.6rem]">
                 <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-white/10 blur-3xl" />
                 <div className="absolute -bottom-20 left-10 h-52 w-52 rounded-full bg-[#F4B183]/20 blur-3xl" />
 
@@ -463,32 +468,32 @@ export default function ServiceDetailClient({ service }) {
                     <HeartHandshake size={30} />
                   </div>
 
-                  <p className="text-xs font-bold uppercase tracking-[0.25em] text-white/60">
-                    Complete but compact
+                  <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/65">
+                    Guided Support
                   </p>
 
                   <h2 className="mt-3 text-2xl font-black leading-tight sm:text-3xl">
-                    Full details without a very long page.
+                    Start with the right next step.
                   </h2>
 
-                  <p className="mt-4 text-sm font-semibold leading-7 text-white/75">
-                    Visitors see the most important overview first. Full service
-                    content is available inside clean expandable sections.
+                  <p className="mt-4 text-sm font-semibold leading-7 text-white/78">
+                    Share your concern and get clear guidance for consultation,
+                    assessment, therapy or parent support.
                   </p>
 
-                  <div className="mt-6 space-y-3">
+                  <div className="mt-6 grid gap-3">
                     {[
                       {
                         icon: CalendarCheck,
-                        title: "Quick booking option",
+                        title: "Book a consultation",
                       },
                       {
                         icon: Route,
-                        title: "All sections available",
+                        title: "Understand the concern",
                       },
                       {
                         icon: ShieldCheck,
-                        title: "FAQs collapsed neatly",
+                        title: "Get a clear support plan",
                       },
                     ].map((item) => {
                       const Icon = item.icon;
@@ -496,7 +501,7 @@ export default function ServiceDetailClient({ service }) {
                       return (
                         <div
                           key={item.title}
-                          className="flex items-center gap-3 rounded-2xl bg-white/10 px-4 py-3"
+                          className="flex items-center gap-3 rounded-2xl bg-white/10 px-4 py-3 backdrop-blur"
                         >
                           <Icon size={18} className="text-[#F4B183]" />
                           <span className="text-sm font-black">
@@ -507,11 +512,20 @@ export default function ServiceDetailClient({ service }) {
                     })}
                   </div>
 
+                  <div className="mt-6 rounded-3xl bg-white/10 p-4 backdrop-blur">
+                    <p className="text-sm font-black text-[#F4B183]">
+                      Available in Indore & Online
+                    </p>
+                    <p className="mt-2 text-sm font-semibold leading-6 text-white/75">
+                      Support for children, adults, couples and families.
+                    </p>
+                  </div>
+
                   <a
                     href="#service-details"
                     className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-[#102A43] transition hover:-translate-y-1 hover:bg-[#E9F8F6]"
                   >
-                    Explore full content
+                    View Service Details
                     <ArrowRight size={17} />
                   </a>
                 </div>
@@ -524,9 +538,8 @@ export default function ServiceDetailClient({ service }) {
       <section id="service-details" className="px-4 py-10 sm:px-5 md:py-14">
         <div className="mx-auto max-w-7xl">
           <SectionHeader
-            eyebrow="Full content"
-            title="Complete service details"
-            subtitle="All content is kept here. Sections are collapsed so the page looks short and easy to read."
+            eyebrow="Service Details"
+            title="Explore the complete service guide"
           />
 
           <div className="mt-8 space-y-4">
@@ -872,11 +885,7 @@ function FaqSection({ faqs }) {
   return (
     <section className="bg-white/55 px-4 py-10 sm:px-5 md:py-14">
       <div className="mx-auto max-w-5xl">
-        <SectionHeader
-          eyebrow="Questions"
-          title="Frequently Asked Questions"
-          subtitle="All FAQs are available, but collapsed to keep the page short."
-        />
+        <SectionHeader eyebrow="Questions" title="Frequently Asked Questions" />
 
         <div className="mt-8 space-y-3">
           {faqs.map((faq, index) => (
