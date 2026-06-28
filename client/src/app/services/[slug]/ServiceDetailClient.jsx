@@ -599,46 +599,48 @@ function ServiceAccordion({ section, index }) {
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.12 }}
-      className="group overflow-hidden rounded-4xl border border-white bg-white shadow-lg shadow-slate-900/5 open:shadow-2xl open:shadow-slate-900/10"
+      className="group overflow-hidden rounded-[1.6rem] border border-[#DDEDEA] bg-white shadow-[0_18px_45px_rgba(15,61,94,0.08)] transition-all duration-300 open:border-[#2CB1A6]/25 open:shadow-[0_24px_70px_rgba(15,61,94,0.14)] sm:rounded-[2rem] md:rounded-[2.5rem]"
     >
-      <summary className="flex cursor-pointer list-none items-start justify-between gap-4 p-5 sm:p-6">
-        <div className="flex gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#0F766E] transition group-open:bg-[#0F3D5E] group-open:text-white">
-            <Icon size={23} />
+      <summary className="cursor-pointer list-none p-4 sm:p-5 md:p-6">
+        <div className="flex items-start gap-3 sm:gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#0F766E] transition group-open:bg-[#0F3D5E] group-open:text-white sm:h-14 sm:w-14 sm:rounded-3xl">
+            <Icon size={22} />
           </div>
 
-          <div>
-            <div className="mb-2 flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-[#F7FBFC] px-3 py-1 text-[11px] font-black uppercase tracking-[0.16em] text-[#0F3D5E]">
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full bg-[#F7FBFC] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-[#0F3D5E] sm:text-[11px]">
                 {getSectionLabel(type)}
               </span>
 
               {itemsCount > 0 && (
-                <span className="rounded-full bg-[#E9F8F6] px-3 py-1 text-[11px] font-black text-[#0F766E]">
+                <span className="rounded-full bg-[#E9F8F6] px-3 py-1.5 text-[10px] font-black text-[#0F766E] sm:text-[11px]">
                   {itemsCount} item{itemsCount > 1 ? "s" : ""}
                 </span>
               )}
             </div>
 
-            <h3 className="text-lg font-black leading-snug text-[#102A43] sm:text-2xl">
+            <h3 className="mt-3 text-[1.35rem] font-black leading-tight text-[#102A43] sm:text-2xl md:text-3xl">
               {section.title || `Section ${index + 1}`}
             </h3>
 
             {section.subtitle && (
-              <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
+              <p className="mt-2 line-clamp-2 text-sm font-semibold leading-6 text-slate-600 sm:text-base sm:leading-7">
                 {section.subtitle}
               </p>
             )}
           </div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-2 rounded-full bg-[#F7FBFC] px-3 py-2 text-xs font-black text-[#0F3D5E]">
-          Learn more
-          <ChevronDown size={18} className="transition group-open:rotate-180" />
+        <div className="mt-4 flex items-center justify-between rounded-2xl bg-[#F7FBFC] px-4 py-3 text-sm font-black text-[#0F3D5E] transition group-open:bg-[#E9F8F6] group-open:text-[#0F766E] sm:ml-[4.5rem] sm:mt-5 sm:inline-flex sm:gap-2">
+          <span className="sm:hidden">Tap to view details</span>
+          <span className="hidden sm:inline">Learn more</span>
+
+          <ChevronDown size={19} className="transition group-open:rotate-180" />
         </div>
       </summary>
 
-      <div className="border-t border-slate-100 px-5 pb-6 sm:px-6 sm:pb-7">
+      <div className="border-t border-slate-100 px-4 pb-5 sm:px-5 sm:pb-6 md:px-6 md:pb-7">
         <SectionContent section={section} />
       </div>
     </motion.details>
@@ -651,21 +653,21 @@ function SectionContent({ section }) {
 
   return (
     <div className="pt-5">
+      {section.subtitle && (
+        <div className="mb-4 rounded-3xl border border-[#2CB1A6]/10 bg-[#E9F8F6]/60 p-4 text-sm font-bold leading-7 text-[#0F3D5E] sm:p-5 sm:text-base">
+          <ReadMoreText text={section.subtitle} limit={260} />
+        </div>
+      )}
+
       {section.content && (
-        <div className="mb-6 rounded-3xl bg-[#F7FBFC] p-5 text-sm font-semibold leading-7 text-slate-600 sm:text-base sm:leading-8">
+        <div className="mb-5 rounded-3xl bg-[#F7FBFC] p-4 text-sm font-semibold leading-7 text-slate-600 sm:p-5 sm:text-base sm:leading-8">
           <ReadMoreText text={section.content} limit={320} />
         </div>
       )}
 
       {type === "story" && (
-        <div className="rounded-4xl bg-[#0F3D5E] p-6 text-white">
+        <div className="rounded-[1.6rem] bg-[#0F3D5E] p-5 text-white sm:rounded-[2rem] sm:p-6">
           <Quote size={34} className="text-[#F4B183]" />
-
-          {section.subtitle && (
-            <p className="mt-4 text-sm font-black text-[#F4B183]">
-              {section.subtitle}
-            </p>
-          )}
 
           {section.content && (
             <div className="mt-4 text-sm font-semibold leading-7 text-white/80 sm:text-base">
@@ -678,7 +680,7 @@ function SectionContent({ section }) {
       )}
 
       {type === "quote" && (
-        <div className="rounded-4xl border border-[#0F3D5E]/10 bg-[#F7FBFC] p-6">
+        <div className="rounded-[1.6rem] border border-[#0F3D5E]/10 bg-[#F7FBFC] p-5 sm:rounded-[2rem] sm:p-6">
           <Quote size={36} className="text-[#2CB1A6]" />
 
           {section.content && (
@@ -690,7 +692,7 @@ function SectionContent({ section }) {
       )}
 
       {type === "steps" && items.length > 0 && (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {items.map((item, index) => (
             <StepCard key={index} item={item} index={index} />
           ))}
@@ -709,7 +711,7 @@ function SectionContent({ section }) {
             className={
               type === "badges"
                 ? "flex flex-wrap gap-3"
-                : "grid gap-4 md:grid-cols-2 xl:grid-cols-3"
+                : "grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
             }
           >
             {items.map((item, index) =>
@@ -723,7 +725,7 @@ function SectionContent({ section }) {
         )}
 
       {type === "cta" && (
-        <div className="rounded-4xl bg-linear-to-br from-[#0F3D5E] to-[#168A83] p-6 text-center text-white">
+        <div className="rounded-[1.6rem] bg-linear-to-br from-[#0F3D5E] to-[#168A83] p-5 text-center text-white sm:rounded-[2rem] sm:p-6">
           <h3 className="text-2xl font-black leading-tight">{section.title}</h3>
 
           {section.content && (
@@ -754,21 +756,27 @@ function StepCard({ item, index }) {
     typeof item === "string"
       ? `Step ${index + 1}`
       : item?.title || `Step ${index + 1}`;
+
   const description =
     typeof item === "string" ? item : getItemDescription(item);
+
   const nestedItems = Array.isArray(item?.items) ? item.items : [];
 
   return (
-    <div className="rounded-3xl bg-[#F7FBFC] p-5">
-      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-[#0F3D5E] text-sm font-black text-white">
-        {index + 1}
+    <div className="rounded-[1.5rem] border border-[#DDEDEA] bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:rounded-[1.8rem] sm:p-5">
+      <div className="flex items-start gap-3">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#0F3D5E] text-sm font-black text-white">
+          {index + 1}
+        </div>
+
+        <h4 className="min-w-0 flex-1 text-lg font-black leading-snug text-[#102A43] sm:text-xl">
+          {title}
+        </h4>
       </div>
 
-      <h4 className="text-lg font-black text-[#102A43]">{title}</h4>
-
       {description && (
-        <div className="mt-3 text-sm font-semibold leading-7 text-slate-600">
-          <ReadMoreText text={description} limit={170} />
+        <div className="mt-4 text-sm font-semibold leading-7 text-slate-600">
+          <ReadMoreText text={description} limit={180} />
         </div>
       )}
 
@@ -786,35 +794,39 @@ function ContentCard({ item }) {
 
   return (
     <div
-      className={`rounded-3xl p-5 shadow-sm ${
+      className={`rounded-[1.5rem] p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:rounded-[1.8rem] sm:p-5 ${
         important
           ? "border border-[#F4B183]/35 bg-[#FFF8ED]"
-          : "border border-slate-100 bg-[#F7FBFC]"
+          : "border border-[#DDEDEA] bg-white"
       }`}
     >
-      <div
-        className={`mb-4 flex h-11 w-11 items-center justify-center rounded-2xl ${
-          important
-            ? "bg-[#F4B183]/20 text-[#B7791F]"
-            : "bg-[#E9F8F6] text-[#0F766E]"
-        }`}
-      >
-        {important ? <AlertTriangle size={21} /> : <CheckCircle2 size={21} />}
+      <div className="flex items-start gap-3">
+        <div
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
+            important
+              ? "bg-[#F4B183]/20 text-[#B7791F]"
+              : "bg-[#E9F8F6] text-[#0F766E]"
+          }`}
+        >
+          {important ? <AlertTriangle size={21} /> : <CheckCircle2 size={21} />}
+        </div>
+
+        <div className="min-w-0 flex-1">
+          {title && (
+            <h4 className="text-lg font-black leading-snug text-[#102A43] sm:text-xl">
+              {important ? "Important Note" : title}
+            </h4>
+          )}
+
+          {subtitle && !important && (
+            <p className="mt-1 text-sm font-black text-[#2CB1A6]">{subtitle}</p>
+          )}
+        </div>
       </div>
 
-      {title && (
-        <h4 className="text-lg font-black leading-snug text-[#102A43]">
-          {important ? "Important Note" : title}
-        </h4>
-      )}
-
-      {subtitle && !important && (
-        <p className="mt-2 text-sm font-black text-[#2CB1A6]">{subtitle}</p>
-      )}
-
       {description && (
-        <div className="mt-3 text-sm font-semibold leading-7 text-slate-600">
-          <ReadMoreText text={description} limit={170} />
+        <div className="mt-4 text-sm font-semibold leading-7 text-slate-600">
+          <ReadMoreText text={description} limit={180} />
         </div>
       )}
 
