@@ -9,6 +9,7 @@ import ServicesOverview from "@/components/home/ServicesOverview";
 import StatsStrip from "@/components/home/StatsStrip";
 import Testimonials from "@/components/home/Testimonials";
 import JsonLd from "@/components/seo/JsonLd";
+import SuccessStoriesPage from "./success-stories/page";
 
 export const revalidate = 60;
 
@@ -188,7 +189,7 @@ export default async function Home() {
 
       <HowWeWork />
       <Testimonials />
-
+      <SuccessStoriesPage />
       <CoursesPreview initialCourses={courses} />
       <ResourcesPreview initialResources={resources} />
       <GalleryPreview initialGallery={gallery} />
