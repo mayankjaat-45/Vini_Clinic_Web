@@ -508,9 +508,9 @@ function StoryCard({ story }) {
               <span className="rounded-full bg-[#E8F7F5] px-3 py-1 text-xs font-black text-[#168C83]">
                 Story {story.id}
               </span>
-              <span className="rounded-full bg-[#FFF4E1] px-3 py-1 text-xs font-black text-[#B56B00]">
+              {/* <span className="rounded-full bg-[#FFF4E1] px-3 py-1 text-xs font-black text-[#B56B00]">
                 {story.language}
-              </span>
+              </span> */}
             </div>
 
             <h3 className="text-2xl font-black leading-tight text-[#102A43]">
