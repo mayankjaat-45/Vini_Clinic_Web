@@ -18,8 +18,11 @@ blogRoutes.get("/", getBlogs);
 
 // Admin
 blogRoutes.get("/admin/all", protect, getAllAdminBlogs);
+
+// bulk upload must stay before /:id and /:slug routes
+blogRoutes.post("/admin/bulk-upload", protect, bulkUploadBlogs);
+
 blogRoutes.post("/", protect, upload.single("image"), createBlog);
-blogRoutes.post("/admin/bulk-upload", protect, adminOnly, bulkUploadBlogs);
 blogRoutes.put("/:id", protect, upload.single("image"), updateBlog);
 blogRoutes.delete("/:id", protect, deleteBlog);
 

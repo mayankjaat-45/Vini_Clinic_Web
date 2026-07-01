@@ -487,7 +487,6 @@ export default function AdminBlogsPage() {
           </div>
         </section>
 
-        
         {showForm && (
           <section className="mb-10 rounded-4xl bg-white p-6 shadow-xl shadow-slate-900/5 md:p-8">
             <div className="mb-6 flex items-center justify-between gap-4">
