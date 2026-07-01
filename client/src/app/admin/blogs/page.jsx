@@ -4,7 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { API } from "@/lib/api";
 import {
+  AlertCircle,
   ArrowLeft,
+  CheckCircle2,
   Edit,
   FileText,
   ImagePlus,
@@ -13,6 +15,7 @@ import {
   Save,
   Search,
   Trash2,
+  Upload,
   X,
 } from "lucide-react";
 import { toast } from "react-toastify";
@@ -65,6 +68,11 @@ export default function AdminBlogsPage() {
 
   const [search, setSearch] = useState("");
   const [showForm, setShowForm] = useState(false);
+
+  const [bulkFile, setBulkFile] = useState(null);
+  const [bulkUploading, setBulkUploading] = useState(false);
+  const [bulkResult, setBulkResult] = useState(null);
+  const [bulkError, setBulkError] = useState("");
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("adminToken") : null;
@@ -188,6 +196,64 @@ export default function AdminBlogsPage() {
     return null;
   };
 
+  const handleBulkUpload = async () => {
+    try {
+      setBulkError("");
+      setBulkResult(null);
+
+      if (!bulkFile) {
+        setBulkError("Please select vini_blogs_upload.json file");
+        return;
+      }
+
+      if (!bulkFile.name.endsWith(".json")) {
+        setBulkError("Only JSON file is allowed");
+        return;
+      }
+
+      setBulkUploading(true);
+
+      const text = await bulkFile.text();
+      const parsedData = JSON.parse(text);
+
+      const blogsArray = Array.isArray(parsedData)
+        ? parsedData
+        : parsedData.blogs;
+
+      if (!Array.isArray(blogsArray) || blogsArray.length === 0) {
+        throw new Error("JSON file must contain blogs array");
+      }
+
+      const { data } = await API.post(
+        "/api/blogs/admin/bulk-upload",
+        { blogs: blogsArray },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      setBulkResult(data?.results);
+      setBulkFile(null);
+
+      toast.success("Blogs uploaded successfully");
+      fetchBlogs();
+    } catch (error) {
+      console.log("BULK BLOG UPLOAD ERROR:", error);
+
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Unable to upload blogs";
+
+      setBulkError(message);
+      toast.error(message);
+    } finally {
+      setBulkUploading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -301,6 +367,127 @@ export default function AdminBlogsPage() {
           </button>
         </div>
 
+        <section className="mb-10 rounded-4xl border border-[#DDF3F1] bg-white p-6 shadow-xl shadow-slate-900/5 md:p-8">
+          <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+            <div>
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#E9F8F6] px-4 py-2 text-sm font-black text-[#0F766E]">
+                <Upload size={16} />
+                Bulk Blog Upload
+              </div>
+
+              <h2 className="text-2xl font-black text-[#102A43] md:text-3xl">
+                Upload Multiple Blogs from JSON
+              </h2>
+
+              <p className="mt-3 max-w-2xl text-sm font-semibold leading-6 text-slate-600">
+                Select <b>vini_blogs_upload.json</b> file and upload all blogs
+                together. Existing blogs with the same slug will be updated
+                automatically.
+              </p>
+
+              <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                <div className="rounded-2xl bg-[#F7FBFC] p-4">
+                  <p className="text-xs font-black uppercase tracking-wide text-slate-400">
+                    Format
+                  </p>
+                  <p className="mt-1 text-lg font-black text-[#102A43]">JSON</p>
+                </div>
+
+                <div className="rounded-2xl bg-[#F7FBFC] p-4">
+                  <p className="text-xs font-black uppercase tracking-wide text-slate-400">
+                    Action
+                  </p>
+                  <p className="mt-1 text-lg font-black text-[#102A43]">
+                    Create / Update
+                  </p>
+                </div>
+
+                <div className="rounded-2xl bg-[#F7FBFC] p-4">
+                  <p className="text-xs font-black uppercase tracking-wide text-slate-400">
+                    Match By
+                  </p>
+                  <p className="mt-1 text-lg font-black text-[#102A43]">Slug</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-slate-100 bg-[#F7FBFC] p-5">
+              <label className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 bg-white px-5 py-8 text-center transition hover:border-[#2CB1A6] hover:bg-[#E9F8F6]/40">
+                <Upload className="mb-3 text-[#0F3D5E]" size={34} />
+
+                <span className="text-sm font-black text-[#102A43]">
+                  {bulkFile ? bulkFile.name : "Click to select JSON file"}
+                </span>
+
+                <span className="mt-1 text-xs font-semibold text-slate-500">
+                  Upload vini_blogs_upload.json
+                </span>
+
+                <input
+                  type="file"
+                  accept="application/json,.json"
+                  onChange={(e) => {
+                    setBulkFile(e.target.files?.[0] || null);
+                    setBulkError("");
+                    setBulkResult(null);
+                  }}
+                  className="hidden"
+                />
+              </label>
+
+              {bulkError && (
+                <div className="mt-4 flex items-start gap-2 rounded-2xl bg-red-50 p-4 text-sm font-bold text-red-700">
+                  <AlertCircle className="mt-0.5 shrink-0" size={18} />
+                  <span>{bulkError}</span>
+                </div>
+              )}
+
+              {bulkResult && (
+                <div className="mt-4 rounded-2xl bg-green-50 p-4 text-sm text-green-800">
+                  <div className="mb-3 flex items-center gap-2 font-black">
+                    <CheckCircle2 size={18} />
+                    Blogs uploaded successfully
+                  </div>
+
+                  <div className="grid gap-2 sm:grid-cols-3">
+                    <div className="rounded-xl bg-white p-3 font-bold">
+                      Created: {bulkResult.created || 0}
+                    </div>
+
+                    <div className="rounded-xl bg-white p-3 font-bold">
+                      Updated: {bulkResult.updated || 0}
+                    </div>
+
+                    <div className="rounded-xl bg-white p-3 font-bold">
+                      Skipped: {bulkResult.skipped || 0}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={handleBulkUpload}
+                disabled={bulkUploading || !bulkFile}
+                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#2CB1A6] px-6 py-4 text-sm font-black text-white shadow-xl shadow-teal-900/10 transition hover:bg-[#0F766E] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {bulkUploading ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" />
+                    Uploading Blogs...
+                  </>
+                ) : (
+                  <>
+                    <Upload size={18} />
+                    Upload Blogs
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </section>
+
+        
         {showForm && (
           <section className="mb-10 rounded-4xl bg-white p-6 shadow-xl shadow-slate-900/5 md:p-8">
             <div className="mb-6 flex items-center justify-between gap-4">

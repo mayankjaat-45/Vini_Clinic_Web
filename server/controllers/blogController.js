@@ -226,6 +226,153 @@ export const createBlog = async (req, res) => {
     });
   }
 };
+
+export const bulkUploadBlogs = async (req, res) => {
+  try {
+    const blogs = Array.isArray(req.body) ? req.body : req.body.blogs;
+
+    if (!Array.isArray(blogs) || blogs.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Blogs array is required",
+      });
+    }
+
+    const allowedCategories = [
+      "Autism",
+      "ADHD",
+      "Dyslexia",
+      "Parenting",
+      "Teen Mental Health",
+      "Child Behaviour",
+      "School & Exams",
+      "Adult Mental Health",
+      "General",
+    ];
+
+    const results = {
+      created: 0,
+      updated: 0,
+      skipped: 0,
+      errors: [],
+    };
+
+    for (const item of blogs) {
+      try {
+        if (!item.title || !item.content) {
+          results.skipped += 1;
+          results.errors.push({
+            title: item.title || "Untitled",
+            reason: "Title and content are required",
+          });
+          continue;
+        }
+
+        const slug = String(item.slug || item.urlSlug || item.title)
+          .replace(/^\//, "")
+          .replace(/^blog\//, "")
+          .trim()
+          .toLowerCase()
+          .replace(/[^\w\s-]/g, "")
+          .replace(/\s+/g, "-")
+          .replace(/-+/g, "-");
+
+        const existingBlog = await Blog.findOne({ slug });
+
+        const payload = {
+          title: item.title,
+          slug,
+          category: allowedCategories.includes(item.category)
+            ? item.category
+            : "General",
+          language: item.language || "English",
+          author: item.author || "Dr. Vini Jhariya",
+
+          seoTitle: item.seoTitle || item.seo?.seoTitle || item.title,
+          metaTitle: item.metaTitle || item.seo?.metaTitle || item.title,
+          pageTitle: item.pageTitle || item.title,
+          metaDescription:
+            item.metaDescription ||
+            item.seo?.metaDescription ||
+            item.excerpt ||
+            "",
+
+          focusKeyword: item.focusKeyword || item.seo?.focusKeyword || "",
+
+          secondaryKeywords: Array.isArray(item.secondaryKeywords)
+            ? item.secondaryKeywords
+            : typeof item.secondaryKeywords === "string"
+              ? item.secondaryKeywords
+                  .split(",")
+                  .map((x) => x.trim())
+                  .filter(Boolean)
+              : [],
+
+          schemaType: item.schemaType || item.seo?.schemaType || "Article",
+
+          excerpt:
+            item.excerpt ||
+            item.metaDescription ||
+            item.seo?.metaDescription ||
+            "",
+
+          content: item.content,
+
+          faqs: Array.isArray(item.faqs) ? item.faqs : [],
+          faqSchema: item.faqSchema || null,
+
+          tags: Array.isArray(item.tags)
+            ? item.tags
+            : typeof item.tags === "string"
+              ? item.tags
+                  .split(",")
+                  .map((x) => x.trim())
+                  .filter(Boolean)
+              : [],
+
+          isFeatured: Boolean(item.isFeatured),
+          isPublished:
+            typeof item.isPublished === "boolean" ? item.isPublished : true,
+          isActive: true,
+          publishedAt: item.publishedAt || new Date(),
+        };
+
+        await Blog.findOneAndUpdate(
+          { slug },
+          { $set: payload },
+          { upsert: true, new: true },
+        );
+
+        if (existingBlog) {
+          results.updated += 1;
+        } else {
+          results.created += 1;
+        }
+      } catch (error) {
+        results.skipped += 1;
+        results.errors.push({
+          title: item.title || "Unknown Blog",
+          reason: error.message,
+        });
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Bulk blogs uploaded successfully",
+      results,
+    });
+  } catch (error) {
+    console.error("Bulk upload blogs error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Bulk blog upload failed",
+      error: error.message,
+    });
+  }
+};
+
 // Admin - Update Blog
 export const updateBlog = async (req, res) => {
   try {
