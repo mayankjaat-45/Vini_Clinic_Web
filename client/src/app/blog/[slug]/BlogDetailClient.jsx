@@ -397,18 +397,20 @@ export default function BlogDetailClient({ blog }) {
 
               <div className="relative overflow-hidden rounded-4xl border border-white bg-white p-3 shadow-2xl shadow-slate-900/10">
                 {blog.image?.url ? (
-                  <img
-                    src={blog.image.url}
-                    alt={`${blog.title} by Dr. Vini Jhariya, Clinical & Child Psychologist in Indore`}
-                    className="h-60 w-full rounded-3xl object-cover sm:h-80 lg:h-105"
-                  />
+                  <div className="flex w-full items-center justify-center overflow-hidden rounded-3xl bg-[#F7FBFC]">
+                    <img
+                      src={blog.image.url}
+                      alt={`${blog.title} by Dr. Vini Jhariya, Clinical & Child Psychologist in Indore`}
+                      className="h-auto w-full rounded-3xl object-contain"
+                    />
+                  </div>
                 ) : (
                   <div className="flex h-60 items-center justify-center rounded-3xl bg-[#102A43] text-white/30 sm:h-80 lg:h-105">
                     <BookOpen size={76} />
                   </div>
                 )}
 
-                <div className="absolute bottom-6 left-6 right-6 rounded-3xl bg-white/95 p-4 shadow-xl backdrop-blur">
+                <div className="mt-4 rounded-3xl bg-[#F7FBFC] p-4 shadow-sm">
                   <p className="text-xs font-black uppercase tracking-[0.2em] text-[#2CB1A6]">
                     Quick View
                   </p>
