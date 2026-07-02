@@ -10,8 +10,8 @@ import {
   Clock,
   Link2,
   MessageCircle,
+  Search,
   Share2,
-  Sparkles,
   Tag,
 } from "lucide-react";
 import Link from "next/link";
@@ -102,10 +102,29 @@ const createArticleSections = (lines) => {
   return sections;
 };
 
+const blogCategories = [
+  "Autism",
+  "ADHD",
+  "Dyslexia",
+  "Parenting",
+  "Teen Mental Health",
+  "Child Behaviour",
+  "School & Exams",
+  "Adult Mental Health",
+];
+
+const usefulLinks = [
+  { name: "Home", href: "/" },
+  { name: "About Dr. Vini", href: "/about-dr-vini" },
+  { name: "Online Consultation", href: "/online-consultation" },
+  { name: "Success Stories", href: "/success-stories" },
+  { name: "Contact Us", href: "/contact-us" },
+];
+
 export default function BlogDetailClient({ blog }) {
-  const [openSections, setOpenSections] = useState([]);
   const [readingProgress, setReadingProgress] = useState(0);
   const [copied, setCopied] = useState(false);
+  const [tocOpen, setTocOpen] = useState(true);
 
   const formattedContent = useMemo(() => {
     if (!blog?.content) return [];
@@ -130,12 +149,6 @@ export default function BlogDetailClient({ blog }) {
   }, [articleSections]);
 
   useEffect(() => {
-    if (articleSections.length > 0) {
-      setOpenSections(articleSections.slice(0, 2).map((section) => section.id));
-    }
-  }, [articleSections]);
-
-  useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
       const docHeight =
@@ -157,32 +170,12 @@ export default function BlogDetailClient({ blog }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const toggleSection = (sectionId) => {
-    setOpenSections((prev) =>
-      prev.includes(sectionId)
-        ? prev.filter((id) => id !== sectionId)
-        : [...prev, sectionId],
-    );
-  };
-
-  const openAllSections = () => {
-    setOpenSections(articleSections.map((section) => section.id));
-  };
-
-  const closeAllSections = () => {
-    setOpenSections(articleSections[0]?.id ? [articleSections[0].id] : []);
-  };
-
   const scrollToSection = (sectionId) => {
-    setOpenSections((prev) =>
-      prev.includes(sectionId) ? prev : [...prev, sectionId],
-    );
-
     setTimeout(() => {
       document
         .getElementById(sectionId)
         ?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 100);
+    }, 80);
   };
 
   const handleShare = async () => {
@@ -209,26 +202,38 @@ export default function BlogDetailClient({ blog }) {
   const renderContentLine = (item) => {
     const line = item.text;
 
+    if (line.startsWith("##### Tags:")) {
+      return null;
+    }
+
     if (line.startsWith("### ")) {
       return (
         <h3
           key={item.id}
-          className="pt-2 text-xl font-black leading-tight text-[#0F3D5E] sm:text-2xl"
+          className="mt-8 text-2xl font-bold leading-tight text-[#17324D]"
         >
           {line.replace("### ", "")}
         </h3>
       );
     }
 
+    if (line.startsWith("#### ")) {
+      return (
+        <h4
+          key={item.id}
+          className="mt-7 text-xl font-bold leading-tight text-[#17324D]"
+        >
+          {line.replace("#### ", "")}
+        </h4>
+      );
+    }
+
     if (line.startsWith("- ")) {
       return (
-        <div
-          key={item.id}
-          className="flex gap-3 rounded-2xl bg-[#F7FBFC] px-5 py-4"
-        >
-          <CheckCircle2 size={18} className="mt-1 shrink-0 text-[#2CB1A6]" />
+        <div key={item.id} className="my-4 flex gap-3">
+          <CheckCircle2 size={19} className="mt-1 shrink-0 text-[#35AFA4]" />
 
-          <p className="text-sm font-semibold leading-7 text-slate-600 sm:text-base sm:leading-8">
+          <p className="text-[16px] font-medium leading-8 text-slate-700">
             {line.replace("- ", "")}
           </p>
         </div>
@@ -240,15 +245,12 @@ export default function BlogDetailClient({ blog }) {
       const text = line.replace(/^\d+\.\s/, "");
 
       return (
-        <div
-          key={item.id}
-          className="flex gap-4 rounded-2xl border border-slate-100 bg-white px-5 py-4 shadow-sm"
-        >
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E9F8F6] text-xs font-black text-[#0F766E]">
+        <div key={item.id} className="my-5 flex gap-4">
+          <span className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E9F8F6] text-sm font-bold text-[#0F766E]">
             {number}
           </span>
 
-          <p className="text-sm font-semibold leading-7 text-slate-600 sm:text-base sm:leading-8">
+          <p className="text-[16px] font-medium leading-8 text-slate-700">
             {text}
           </p>
         </div>
@@ -258,7 +260,7 @@ export default function BlogDetailClient({ blog }) {
     return (
       <p
         key={item.id}
-        className="text-base font-semibold leading-8 text-slate-600 sm:text-lg sm:leading-9"
+        className="my-5 text-[16px] font-medium leading-8 text-slate-700 sm:text-[17px] sm:leading-9"
       >
         {line}
       </p>
@@ -267,9 +269,9 @@ export default function BlogDetailClient({ blog }) {
 
   if (!blog) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#F7FBFC] px-4 sm:px-5">
-        <div className="max-w-xl rounded-4xl bg-white p-8 text-center shadow-xl shadow-slate-900/5 sm:p-10">
-          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-[#E9F8F6]">
+      <main className="flex min-h-screen items-center justify-center bg-white px-4 sm:px-5">
+        <div className="max-w-xl rounded-3xl border border-slate-100 bg-white p-8 text-center shadow-xl shadow-slate-900/5 sm:p-10">
+          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#E9F8F6]">
             <BookOpen className="text-[#0F3D5E]" size={34} />
           </div>
 
@@ -292,280 +294,365 @@ export default function BlogDetailClient({ blog }) {
   }
 
   return (
-    <main className="overflow-hidden bg-[#F7FBFC] text-[#102A43]">
+    <main className="bg-white text-[#17324D]">
       <div className="sticky top-0 z-50 h-1 bg-white">
         <div
-          className="h-full bg-[#2CB1A6] transition-all duration-300"
+          className="h-full bg-[#35AFA4] transition-all duration-300"
           style={{ width: `${readingProgress}%` }}
         />
       </div>
 
-      <section className="relative overflow-hidden border-b border-slate-200/70 bg-linear-to-br from-white via-[#F7FBFC] to-[#E9F8F6] px-4 py-8 sm:px-5 lg:py-10">
-        <div className="absolute -left-24 -top-28 h-72 w-72 rounded-full bg-[#2CB1A6]/20 blur-3xl" />
-        <div className="absolute -right-24 top-10 h-72 w-72 rounded-full bg-[#0F3D5E]/10 blur-3xl" />
-
-        <div className="relative mx-auto max-w-7xl">
-          <div className="mb-5 flex flex-wrap items-center gap-2 text-sm font-bold text-slate-500">
-            <Link href="/" className="transition hover:text-[#0F3D5E]">
+      <section className="border-b border-slate-100 bg-white px-4 py-5 sm:px-5">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-2 text-sm font-semibold text-slate-500">
+            <Link href="/" className="transition hover:text-[#35AFA4]">
               Home
             </Link>
+
             <ChevronRight size={15} />
-            <Link href="/blog" className="transition hover:text-[#0F3D5E]">
+
+            <Link href="/blog" className="transition hover:text-[#35AFA4]">
               Blogs
             </Link>
+
             <ChevronRight size={15} />
-            <span className="text-[#0F3D5E]">Article</span>
+
+            <span className="text-[#17324D]">Article</span>
           </div>
 
-          <div className="grid gap-7 lg:grid-cols-[1fr_0.9fr] lg:items-center">
-            <div>
-              <Link
-                href="/blog"
-                className="mb-5 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm transition hover:-translate-x-1"
-              >
-                <ArrowLeft size={15} />
-                Back to Blog
-              </Link>
-
-              <div className="mb-4 flex flex-wrap gap-2">
-                <span className="inline-flex items-center gap-2 rounded-full border border-[#2CB1A6]/20 bg-white/90 px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm">
-                  <Sparkles size={15} className="text-[#2CB1A6]" />
-                  {blog.category || "Article"}
-                </span>
-
-                {blogTopics.slice(0, 2).map((topic) => (
-                  <span
-                    key={topic}
-                    className="rounded-full bg-[#E9F8F6] px-4 py-2 text-xs font-black text-[#0F766E] shadow-sm"
-                  >
-                    {topic}
-                  </span>
-                ))}
-              </div>
-
-              <h1 className="max-w-4xl text-3xl font-black leading-tight tracking-[-0.04em] text-[#102A43] sm:text-4xl lg:text-5xl">
-                {blog.title}
-              </h1>
-
-              {blog.excerpt && (
-                <p className="mt-4 max-w-3xl text-sm font-semibold leading-7 text-slate-600 sm:text-base sm:leading-8">
-                  {blog.excerpt}
-                </p>
-              )}
-
-              <div className="mt-6 flex flex-wrap gap-3">
-                <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-500 shadow-sm">
-                  <CalendarDays size={16} />
-                  {formatDate(blog.publishedAt)}
-                </span>
-
-                <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-500 shadow-sm">
-                  <Clock size={16} />
-                  {getReadingTime(blog)}
-                </span>
-
-                {blog.language && (
-                  <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-500 shadow-sm">
-                    <BookOpen size={16} />
-                    {blog.language}
-                  </span>
-                )}
-              </div>
-
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                <Link
-                  href="/contact-us"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0F3D5E] px-6 py-4 text-sm font-black text-white shadow-xl shadow-[#0F3D5E]/20 transition hover:-translate-y-1 hover:bg-[#2CB1A6]"
-                >
-                  <MessageCircle size={17} />
-                  Book Consultation
-                </Link>
-
-                <button
-                  type="button"
-                  onClick={handleShare}
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-4 text-sm font-black text-[#0F3D5E] shadow-xl shadow-slate-900/5 transition hover:-translate-y-1 hover:bg-[#E9F8F6]"
-                >
-                  {copied ? <Link2 size={17} /> : <Share2 size={17} />}
-                  {copied ? "Link Copied" : "Share Article"}
-                </button>
-              </div>
-            </div>
-
-            <div className="relative">
-              <div className="absolute -bottom-5 -right-5 hidden h-28 w-28 rounded-full bg-[#2CB1A6]/20 blur-2xl sm:block" />
-
-              <div className="relative overflow-hidden rounded-4xl border border-white bg-white p-3 shadow-2xl shadow-slate-900/10">
-                {blog.image?.url ? (
-                  <div className="flex w-full items-center justify-center overflow-hidden rounded-3xl bg-[#F7FBFC]">
-                    <img
-                      src={blog.image.url}
-                      alt={`${blog.title} by Dr. Vini Jhariya, Clinical & Child Psychologist in Indore`}
-                      className="h-auto w-full rounded-3xl object-contain"
-                    />
-                  </div>
-                ) : (
-                  <div className="flex h-60 items-center justify-center rounded-3xl bg-[#102A43] text-white/30 sm:h-80 lg:h-105">
-                    <BookOpen size={76} />
-                  </div>
-                )}
-
-                <div className="mt-4 rounded-3xl bg-[#F7FBFC] p-4 shadow-sm">
-                  <p className="text-xs font-black uppercase tracking-[0.2em] text-[#2CB1A6]">
-                    Quick View
-                  </p>
-
-                  <div className="mt-3 grid grid-cols-3 gap-3">
-                    <div>
-                      <p className="text-xl font-black text-[#102A43]">
-                        {articleSections.length || 1}
-                      </p>
-                      <p className="text-[11px] font-bold text-slate-500">
-                        Sections
-                      </p>
-                    </div>
-
-                    <div>
-                      <p className="text-xl font-black text-[#102A43]">
-                        {totalPoints || formattedContent.length}
-                      </p>
-                      <p className="text-[11px] font-bold text-slate-500">
-                        Points
-                      </p>
-                    </div>
-
-                    <div>
-                      <p className="text-xl font-black text-[#102A43]">
-                        {readingProgress}%
-                      </p>
-                      <p className="text-[11px] font-bold text-slate-500">
-                        Read
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-[#17324D] transition hover:border-[#35AFA4] hover:text-[#35AFA4]"
+          >
+            <ArrowLeft size={15} />
+            Back to Blog
+          </Link>
         </div>
       </section>
 
-      <section className="px-4 py-8 sm:px-5 lg:py-10">
-        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_330px]">
-          <article className="rounded-4xl border border-slate-100 bg-white p-5 shadow-xl shadow-slate-900/5 sm:p-6 lg:p-8">
-            <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5">
-              <div>
-                <p className="text-xs font-black uppercase tracking-[0.25em] text-[#2CB1A6]">
-                  Interactive Guide
-                </p>
+      <section className="px-4 py-10 sm:px-5 lg:py-14">
+        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[minmax(0,850px)_330px] lg:items-start">
+          <article className="min-w-0">
+            <div className="mb-5 flex flex-wrap items-center gap-3">
+              <span className="inline-flex items-center gap-2 text-sm font-bold text-[#35AFA4]">
+                <CalendarDays size={17} />
+                {formatDate(blog.publishedAt)}
+              </span>
 
-                <h2 className="mt-2 text-2xl font-black text-[#102A43] sm:text-3xl">
-                  Read by section
-                </h2>
+              <span className="h-1 w-1 rounded-full bg-slate-300" />
 
-                <p className="mt-2 text-sm font-semibold text-slate-500">
-                  Tap any section to expand or collapse the article content.
-                </p>
-              </div>
+              <span className="inline-flex items-center gap-2 text-sm font-bold text-slate-500">
+                <Clock size={17} />
+                {getReadingTime(blog)}
+              </span>
 
-              <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={openAllSections}
-                  className="rounded-full bg-[#0F3D5E] px-4 py-2 text-xs font-black text-white transition hover:bg-[#2CB1A6]"
-                >
-                  Open All
-                </button>
+              {blog.category && (
+                <>
+                  <span className="h-1 w-1 rounded-full bg-slate-300" />
 
-                <button
-                  type="button"
-                  onClick={closeAllSections}
-                  className="rounded-full bg-[#F7FBFC] px-4 py-2 text-xs font-black text-slate-600 transition hover:bg-[#E9F8F6] hover:text-[#0F766E]"
-                >
-                  Collapse
-                </button>
-              </div>
+                  <span className="inline-flex items-center gap-2 text-sm font-bold text-slate-500">
+                    <Tag size={16} />
+                    {blog.category}
+                  </span>
+                </>
+              )}
             </div>
 
-            <div className="space-y-4">
-              {articleSections.map((section, sectionIndex) => {
-                const isOpen = openSections.includes(section.id);
+            <h1 className="max-w-4xl text-4xl font-black leading-tight tracking-[-0.04em] text-[#17324D] sm:text-5xl lg:text-[56px]">
+              {blog.title}
+            </h1>
 
-                return (
-                  <div
+            {blog.excerpt && (
+              <p className="mt-5 max-w-3xl text-lg font-medium leading-8 text-slate-600">
+                {blog.excerpt}
+              </p>
+            )}
+
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link
+                href="/contact-us"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#35AFA4] px-6 py-3.5 text-sm font-black text-white shadow-lg shadow-[#35AFA4]/20 transition hover:-translate-y-1 hover:bg-[#17324D]"
+              >
+                <MessageCircle size={17} />
+                Book Consultation
+              </Link>
+
+              <button
+                type="button"
+                onClick={handleShare}
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3.5 text-sm font-black text-[#17324D] transition hover:-translate-y-1 hover:border-[#35AFA4] hover:text-[#35AFA4]"
+              >
+                {copied ? <Link2 size={17} /> : <Share2 size={17} />}
+                {copied ? "Link Copied" : "Share Article"}
+              </button>
+            </div>
+
+            <div className="mt-9 overflow-hidden rounded-sm border border-slate-100 bg-[#F7FBFC]">
+              {blog.image?.url ? (
+                <img
+                  src={blog.image.url}
+                  alt={`${blog.title} by Dr. Vini Jhariya, Clinical & Child Psychologist in Indore`}
+                  className="h-auto max-h-140 w-full object-contain"
+                />
+              ) : (
+                <div className="flex h-72 items-center justify-center bg-[#F7FBFC] text-[#35AFA4]/40 sm:h-96">
+                  <BookOpen size={80} />
+                </div>
+              )}
+            </div>
+
+            <div className="my-8 overflow-hidden rounded-sm border border-slate-200 bg-white">
+              <button
+                type="button"
+                onClick={() => setTocOpen((prev) => !prev)}
+                className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition hover:bg-[#F7FBFC] sm:px-6"
+              >
+                <h2 className="text-xl font-bold text-[#17324D]">
+                  Table of Contents
+                </h2>
+
+                <span className="inline-flex items-center gap-2 text-sm font-bold text-[#35AFA4]">
+                  Toggle
+                  <ChevronDown
+                    size={18}
+                    className={`transition ${tocOpen ? "rotate-180" : ""}`}
+                  />
+                </span>
+              </button>
+
+              {tocOpen && (
+                <div className="border-t border-slate-100 px-5 py-5 sm:px-6">
+                  <ul className="space-y-3">
+                    {articleSections.map((section) => {
+                      const subHeadings = section.lines
+                        .filter((item) => item.text.startsWith("### "))
+                        .slice(0, 5);
+
+                      return (
+                        <li key={section.id}>
+                          <button
+                            type="button"
+                            onClick={() => scrollToSection(section.id)}
+                            className="group block w-full text-left"
+                          >
+                            <span className="block text-[15px] font-bold leading-7 text-slate-700 transition group-hover:text-[#35AFA4]">
+                              {section.title}
+                            </span>
+
+                            {subHeadings.length > 0 && (
+                              <span className="mt-1 block space-y-1 pl-5">
+                                {subHeadings.map((item) => (
+                                  <span
+                                    key={item.id}
+                                    className="block text-sm font-medium leading-6 text-slate-500 transition before:mr-2 before:content-['•'] group-hover:text-slate-700"
+                                  >
+                                    {item.text.replace("### ", "")}
+                                  </span>
+                                ))}
+                              </span>
+                            )}
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            <div className="article-content">
+              {articleSections.length > 0 ? (
+                articleSections.map((section) => (
+                  <section
                     key={section.id}
                     id={section.id}
-                    className={`overflow-hidden rounded-[1.75rem] border transition ${
-                      isOpen
-                        ? "border-[#2CB1A6]/30 bg-white shadow-lg shadow-slate-900/5"
-                        : "border-slate-100 bg-[#F7FBFC]"
-                    }`}
+                    className="scroll-mt-24 border-b border-slate-100 py-7 last:border-b-0"
                   >
-                    <button
-                      type="button"
-                      onClick={() => toggleSection(section.id)}
-                      className="flex w-full items-center justify-between gap-4 p-5 text-left transition hover:bg-[#E9F8F6]"
-                    >
-                      <div className="flex items-center gap-4">
-                        <span
-                          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xs font-black shadow-sm ${
-                            isOpen
-                              ? "bg-[#0F3D5E] text-white"
-                              : "bg-white text-[#0F766E]"
-                          }`}
-                        >
-                          {sectionIndex + 1}
-                        </span>
-
-                        <div>
-                          <h3 className="text-lg font-black leading-tight text-[#102A43] sm:text-xl">
-                            {section.title}
-                          </h3>
-
-                          <p className="mt-1 text-xs font-bold text-slate-500">
-                            {section.lines.length} points inside
-                          </p>
-                        </div>
-                      </div>
-
-                      <ChevronDown
-                        size={22}
-                        className={`shrink-0 text-[#0F3D5E] transition ${
-                          isOpen ? "rotate-180" : ""
-                        }`}
-                      />
-                    </button>
-
-                    {isOpen && (
-                      <div className="space-y-5 border-t border-slate-100 bg-white p-5 sm:p-6">
-                        {section.lines.map(renderContentLine)}
-                      </div>
+                    {section.title !== "Introduction" && (
+                      <h2 className="mb-5 text-3xl font-black leading-tight tracking-[-0.02em] text-[#17324D] sm:text-4xl">
+                        {section.title}
+                      </h2>
                     )}
-                  </div>
-                );
-              })}
+
+                    <div>{section.lines.map(renderContentLine)}</div>
+                  </section>
+                ))
+              ) : (
+                <p className="my-5 text-[17px] font-medium leading-9 text-slate-700">
+                  {blog.excerpt || "Content will be updated soon."}
+                </p>
+              )}
+            </div>
+
+            {blogTopics.length > 0 && (
+              <div className="mt-8 border-t border-slate-100 pt-6">
+                <h3 className="mb-4 text-lg font-black text-[#17324D]">
+                  Tags:
+                </h3>
+
+                <div className="flex flex-wrap gap-2">
+                  {blogTopics.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black text-slate-600 transition hover:border-[#35AFA4] hover:text-[#35AFA4]"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-y border-slate-100 py-6">
+              <div>
+                <p className="text-sm font-bold text-slate-500">Share:</p>
+                <p className="mt-1 text-lg font-black text-[#17324D]">
+                  Help another parent read this
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleShare}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#17324D] px-6 py-3 text-sm font-black text-white transition hover:-translate-y-1 hover:bg-[#35AFA4]"
+              >
+                {copied ? <Link2 size={17} /> : <Share2 size={17} />}
+                {copied ? "Link Copied" : "Share Article"}
+              </button>
+            </div>
+
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+              <Link
+                href="/blog"
+                className="rounded-sm border border-slate-200 bg-white p-5 transition hover:border-[#35AFA4] hover:bg-[#F7FBFC]"
+              >
+                <p className="text-sm font-bold text-slate-500">
+                  « Previous Post
+                </p>
+                <p className="mt-2 font-black text-[#17324D]">
+                  Explore more articles
+                </p>
+              </Link>
+
+              <Link
+                href="/blog"
+                className="rounded-sm border border-slate-200 bg-white p-5 text-left transition hover:border-[#35AFA4] hover:bg-[#F7FBFC] sm:text-right"
+              >
+                <p className="text-sm font-bold text-slate-500">Next Post »</p>
+                <p className="mt-2 font-black text-[#17324D]">
+                  Read latest guidance
+                </p>
+              </Link>
             </div>
           </article>
 
-          <aside className="space-y-5 lg:sticky lg:top-20 lg:h-fit">
-            <div className="overflow-hidden rounded-4xl bg-[#0F3D5E] text-white shadow-xl shadow-blue-950/15">
-              <div className="bg-white/10 p-6">
-                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10">
-                  <MessageCircle className="text-[#F4B183]" size={26} />
+          <aside className="space-y-8 lg:sticky lg:top-20 lg:h-fit">
+            <div className="rounded-sm border border-slate-200 bg-white p-5">
+              <h3 className="text-xl font-black text-[#17324D]">Search</h3>
+
+              <div className="relative mt-4">
+                <Search
+                  size={18}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                />
+
+                <input
+                  type="text"
+                  placeholder="Search"
+                  className="h-12 w-full rounded-sm border border-slate-200 bg-white pl-11 pr-4 text-sm font-semibold text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-[#35AFA4]"
+                />
+              </div>
+            </div>
+
+            <div className="rounded-sm border border-slate-200 bg-white p-5">
+              <h3 className="text-xl font-black text-[#17324D]">
+                Article Sections
+              </h3>
+
+              <div className="mt-4 space-y-3">
+                {articleSections.slice(0, 6).map((section) => (
+                  <button
+                    key={section.id}
+                    type="button"
+                    onClick={() => scrollToSection(section.id)}
+                    className="block w-full border-b border-slate-100 pb-3 text-left text-sm font-bold leading-6 text-slate-600 transition last:border-b-0 last:pb-0 hover:text-[#35AFA4]"
+                  >
+                    {section.title}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-sm border border-slate-200 bg-white p-5">
+              <h3 className="text-xl font-black text-[#17324D]">Categories</h3>
+
+              <div className="mt-4 space-y-3">
+                {blogCategories.map((category) => (
+                  <Link
+                    key={category}
+                    href={`/blog?category=${encodeURIComponent(category)}`}
+                    className="block border-b border-slate-100 pb-3 text-sm font-bold text-slate-600 transition last:border-b-0 last:pb-0 hover:text-[#35AFA4]"
+                  >
+                    {category}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-sm border border-slate-200 bg-white p-5">
+              <h3 className="text-xl font-black text-[#17324D]">
+                Popular Tags
+              </h3>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                {(blogTopics.length > 0 ? blogTopics : blogCategories)
+                  .slice(0, 12)
+                  .map((tag) => (
+                    <Link
+                      key={tag}
+                      href="/blog"
+                      className="rounded-full border border-slate-200 px-3 py-2 text-xs font-bold text-slate-600 transition hover:border-[#35AFA4] hover:text-[#35AFA4]"
+                    >
+                      {tag}
+                    </Link>
+                  ))}
+              </div>
+            </div>
+
+            <div className="rounded-sm border border-slate-200 bg-white p-5">
+              <h3 className="text-xl font-black text-[#17324D]">
+                Useful Links
+              </h3>
+
+              <div className="mt-4 space-y-3">
+                {usefulLinks.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="block border-b border-slate-100 pb-3 text-sm font-bold text-slate-600 transition last:border-b-0 last:pb-0 hover:text-[#35AFA4]"
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className="overflow-hidden rounded-sm bg-[#17324D] text-white">
+              <div className="p-6">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-white/10">
+                  <MessageCircle className="text-[#35AFA4]" size={25} />
                 </div>
 
-                <h3 className="text-2xl font-black">Need personal guidance?</h3>
+                <h3 className="text-2xl font-black">Get in Touch</h3>
 
-                <p className="mt-3 text-sm font-semibold leading-6 text-white/75">
-                  If this article feels close to what your child or family is
-                  facing, you can book a consultation with Dr. Vini Jhariya.
+                <p className="mt-3 text-sm font-medium leading-7 text-white/75">
+                  Questions? Concerns? We are here to listen and guide your
+                  family with the right support.
                 </p>
-              </div>
 
-              <div className="p-6 pt-0">
                 <Link
                   href="/contact-us"
-                  className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-black text-[#0F3D5E] transition hover:-translate-y-1"
+                  className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-black text-[#17324D] transition hover:-translate-y-1"
                 >
                   Book Consultation
                 </Link>
@@ -576,63 +663,12 @@ export default function BlogDetailClient({ blog }) {
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-3 inline-flex w-full items-center justify-center rounded-full bg-[#25D366] px-5 py-3 text-sm font-black text-white transition hover:-translate-y-1"
+                  className="mt-3 inline-flex w-full items-center justify-center rounded-full bg-[#35AFA4] px-5 py-3 text-sm font-black text-white transition hover:-translate-y-1"
                 >
                   WhatsApp Us
                 </a>
               </div>
             </div>
-
-            <div className="rounded-4xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-900/5">
-              <h3 className="mb-4 text-xl font-black text-[#102A43]">
-                Jump to section
-              </h3>
-
-              <div className="space-y-2">
-                {articleSections.slice(0, 7).map((section, index) => (
-                  <button
-                    key={section.id}
-                    type="button"
-                    onClick={() => scrollToSection(section.id)}
-                    className="flex w-full items-center gap-3 rounded-2xl bg-[#F7FBFC] px-4 py-3 text-left text-sm font-bold text-slate-600 transition hover:bg-[#E9F8F6] hover:text-[#0F766E]"
-                  >
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-xs font-black text-[#0F766E]">
-                      {index + 1}
-                    </span>
-                    <span className="line-clamp-2">{section.title}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {blogTopics.length > 0 && (
-              <div className="rounded-4xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-900/5">
-                <h3 className="mb-4 flex items-center gap-2 text-xl font-black text-[#102A43]">
-                  <Tag size={20} className="text-[#2CB1A6]" />
-                  Topics
-                </h3>
-
-                <div className="flex flex-wrap gap-2">
-                  {blogTopics.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full bg-[#E9F8F6] px-3 py-2 text-xs font-black text-[#0F766E]"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <button
-              type="button"
-              onClick={handleShare}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-6 py-4 text-sm font-black text-[#0F3D5E] shadow-xl shadow-slate-900/5 transition hover:-translate-y-1 hover:bg-[#E9F8F6]"
-            >
-              {copied ? <Link2 size={17} /> : <Share2 size={17} />}
-              {copied ? "Link Copied" : "Share Article"}
-            </button>
           </aside>
         </div>
       </section>
