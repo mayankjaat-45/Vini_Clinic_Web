@@ -14,12 +14,15 @@ import {
   ClipboardCheck,
   HelpCircle,
   HeartHandshake,
+  Lightbulb,
+  MapPin,
   MessageCircle,
   Quote,
   Route,
   ShieldCheck,
   Sparkles,
   Star,
+  Users,
 } from "lucide-react";
 
 const fadeUp = {
@@ -65,6 +68,14 @@ const isExternalLink = (link = "") => {
 
 const normalizeText = (value = "") => String(value).toLowerCase().trim();
 
+const getCombinedSectionText = (section = {}) => {
+  return normalizeText(
+    `${section.type || ""} ${section.title || ""} ${section.subtitle || ""} ${
+      section.content || ""
+    }`,
+  );
+};
+
 const isImportantNote = (item = {}) => {
   const title = normalizeText(item.title || "");
   return title.includes("important note") || title.startsWith("important:");
@@ -100,59 +111,179 @@ const getPointText = (point) => {
   );
 };
 
-const isProcessSection = (section = {}) => {
-  const title = normalizeText(section.title);
-  const type = normalizeText(section.type);
+const isTeenService = (service = {}) => {
+  const text = normalizeText(
+    `${service.title || ""} ${service.slug || ""} ${service.category || ""}`,
+  );
 
   return (
-    type === "steps" ||
-    title.includes("process") ||
-    title.includes("how it works") ||
-    title.includes("approach") ||
-    title.includes("journey") ||
-    title.includes("what happens")
+    text.includes("adolescent") ||
+    text.includes("teen") ||
+    text.includes("teenager")
+  );
+};
+
+const isChildService = (service = {}) => {
+  const text = normalizeText(
+    `${service.title || ""} ${service.slug || ""} ${service.category || ""}`,
+  );
+
+  return (
+    text.includes("child") ||
+    text.includes("children") ||
+    text.includes("early intervention") ||
+    text.includes("autism") ||
+    text.includes("adhd") ||
+    text.includes("dyslexia")
+  );
+};
+
+const isAdultService = (service = {}) => {
+  const text = normalizeText(
+    `${service.title || ""} ${service.slug || ""} ${service.category || ""}`,
+  );
+
+  return (
+    text.includes("adult") || text.includes("couple") || text.includes("family")
+  );
+};
+
+const isProcessSection = (section = {}) => {
+  const text = getCombinedSectionText(section);
+
+  return (
+    normalizeText(section.type) === "steps" ||
+    text.includes("process") ||
+    text.includes("how it works") ||
+    text.includes("journey") ||
+    text.includes("what happens") ||
+    text.includes("sessions work") ||
+    text.includes("first consultation")
   );
 };
 
 const isSignsSection = (section = {}) => {
-  const title = normalizeText(section.title);
-  const type = normalizeText(section.type);
+  const text = getCombinedSectionText(section);
 
   return (
-    title.includes("sign") ||
-    title.includes("symptom") ||
-    title.includes("look for") ||
-    title.includes("red flag") ||
-    title.includes("may need") ||
-    title.includes("when to seek") ||
-    type === "signs"
+    normalizeText(section.type) === "signs" ||
+    text.includes("sign") ||
+    text.includes("symptom") ||
+    text.includes("look for") ||
+    text.includes("red flag") ||
+    text.includes("may need") ||
+    text.includes("when to seek")
   );
 };
 
 const isStorySection = (section = {}) => {
-  const title = normalizeText(section.title);
-  const type = normalizeText(section.type);
+  const text = getCombinedSectionText(section);
 
   return (
-    type === "story" ||
-    title.includes("story") ||
-    title.includes("success") ||
-    title.includes("family") ||
-    title.includes("parent experience")
+    normalizeText(section.type) === "story" ||
+    text.includes("story") ||
+    text.includes("success") ||
+    text.includes("family story") ||
+    text.includes("parent experience") ||
+    text.includes("found her voice") ||
+    text.includes("found his voice")
   );
 };
 
+const isMethodsSection = (section = {}) => {
+  const text = getCombinedSectionText(section);
+
+  return (
+    normalizeText(section.type) === "methods" ||
+    normalizeText(section.type) === "tools" ||
+    text.includes("therapy approaches") ||
+    text.includes("approaches used") ||
+    text.includes("therapy tools") ||
+    text.includes("methods") ||
+    text.includes("techniques") ||
+    text.includes("modalities") ||
+    text.includes("cbt") ||
+    text.includes("dbt") ||
+    text.includes("act")
+  );
+};
+
+const isConcernSection = (section = {}) => {
+  const text = getCombinedSectionText(section);
+
+  return (
+    normalizeText(section.type) === "concerns" ||
+    text.includes("concern") ||
+    text.includes("challenges") ||
+    text.includes("difficulties") ||
+    text.includes("what brings") ||
+    text.includes("navigating") ||
+    text.includes("issues") ||
+    text.includes("support with")
+  );
+};
+
+const isReaderNoteSection = (section = {}) => {
+  const text = getCombinedSectionText(section);
+
+  return (
+    text.includes("if you are") ||
+    text.includes("reading this") ||
+    text.includes("for teenagers") ||
+    text.includes("for parents") ||
+    text.includes("important note")
+  );
+};
+
+const getGuideCopy = (service = {}) => {
+  if (isTeenService(service)) {
+    return {
+      eyebrow: "Teen Support Guide",
+      title: "Understand what your teenager may not be able to say.",
+      subtitle:
+        "A clear, parent-friendly and teen-sensitive guide to concerns, counselling process, therapy methods and next steps.",
+    };
+  }
+
+  if (isChildService(service)) {
+    return {
+      eyebrow: "Child Support Guide",
+      title: "Clear guidance for what you are noticing.",
+      subtitle:
+        "Important signs, assessment steps, therapy planning and parent support are presented in a simple visual flow.",
+    };
+  }
+
+  if (isAdultService(service)) {
+    return {
+      eyebrow: "Support Guide",
+      title: "Understand the concern. Choose the right next step.",
+      subtitle:
+        "Explore the service through clear sections, practical guidance and supportive next steps.",
+    };
+  }
+
+  return {
+    eyebrow: "Complete Guide",
+    title: "Understand the concern. Choose the right next step.",
+    subtitle:
+      "Important information is organised into readable sections so users do not feel overwhelmed.",
+  };
+};
+
 const getSectionEyebrow = (section = {}) => {
+  if (isMethodsSection(section)) return "Therapy tools";
+  if (isConcernSection(section)) return "What brings people here";
   if (isProcessSection(section)) return "How it works";
   if (isSignsSection(section)) return "Signs to look for";
   if (isStorySection(section)) return "A family story";
+  if (isReaderNoteSection(section)) return "Important note";
 
   const type = normalizeText(section.type);
 
   const labels = {
-    text: "Details",
+    text: "Helpful context",
     cards: "Key points",
-    tools: "Tools & support",
     badges: "Highlights",
     quote: "Expert note",
     cta: "Next step",
@@ -164,14 +295,16 @@ const getSectionEyebrow = (section = {}) => {
 };
 
 const getSectionIcon = (section = {}) => {
+  if (isMethodsSection(section)) return Brain;
+  if (isConcernSection(section)) return Users;
   if (isProcessSection(section)) return Route;
   if (isSignsSection(section)) return AlertTriangle;
   if (isStorySection(section)) return Quote;
+  if (isReaderNoteSection(section)) return Lightbulb;
 
   const icons = {
     text: ClipboardCheck,
     cards: CheckCircle2,
-    tools: Brain,
     badges: ShieldCheck,
     quote: Quote,
     cta: CalendarCheck,
@@ -208,14 +341,19 @@ function SmartButton({ href, children, variant = "primary", className = "" }) {
   );
 }
 
-function ReadMoreText({ text, limit = 260, className = "" }) {
+function ReadMoreText({
+  text,
+  limit = 420,
+  className = "",
+  buttonText = "Read more",
+}) {
   const [open, setOpen] = useState(false);
 
   const lines = getTextLines(text);
   if (lines.length === 0) return null;
 
   const fullText = lines.join("\n");
-  const shouldShorten = fullText.length > limit || lines.length > 2;
+  const shouldShorten = fullText.length > limit || lines.length > 4;
 
   const previewText =
     fullText.length > limit
@@ -238,9 +376,9 @@ function ReadMoreText({ text, limit = 260, className = "" }) {
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
-          className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#E9F8F6] px-4 py-2 text-xs font-black text-[#0F766E] transition hover:bg-[#0F3D5E] hover:text-white"
+          className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#E9F8F6] px-4 py-2 text-xs font-black text-[#0F766E] transition hover:bg-[#0F3D5E] hover:text-white"
         >
-          {open ? "Show less" : "Read more"}
+          {open ? "Show less" : buttonText}
           <ChevronDown
             size={15}
             className={`transition ${open ? "rotate-180" : ""}`}
@@ -251,7 +389,7 @@ function ReadMoreText({ text, limit = 260, className = "" }) {
   );
 }
 
-function ExpandablePointList({ items = [], limit = 4 }) {
+function ExpandablePointList({ items = [], limit = 5 }) {
   const [open, setOpen] = useState(false);
 
   if (!Array.isArray(items) || items.length === 0) return null;
@@ -261,7 +399,7 @@ function ExpandablePointList({ items = [], limit = 4 }) {
 
   return (
     <div className="mt-4">
-      <ul className="space-y-2">
+      <ul className="space-y-2.5">
         {visibleItems.map((point, index) => {
           const text = getPointText(point);
           if (!text) return null;
@@ -285,9 +423,9 @@ function ExpandablePointList({ items = [], limit = 4 }) {
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
-          className="mt-3 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm transition hover:bg-[#E9F8F6] hover:text-[#0F766E]"
+          className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm transition hover:bg-[#E9F8F6] hover:text-[#0F766E]"
         >
-          {open ? "Show less points" : `View ${remaining} more points`}
+          {open ? "Show less" : `View ${remaining} more`}
           <ChevronDown
             size={15}
             className={`transition ${open ? "rotate-180" : ""}`}
@@ -405,6 +543,8 @@ export default function ServiceDetailClient({ service }) {
           },
         ];
 
+  const guideCopy = getGuideCopy(service);
+
   return (
     <main className="overflow-hidden bg-[#F7FBFC]">
       <Breadcrumb title={service.title} />
@@ -418,13 +558,15 @@ export default function ServiceDetailClient({ service }) {
         hero={hero}
       />
 
+      <QuickClarityCards service={service} />
+
       {sections.length > 0 && (
-        <section id="service-details" className="px-4 py-10 sm:px-5 md:py-14">
+        <section id="service-details" className="px-4 py-10 sm:px-5 md:py-16">
           <div className="mx-auto max-w-7xl">
             <SectionHeader
-              eyebrow="Complete Guide"
-              title="Everything you need to know"
-              subtitle="Important information is now visible directly on the page, so users do not miss key service details."
+              eyebrow={guideCopy.eyebrow}
+              title={guideCopy.title}
+              subtitle={guideCopy.subtitle}
             />
 
             <div className="mt-10 space-y-10 md:space-y-14">
@@ -433,6 +575,7 @@ export default function ServiceDetailClient({ service }) {
                   key={`${section.title || "section"}-${index}`}
                   section={section}
                   index={index}
+                  service={service}
                 />
               ))}
             </div>
@@ -479,13 +622,15 @@ function HeroSection({
   heroButtons,
   hero,
 }) {
+  const teen = isTeenService(service);
+
   return (
     <section className="relative overflow-hidden bg-linear-to-br from-[#08384D] via-[#10616A] to-[#168A83] px-4 py-14 text-white sm:px-5 md:py-20">
       <div className="absolute -right-20 -top-24 h-96 w-96 rounded-full bg-white/10 blur-3xl" />
       <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-[#F4B183]/15 blur-3xl" />
       <div className="absolute right-8 top-10 hidden h-72 w-72 rounded-full border border-white/10 bg-white/5 lg:block" />
 
-      <div className="relative mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_390px] lg:items-center">
+      <div className="relative mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_400px] lg:items-center">
         <motion.div variants={staggerContainer} initial="hidden" animate="show">
           <motion.div
             variants={fadeUp}
@@ -516,7 +661,11 @@ function HeroSection({
               variants={fadeUp}
               className="mt-5 max-w-3xl text-base font-semibold leading-8 text-white/78 sm:text-lg"
             >
-              <ReadMoreText text={heroParagraph} limit={330} />
+              <ReadMoreText
+                text={heroParagraph}
+                limit={520}
+                buttonText="Continue reading"
+              />
             </motion.div>
           )}
 
@@ -603,12 +752,15 @@ function HeroSection({
               </p>
 
               <h2 className="mt-3 text-2xl font-black leading-tight sm:text-3xl">
-                Start with the right next step.
+                {teen
+                  ? "Your teenager needs safety first, not judgement."
+                  : "Start with the right next step."}
               </h2>
 
               <p className="mt-4 text-sm font-semibold leading-7 text-white/78">
-                Share your concern and get clear guidance for consultation,
-                assessment, therapy or parent support.
+                {teen
+                  ? "Counselling works best when teenagers feel heard, respected and emotionally safe before deeper work begins."
+                  : "Share your concern and get clear guidance for consultation, assessment, therapy or parent support."}
               </p>
 
               <div className="mt-6 grid gap-3">
@@ -655,6 +807,89 @@ function HeroSection({
   );
 }
 
+function QuickClarityCards({ service }) {
+  const teen = isTeenService(service);
+
+  const cards = teen
+    ? [
+        {
+          icon: Users,
+          title: "For Parents",
+          text: "Understand mood, behaviour, screen, school, anger, silence or emotional changes without blaming your teen.",
+        },
+        {
+          icon: HeartHandshake,
+          title: "For Teenagers",
+          text: "A safe space to talk about pressure, anxiety, relationships, identity, studies or family stress.",
+        },
+        {
+          icon: Lightbulb,
+          title: "When to seek help",
+          text: "If changes are lasting, intense, confusing or affecting daily life, counselling can bring clarity.",
+        },
+        {
+          icon: MapPin,
+          title: "Online + Indore",
+          text: "Support is available at Urjasvini CDC, Indore and through online consultation.",
+        },
+      ]
+    : [
+        {
+          icon: Users,
+          title: "Who this is for",
+          text: "Families, children, adults, couples or parents looking for clear professional guidance.",
+        },
+        {
+          icon: ClipboardCheck,
+          title: "First step",
+          text: "The first consultation helps understand the concern before deciding therapy or assessment.",
+        },
+        {
+          icon: ShieldCheck,
+          title: "Support style",
+          text: "Warm, structured and personalised support based on real needs, not guesswork.",
+        },
+        {
+          icon: MapPin,
+          title: "Online + Indore",
+          text: "Consultation support is available in Indore and online for families outside the city.",
+        },
+      ];
+
+  return (
+    <section className="relative z-10 -mt-8 px-4 sm:px-5">
+      <div className="mx-auto grid max-w-7xl gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {cards.map((card, index) => {
+          const Icon = card.icon;
+
+          return (
+            <motion.div
+              key={card.title}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ delay: index * 0.04 }}
+              className="rounded-[1.5rem] border border-[#DDEDEA] bg-white p-5 shadow-[0_18px_45px_rgba(15,61,94,0.08)] transition hover:-translate-y-1 hover:shadow-xl"
+            >
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#0F766E]">
+                <Icon size={23} />
+              </div>
+
+              <h3 className="text-lg font-black text-[#102A43]">
+                {card.title}
+              </h3>
+              <p className="mt-2 text-sm font-semibold leading-7 text-slate-600">
+                {card.text}
+              </p>
+            </motion.div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 function SectionHeader({ eyebrow, title, subtitle }) {
   return (
     <motion.div
@@ -682,7 +917,7 @@ function SectionHeader({ eyebrow, title, subtitle }) {
   );
 }
 
-function VisibleServiceSection({ section, index }) {
+function VisibleServiceSection({ section, index, service }) {
   const type = section.type || "text";
 
   if (type === "cta") {
@@ -693,12 +928,24 @@ function VisibleServiceSection({ section, index }) {
     return <StorySection section={section} index={index} />;
   }
 
+  if (isMethodsSection(section)) {
+    return <MethodsSection section={section} index={index} />;
+  }
+
+  if (isConcernSection(section)) {
+    return <ConcernSection section={section} index={index} service={service} />;
+  }
+
   if (isProcessSection(section)) {
     return <ProcessSection section={section} index={index} />;
   }
 
   if (isSignsSection(section)) {
     return <SignsSection section={section} index={index} />;
+  }
+
+  if (isReaderNoteSection(section)) {
+    return <ReaderNoteSection section={section} index={index} />;
   }
 
   if (type === "quote") {
@@ -708,7 +955,7 @@ function VisibleServiceSection({ section, index }) {
   return <GenericSection section={section} index={index} />;
 }
 
-function SectionTitleRow({ section, index, align = "left" }) {
+function SectionTitleRow({ section, index, align = "left", light = false }) {
   const Icon = getSectionIcon(section);
 
   return (
@@ -722,29 +969,42 @@ function SectionTitleRow({ section, index, align = "left" }) {
       }
     >
       <div
-        className={`mb-4 inline-flex items-center gap-2 rounded-full bg-[#E9F8F6] px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-[#0F766E] ${
-          align === "center" ? "mx-auto" : ""
-        }`}
+        className={`mb-4 inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-black uppercase tracking-[0.14em] ${
+          light ? "bg-white/15 text-white" : "bg-[#E9F8F6] text-[#0F766E]"
+        } ${align === "center" ? "mx-auto" : ""}`}
       >
         <Icon size={15} />
         {getSectionEyebrow(section)}
       </div>
 
-      <h2 className="text-3xl font-black leading-tight text-[#102A43] sm:text-5xl">
+      <h2
+        className={`text-3xl font-black leading-tight sm:text-5xl ${
+          light ? "text-white" : "text-[#102A43]"
+        }`}
+      >
         {section.title || `Section ${index + 1}`}
       </h2>
 
       {section.subtitle && (
-        <div className="mt-4 text-base font-semibold leading-8 text-slate-600 sm:text-lg">
-          <ReadMoreText text={section.subtitle} limit={280} />
+        <div
+          className={`mt-4 text-base font-semibold leading-8 sm:text-lg ${
+            light ? "text-white/78" : "text-slate-600"
+          }`}
+        >
+          <ReadMoreText text={section.subtitle} limit={520} />
         </div>
       )}
 
       {section.content &&
         !isStorySection(section) &&
-        section.type !== "quote" && (
-          <div className="mt-4 text-sm font-semibold leading-7 text-slate-600 sm:text-base sm:leading-8">
-            <ReadMoreText text={section.content} limit={360} />
+        section.type !== "quote" &&
+        section.type !== "cta" && (
+          <div
+            className={`mt-4 text-sm font-semibold leading-7 sm:text-base sm:leading-8 ${
+              light ? "text-white/78" : "text-slate-600"
+            }`}
+          >
+            <ReadMoreText text={section.content} limit={620} />
           </div>
         )}
     </motion.div>
@@ -797,12 +1057,114 @@ function ProcessCard({ item, index }) {
 
       {description && (
         <div className="mt-3 text-sm font-semibold leading-7 text-slate-600">
-          <ReadMoreText text={description} limit={210} />
+          <ReadMoreText text={description} limit={320} />
         </div>
       )}
 
-      <ExpandablePointList items={nestedItems} limit={3} />
+      <ExpandablePointList items={nestedItems} limit={4} />
     </div>
+  );
+}
+
+function ConcernSection({ section, index, service }) {
+  const items = Array.isArray(section.items) ? section.items : [];
+  const hasNestedItems = items.some(
+    (item) => Array.isArray(item?.items) && item.items.length > 0,
+  );
+
+  if (items.length >= 4 && hasNestedItems) {
+    return (
+      <ConcernTabsSection section={section} index={index} service={service} />
+    );
+  }
+
+  return <SignsSection section={section} index={index} />;
+}
+
+function ConcernTabsSection({ section, index, service }) {
+  const items = Array.isArray(section.items) ? section.items : [];
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const activeItem = items[activeIndex] || items[0];
+  const activeNestedItems = Array.isArray(activeItem?.items)
+    ? activeItem.items
+    : [];
+  const activeDescription = getItemDescription(activeItem);
+  const teen = isTeenService(service);
+
+  return (
+    <motion.section
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.12 }}
+      className="overflow-hidden rounded-[2rem] bg-white shadow-[0_18px_45px_rgba(15,61,94,0.08)] md:rounded-[3rem]"
+    >
+      <div className="grid gap-0 lg:grid-cols-[0.85fr_1.15fr]">
+        <div className="bg-[#E9F8F6] p-5 sm:p-7 md:p-9">
+          <SectionTitleRow section={section} index={index} />
+
+          <div className="mt-8 flex flex-wrap gap-2">
+            {items.map((item, itemIndex) => {
+              const selected = activeIndex === itemIndex;
+
+              return (
+                <button
+                  key={itemIndex}
+                  type="button"
+                  onClick={() => setActiveIndex(itemIndex)}
+                  className={`rounded-full px-4 py-2 text-xs font-black transition sm:text-sm ${
+                    selected
+                      ? "bg-[#0F3D5E] text-white shadow-lg shadow-blue-950/15"
+                      : "bg-white text-[#0F3D5E] hover:bg-[#0F766E] hover:text-white"
+                  }`}
+                >
+                  {getItemTitle(item, `Concern ${itemIndex + 1}`)}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="p-5 sm:p-7 md:p-9">
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-[#FFF8ED] px-4 py-2 text-xs font-black uppercase tracking-[0.13em] text-[#B7791F]">
+            <Lightbulb size={15} />
+            {teen ? "What this may look like" : "Helpful to understand"}
+          </div>
+
+          <h3 className="text-2xl font-black leading-tight text-[#102A43] sm:text-4xl">
+            {getItemTitle(activeItem, "Concern")}
+          </h3>
+
+          {activeDescription && (
+            <div className="mt-4 text-sm font-semibold leading-7 text-slate-600 sm:text-base">
+              <ReadMoreText text={activeDescription} limit={520} />
+            </div>
+          )}
+
+          {activeNestedItems.length > 0 && (
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              {activeNestedItems.map((point, pointIndex) => (
+                <div
+                  key={pointIndex}
+                  className="rounded-2xl border border-[#DDEDEA] bg-[#F7FBFC] p-4"
+                >
+                  <div className="flex gap-3">
+                    <CheckCircle2
+                      size={18}
+                      className="mt-1 shrink-0 text-[#2CB1A6]"
+                    />
+                    <p className="text-sm font-bold leading-6 text-slate-700">
+                      {getPointText(point)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </motion.section>
   );
 }
 
@@ -840,11 +1202,11 @@ function SignsSection({ section, index }) {
 
                     {description && (
                       <div className="mt-2 text-sm font-semibold leading-7 text-slate-600">
-                        <ReadMoreText text={description} limit={170} />
+                        <ReadMoreText text={description} limit={260} />
                       </div>
                     )}
 
-                    <ExpandablePointList items={nestedItems} limit={3} />
+                    <ExpandablePointList items={nestedItems} limit={4} />
                   </div>
                 </div>
               </div>
@@ -852,6 +1214,106 @@ function SignsSection({ section, index }) {
           })}
         </div>
       )}
+    </motion.section>
+  );
+}
+
+function MethodsSection({ section, index }) {
+  const items = Array.isArray(section.items) ? section.items : [];
+
+  return (
+    <motion.section
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.12 }}
+      className="rounded-[2rem] bg-linear-to-br from-[#102A43] via-[#0F3D5E] to-[#168A83] px-5 py-8 text-white shadow-2xl shadow-slate-900/15 sm:px-7 md:rounded-[3rem] md:px-9 md:py-11"
+    >
+      <SectionTitleRow section={section} index={index} light />
+
+      {items.length > 0 && (
+        <div className="mt-9 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {items.map((item, itemIndex) => {
+            const title = getItemTitle(item, `Method ${itemIndex + 1}`);
+            const description = getItemDescription(item);
+            const nestedItems = Array.isArray(item?.items) ? item.items : [];
+
+            return (
+              <div
+                key={itemIndex}
+                className="rounded-[1.5rem] border border-white/15 bg-white/10 p-5 backdrop-blur transition hover:-translate-y-1 hover:bg-white/15"
+              >
+                <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-white/15 text-[#F4B183]">
+                  <Brain size={22} />
+                </div>
+
+                <h3 className="text-xl font-black leading-tight text-white">
+                  {title}
+                </h3>
+
+                {description && (
+                  <div className="mt-3 text-sm font-semibold leading-7 text-white/75">
+                    <ReadMoreText text={description} limit={260} />
+                  </div>
+                )}
+
+                {nestedItems.length > 0 && (
+                  <ul className="mt-4 space-y-2">
+                    {nestedItems.slice(0, 4).map((point, pointIndex) => (
+                      <li
+                        key={pointIndex}
+                        className="flex gap-2 text-sm font-semibold leading-6 text-white/75"
+                      >
+                        <CheckCircle2
+                          size={15}
+                          className="mt-1 shrink-0 text-[#F4B183]"
+                        />
+                        <span>{getPointText(point)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </motion.section>
+  );
+}
+
+function ReaderNoteSection({ section, index }) {
+  return (
+    <motion.section
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.12 }}
+      className="grid gap-7 rounded-[2rem] border border-[#DDEDEA] bg-white p-5 shadow-[0_18px_45px_rgba(15,61,94,0.08)] sm:p-7 md:rounded-[3rem] md:p-9 lg:grid-cols-[0.85fr_1.15fr] lg:items-center"
+    >
+      <div>
+        <SectionTitleRow section={section} index={index} />
+      </div>
+
+      <div className="rounded-[1.8rem] bg-[#FFF8ED] p-6 sm:p-8">
+        <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-3xl bg-[#F4B183]/20 text-[#B7791F]">
+          <Lightbulb size={28} />
+        </div>
+
+        {section.content && (
+          <div className="text-base font-semibold leading-8 text-slate-700 sm:text-lg">
+            <ReadMoreText text={section.content} limit={700} />
+          </div>
+        )}
+
+        {Array.isArray(section.items) && section.items.length > 0 && (
+          <div className="mt-6 grid gap-3">
+            {section.items.map((item, itemIndex) => (
+              <ContentCard key={itemIndex} item={item} compact />
+            ))}
+          </div>
+        )}
+      </div>
     </motion.section>
   );
 }
@@ -874,7 +1336,7 @@ function StorySection({ section, index }) {
 
         {section.content && (
           <div className="text-lg font-semibold italic leading-9 text-[#102A43]">
-            <ReadMoreText text={section.content} limit={520} />
+            <ReadMoreText text={section.content} limit={760} />
           </div>
         )}
 
@@ -907,7 +1369,7 @@ function QuoteSection({ section, index }) {
         <div className="mt-7 rounded-[1.8rem] bg-[#F7FBFC] p-6">
           <Quote size={38} className="mb-4 text-[#2CB1A6]" />
           <div className="text-base font-semibold leading-8 text-slate-600">
-            <ReadMoreText text={section.content} limit={440} />
+            <ReadMoreText text={section.content} limit={720} />
           </div>
         </div>
       )}
@@ -927,7 +1389,27 @@ function GenericSection({ section, index }) {
       viewport={{ once: true, amount: 0.12 }}
       className="rounded-[2rem] bg-white px-5 py-8 shadow-[0_18px_45px_rgba(15,61,94,0.08)] sm:px-7 md:rounded-[3rem] md:px-9 md:py-11"
     >
-      <SectionTitleRow section={section} index={index} />
+      <div
+        className={
+          items.length > 0
+            ? ""
+            : "grid gap-7 lg:grid-cols-[0.75fr_1.25fr] lg:items-start"
+        }
+      >
+        <SectionTitleRow section={section} index={index} />
+
+        {items.length === 0 && section.content && (
+          <div className="rounded-[1.8rem] border border-[#DDEDEA] bg-[#F7FBFC] p-5 sm:p-6">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#0F766E]">
+              <ClipboardCheck size={23} />
+            </div>
+
+            <div className="text-sm font-semibold leading-7 text-slate-600 sm:text-base sm:leading-8">
+              <ReadMoreText text={section.content} limit={760} />
+            </div>
+          </div>
+        )}
+      </div>
 
       {items.length > 0 && (
         <div
@@ -985,7 +1467,7 @@ function CTASection({ section, index }) {
 
         {section.content && (
           <div className="mx-auto mt-5 max-w-2xl text-sm font-semibold leading-7 text-white/80 sm:text-base">
-            <ReadMoreText text={section.content} limit={340} />
+            <ReadMoreText text={section.content} limit={680} />
           </div>
         )}
 
@@ -1038,11 +1520,11 @@ function ContentCard({ item, compact = false }) {
 
       {description && (
         <div className="mt-4 text-sm font-semibold leading-7 text-slate-600">
-          <ReadMoreText text={description} limit={220} />
+          <ReadMoreText text={description} limit={360} />
         </div>
       )}
 
-      <ExpandablePointList items={nestedItems} limit={3} />
+      <ExpandablePointList items={nestedItems} limit={4} />
 
       {typeof item !== "string" && item?.buttonText && item?.buttonLink && (
         <div className="mt-5">
@@ -1070,11 +1552,11 @@ function BadgeItem({ item }) {
 
       {description && (
         <div className="mt-3 text-xs font-semibold leading-6 text-slate-600">
-          <ReadMoreText text={description} limit={150} />
+          <ReadMoreText text={description} limit={260} />
         </div>
       )}
 
-      <ExpandablePointList items={nestedItems} limit={3} />
+      <ExpandablePointList items={nestedItems} limit={4} />
     </div>
   );
 }
@@ -1109,7 +1591,7 @@ function FaqSection({ faqs }) {
         <SectionHeader
           eyebrow="Common Questions"
           title="Frequently Asked Questions"
-          subtitle="These answers stay clean, readable and openable on all screen sizes."
+          subtitle="Quick answers for parents, teenagers and families before booking a consultation."
         />
 
         <div className="mt-9 space-y-4">
@@ -1156,7 +1638,7 @@ function FaqSection({ faqs }) {
                 {open && (
                   <div className="border-t border-slate-100 px-5 pb-5 pt-1 sm:px-7 sm:pb-6">
                     <div className="pl-9 text-sm font-semibold leading-7 text-slate-600 sm:text-base">
-                      <ReadMoreText text={faq.answer} limit={360} />
+                      <ReadMoreText text={faq.answer} limit={520} />
                     </div>
                   </div>
                 )}
@@ -1173,6 +1655,8 @@ function BottomCTA({ service }) {
   const whatsappMessage = encodeURIComponent(
     `Hello, I want to book consultation for ${service.title}`,
   );
+
+  const teen = isTeenService(service);
 
   return (
     <section className="px-4 pb-14 pt-6 sm:px-5 md:pb-20">
@@ -1192,12 +1676,15 @@ function BottomCTA({ service }) {
           </div>
 
           <h2 className="text-2xl font-black leading-tight sm:text-4xl">
-            Not sure if this is the right service?
+            {teen
+              ? "You have not lost your teenager."
+              : "Not sure if this is the right service?"}
           </h2>
 
           <p className="mx-auto mt-4 max-w-2xl text-sm font-semibold leading-7 text-white/75 sm:text-base">
-            Share what you are noticing. We will help you choose the right next
-            step.
+            {teen
+              ? "Changes in behaviour, silence, anger or anxiety often mean your teenager needs support, not criticism. Start with one conversation."
+              : "Share what you are noticing. We will help you choose the right next step."}
           </p>
 
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
