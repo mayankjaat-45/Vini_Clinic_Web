@@ -2196,7 +2196,7 @@ const psychologicalAssessmentsService = {
     "Comprehensive psychological assessments for children, adolescents and adults — giving answers, clarity and a plan.",
 
   description:
-    "At Urjasvini CDC, Dr. Vini Jhariya conducts multi-tool psychological assessments covering cognitive ability, developmental milestones, learning disabilities, autism, ADHD, emotional functioning, personality and more.",
+    "At Urjasvini CDC, Dr. Vini Jhariya conducts detailed, multi-tool psychological assessments for children, adolescents, and adults — covering cognitive ability, neuropsychological functioning, developmental milestones, learning disabilities, autism spectrum, ADHD, behaviour, emotional functioning, personality, and more.",
 
   hero: {
     headline: "You do not need more opinions.\nYou need answers.",
@@ -2209,7 +2209,7 @@ const psychologicalAssessmentsService = {
     buttons: [
       {
         text: "Book a Psychological Assessment",
-        link: "/contact",
+        link: "/contact-us",
         type: "primary",
       },
       {
@@ -2226,7 +2226,7 @@ const psychologicalAssessmentsService = {
       type: "text",
       order: 1,
       content:
-        "Most parents come to Urjasvini CDC after months — sometimes years — of being told to wait. Wait and see. He will catch up. She is just going through a phase.\n\nMost adults come after years of feeling something is not right — and being told it is stress, or personality, or just the way they are.\n\nMeanwhile, the real reason goes unidentified. The gap widens. The frustration builds. And the person begins to believe something is fundamentally wrong with them — when actually, the only thing missing was the right assessment.\n\nA proper psychological assessment by Dr. Vini Jhariya tells you exactly what is happening, why it is happening, and what plan is needed next.\n\nAssessment is not labelling. Assessment is understanding. And understanding is where everything begins.",
+        "Most parents come to Urjasvini CDC after months — sometimes years — of being told to wait. Wait and see. He will catch up. She is just going through a phase.\n\nMost adults come after years of feeling something is not right — and being told it is stress, or personality, or just the way they are.\n\nMeanwhile, the real reason goes unidentified. The gap widens. The frustration builds. And the person begins to believe something is fundamentally wrong with them — when actually, the only thing missing was the right assessment.\n\nA proper psychological assessment by Dr. Vini Jhariya does three things that no amount of waiting ever can:\n\n1. It tells you exactly what is happening — not what might be happening.\n2. It tells you why — the specific cognitive, developmental, emotional, or neurological pattern at work.\n3. It gives you a plan — specific, evidence-based, and built around the individual.\n\nAssessment is not labelling. Assessment is understanding. And understanding is where everything begins.",
     },
 
     {
@@ -2238,18 +2238,18 @@ const psychologicalAssessmentsService = {
           title: "Children",
           subtitle: "Age 0–12",
           description:
-            "From developmental concerns in toddlers to learning difficulties in school-age children — Dr. Vini Jhariya assesses across every domain of child development.",
+            "From developmental concerns in toddlers to learning difficulties in school-age children — Dr. Vini Jhariya assesses across every domain of child development. The earlier an assessment is conducted, the earlier the right support can begin.",
         },
         {
           title: "Adolescents",
           subtitle: "Age 13–18",
           description:
-            "Teenagers whose ADHD was missed, adolescents navigating anxiety or academic pressure, and students needing career aptitude assessments before stream selection.",
+            "Teenagers whose ADHD was missed in childhood. Adolescents navigating anxiety, identity, or academic pressure. Students needing career aptitude assessments before stream selection. Dr. Vini Jhariya works with adolescents across every presenting concern.",
         },
         {
           title: "Adults",
           description:
-            "Personality assessment, neuropsychological evaluation, emotional and mental health assessment, relationship and premarital assessment, trauma evaluation, disability certification, and more.",
+            "Personality assessment, neuropsychological evaluation, emotional and mental health assessment, relationship and premarital assessment, trauma evaluation, disability certification, and more. Assessment is not only for children — adults deserve answers too.",
         },
       ],
     },
@@ -2264,54 +2264,54 @@ const psychologicalAssessmentsService = {
         {
           title: "Cognitive & IQ Assessment",
           description:
-            "A thorough evaluation of intellectual ability — how a child thinks, reasons, processes information and learns. Useful for children whose performance does not match apparent ability, giftedness concerns or suspected intellectual disability.",
+            "What it is: A thorough evaluation of a child's intellectual ability — how they think, reason, process information, and learn.\n\nWhat it covers: Verbal intelligence, non-verbal intelligence, processing speed, working memory, fluid reasoning, and overall cognitive profile.\n\nWho it is for: Children whose academic performance does not match their apparent ability. Children being considered for gifted programmes. Children with suspected intellectual disability. Any child where understanding cognitive potential is essential.\n\nKey tools: WISC-V, WPPSI-IV, Stanford-Binet-5, Raven's Progressive Matrices, Cattell Culture Fair Intelligence Test, CAS-2, KABC-II, and more.\n\nWhat the report gives you: A complete cognitive profile — strengths, areas of need, and specific recommendations for home, school, and intervention.",
         },
         {
           title: "Neuropsychological Assessment",
           description:
-            "A detailed evaluation of brain functioning — attention, memory, executive functioning, language processing, visuospatial skills and processing speed.",
+            "What it is: A detailed evaluation of how the brain is functioning — covering attention, memory, executive functioning, language processing, visuospatial skills, and processing speed.\n\nWhat it covers: Attention and concentration, short and long-term memory, executive functioning, language processing, visuospatial processing, processing speed, and academic achievement.\n\nWho it is for: Children with complex presentations requiring a detailed understanding of brain-behaviour relationships. Children where cognitive assessment alone is insufficient. Adolescents with attention, memory, or executive functioning difficulties.\n\nKey tools: NEPSY-II, D-KEFS, CANTAB, CVLT-C, Rey Complex Figure Test, Trail Making Test, Wisconsin Card Sorting Test, Stroop Test, Digit Span, and more.\n\nWhat the report gives you: A comprehensive neuropsychological profile — identifying specific areas of strength and difficulty at the brain-function level, with targeted recommendations.",
         },
         {
           title: "Developmental Assessment",
           subtitle: "Age 0–6",
           description:
-            "A comprehensive evaluation of motor, language, cognitive, social-emotional and adaptive development for toddlers and young children.",
+            "What it is: A comprehensive evaluation of a young child's development across all key domains — motor, language, cognitive, social-emotional, and adaptive behaviour.\n\nWhat it covers: Gross and fine motor development, receptive and expressive language, cognitive development, social-emotional functioning, adaptive behaviour, sensory processing, and developmental milestones.\n\nWho it is for: Toddlers and young children with concerns about developmental milestones. Children not meeting expected developmental markers. Early identification of autism, developmental delay, or sensory processing difficulties.\n\nKey tools: Bayley-III, DAYC-2, Griffiths Mental Development Scales, Denver Developmental Screening Test-II, Vineland-3, Sensory Profile-2, and more.\n\nWhat the report gives you: A clear developmental profile — where your child is, what they need, and an early intervention plan tailored to their specific profile.",
         },
         {
           title: "Psychoeducational & SLD Assessment",
           description:
-            "Evaluation of academic skills and learning processes — identifying dyslexia, dyscalculia, written expression difficulties and school accommodation needs.",
+            "What it is: A comprehensive evaluation of a child's academic skills and learning processes — identifying specific learning difficulties including dyslexia, dyscalculia, and disorders of written expression.\n\nWhat it covers: Reading accuracy, reading fluency, reading comprehension, written expression, spelling, mathematics, phonological processing, and working memory.\n\nWho it is for: Children struggling academically despite effort. Children with suspected learning difficulties. Children needing documentation for school accommodations or board examination exemptions.\n\nKey tools: WIAT-III, KTEA-3, WRAT-5, GORT-5, CTOPP-2, TOWL-4, Woodcock Reading Mastery Tests, NIMHANS SLD Battery, DALI, and more.\n\nWhat the report gives you: A precise SLD diagnosis, legally recognised documentation for school accommodations and board exam exemptions, and a targeted remedial education plan.",
         },
         {
           title: "ASD — Autism Spectrum Assessment",
           description:
-            "Multi-tool evaluation covering social communication, repetitive behaviours, sensory profile, adaptive functioning and cognitive ability.",
+            "What it is: A comprehensive multi-tool evaluation for autism spectrum — covering social communication, repetitive behaviours, sensory profile, adaptive functioning, and cognitive ability.\n\nWho it is for: Children showing signs of autism at any age. Children already assessed elsewhere who need a more detailed profile. Toddlers with early developmental concerns.\n\nKey tools: ADOS-2, ADI-R, CARS-2, GARS-3, M-CHAT-R/F, ISAA, SCQ, SRS-2, Vineland-3, Sensory Profile-2, and more.\n\nWhat the report gives you: A clear diagnostic picture, a detailed developmental and sensory profile, and a specific intervention plan.",
         },
         {
           title: "ADHD Assessment",
           description:
-            "Comprehensive evaluation of attention, impulse control, hyperactivity and executive functioning across home and school settings.",
+            "What it is: A comprehensive evaluation of attention, impulse control, hyperactivity, and executive functioning — across home and school settings.\n\nWho it is for: Children with attention difficulties, hyperactivity, or impulsivity. Adolescents whose ADHD was missed in childhood. Girls with inattentive ADHD that has been overlooked.\n\nKey tools: Conners-3, BASC-3, CBCL, Vanderbilt, Brown ADD Scales, ADHD-RS-5, TOVA, IVA-2, AIIMS ADHD Toolkit, and more.\n\nWhat the report gives you: A clear ADHD profile and a specific behavioural intervention plan.",
         },
         {
           title: "Behavioural & Emotional Assessment",
           description:
-            "Evaluation of behavioural patterns, emotional regulation, anxiety, depression, trauma responses, social functioning and self-concept.",
+            "What it is: A comprehensive evaluation of a child's behavioural patterns, emotional functioning, and mental health.\n\nWhat it covers: Behavioural patterns, emotional regulation, anxiety, depression, trauma responses, social functioning, and self-concept.\n\nWho it is for: Children with significant behavioural difficulties, emotional dysregulation, anxiety, depression, school refusal, or trauma history.\n\nKey tools: BASC-3, CBCL, CDI-2, MASC-2, SCARED, RCMAS-2, Beck Youth Inventories, TSCC, and more.\n\nWhat the report gives you: A clear emotional and behavioural profile, clinical diagnosis where applicable, and specific therapeutic recommendations.",
         },
         {
           title: "Personality Assessment",
           subtitle: "Adolescents",
           description:
-            "Assessment of personality traits, thinking patterns, emotional style and interpersonal functioning in adolescents.",
+            "What it is: An evaluation of personality traits, patterns of thinking, emotional style, and interpersonal functioning in adolescents.\n\nWho it is for: Adolescents with identity concerns, persistent behavioural patterns, emotional difficulties, or where understanding personality structure is clinically important.\n\nKey tools: MACI, Adolescent Psychopathology Scale (APS), TAT, HTP, and more.\n\nWhat the report gives you: A detailed personality profile — helping parents, therapists, and schools understand the adolescent's inner world and respond appropriately.",
         },
         {
           title: "Career Aptitude & Multiple Intelligence Assessment",
           description:
-            "Structured evaluation of cognitive strengths, aptitudes, interests and learning style to guide stream and career selection.",
+            "What it is: A structured evaluation of a student's cognitive strengths, aptitudes, interests, and learning style — to guide stream and career selection.\n\nWho it is for: Students in Class 8-10 facing stream selection decisions. Adolescents confused about career direction. Students whose strengths do not match the stream they are being guided towards.\n\nKey tools: DMIT, Multiple Intelligence Assessment, Differential Aptitude Tests, Career Interest Inventories, and more.\n\nWhat the report gives you: A clear, data-driven career guidance report — aligning stream and career choices with actual strengths, not just marks or family expectations.",
         },
         {
           title: "School Readiness Assessment",
           description:
-            "Evaluation of readiness for formal schooling across cognitive, language, motor, social and emotional domains.",
+            "What it is: An evaluation of a young child's readiness for formal schooling — across cognitive, language, motor, social, and emotional domains.\n\nWho it is for: Children approaching school entry age where parents or nursery teachers have concerns. Children who have been asked to repeat a year. Parents who want an objective picture before making school placement decisions.\n\nWhat the report gives you: A clear readiness profile and specific recommendations for school placement and support.",
         },
       ],
     },
@@ -2326,37 +2326,37 @@ const psychologicalAssessmentsService = {
         {
           title: "Cognitive & Neuropsychological Assessment",
           description:
-            "For adults experiencing memory difficulties, concentration challenges or cognitive changes.",
+            "For adults experiencing memory difficulties, concentration challenges, or cognitive changes. Also used for medico-legal purposes where cognitive functioning needs to be documented.\n\nCovers: Memory, attention, executive functioning, processing speed, language, and visuospatial functioning.\n\nTools: WAIS-IV, MoCA, MMSE, RBANS, D-KEFS, Rey Complex Figure Test, Trail Making Test, and more.",
         },
         {
           title: "Personality Assessment",
           description:
-            "A thorough evaluation of personality structure, coping styles and interpersonal patterns.",
+            "A thorough evaluation of personality structure, coping styles, and interpersonal patterns — used clinically, for self-understanding, and for medico-legal purposes.\n\nCovers: Personality traits, emotional patterns, defence mechanisms, interpersonal style, and psychopathology.\n\nTools: MMPI-2, MCMI-IV, NEO-PI-R, Big Five Inventory, Rorschach Inkblot Test, Thematic Apperception Test (TAT), House-Tree-Person (HTP), and more.",
         },
         {
           title: "Emotional & Mental Health Assessment",
           description:
-            "For adults experiencing anxiety, depression, stress, burnout, grief or trauma.",
+            "For adults experiencing anxiety, depression, stress, burnout, grief, or trauma — where a structured clinical assessment is needed before treatment planning.\n\nCovers: Anxiety, depression, stress, burnout, PTSD, grief, and overall mental health functioning.\n\nTools: BDI-II, BAI, PHQ-9, GAD-7, PSS, PCL-5, GHQ-28, Hamilton Rating Scales, and more.",
         },
         {
           title: "Trauma Assessment",
           description:
-            "Structured evaluation of trauma history, PTSD signs, dissociation, emotional impact and functioning.",
+            "For adults who have experienced significant trauma and where a structured evaluation of trauma impact is clinically necessary.\n\nCovers: Trauma history, PTSD signs, dissociation, emotional impact, and overall functioning.\n\nTools: PCL-5, CAPS-5, Trauma Symptom Inventory-2 (TSI-2), DES-II, and more.",
         },
         {
           title: "Relationship & Premarital Assessment",
           description:
-            "Compatibility, communication patterns, conflict resolution styles, values alignment and readiness for marriage.",
+            "A structured evaluation of compatibility, communication patterns, conflict resolution styles, and readiness for marriage — for couples considering marriage or experiencing relationship difficulties.\n\nCovers: Personality compatibility, communication style, conflict patterns, values alignment, and relationship strengths.\n\nTools: Standardised relationship inventories, couple compatibility assessments, and structured clinical interview.",
         },
         {
           title: "Parenting Style Assessment",
           description:
-            "Understanding parenting approach, emotional availability, discipline patterns and parent-child relationship quality.",
+            "For parents who want to understand their parenting approach, identify patterns that may be affecting their child, and build a more conscious and effective parenting style.\n\nCovers: Parenting style, emotional availability, discipline approach, and parent-child relationship quality.",
         },
         {
           title: "Disability Assessment & Certification",
           description:
-            "Formal psychological evaluation for disability certification — school, college, employment or legal purposes.",
+            "For individuals requiring formal psychological evaluation for disability certification — school, college, employment, or legal purposes.\n\nDr. Vini Jhariya is an RCI Registered Clinical Psychologist — legally qualified to conduct disability assessments and provide certification documentation recognised across India.",
         },
       ],
     },
@@ -2364,112 +2364,317 @@ const psychologicalAssessmentsService = {
     {
       title: "Assessment tools used at Urjasvini CDC.",
       subtitle:
-        "Nationally and internationally validated assessment tools across all domains. Every tool is selected based on the specific assessment need.",
+        "Dr. Vini Jhariya uses nationally and internationally validated assessment tools across all domains. Every tool is selected based on the specific assessment need — never a one-size-fits-all approach.",
       type: "tools",
       order: 5,
+
+      categories: [
+        {
+          title: "Cognitive & IQ",
+          tools: [
+            "WISC-V",
+            "WPPSI-IV",
+            "WAIS-IV",
+            "Stanford-Binet-5",
+            "Raven's Progressive Matrices",
+            "Cattell Culture Fair Intelligence Test",
+            "CAS-2",
+            "KABC-II",
+          ],
+        },
+        {
+          title: "Neuropsychological",
+          tools: [
+            "NEPSY-II",
+            "D-KEFS",
+            "CANTAB",
+            "CVLT-C",
+            "Rey Complex Figure Test",
+            "Trail Making Test",
+            "Wisconsin Card Sorting Test",
+            "Stroop Test",
+            "Digit Span",
+            "RBANS",
+          ],
+        },
+        {
+          title: "Developmental",
+          tools: [
+            "Bayley-III",
+            "DAYC-2",
+            "Griffiths Mental Development Scales",
+            "Denver Developmental Screening Test-II",
+            "Vineland Adaptive Behaviour Scales-3",
+            "Sensory Profile-2",
+          ],
+        },
+        {
+          title: "ASD",
+          tools: [
+            "ADOS-2",
+            "ADI-R",
+            "CARS-2",
+            "GARS-3",
+            "M-CHAT-R/F",
+            "ISAA",
+            "SCQ",
+            "SRS-2",
+          ],
+        },
+        {
+          title: "ADHD",
+          tools: [
+            "Conners-3",
+            "BASC-3",
+            "CBCL",
+            "Vanderbilt",
+            "Brown ADD Scales",
+            "ADHD-RS-5",
+            "TOVA",
+            "IVA-2",
+            "AIIMS ADHD Toolkit",
+          ],
+        },
+        {
+          title: "Psychoeducational & SLD",
+          tools: [
+            "WIAT-III",
+            "KTEA-3",
+            "WRAT-5",
+            "GORT-5",
+            "CTOPP-2",
+            "TOWL-4",
+            "Woodcock Reading Mastery Tests",
+            "NIMHANS SLD Battery",
+            "DALI",
+          ],
+        },
+        {
+          title: "Behavioural & Emotional",
+          tools: [
+            "BASC-3",
+            "CBCL",
+            "CDI-2",
+            "MASC-2",
+            "SCARED",
+            "RCMAS-2",
+            "Beck Youth Inventories",
+            "TSCC",
+            "PCL-5",
+          ],
+        },
+        {
+          title: "Personality",
+          tools: [
+            "MMPI-2",
+            "MCMI-IV",
+            "MACI",
+            "NEO-PI-R",
+            "Big Five Inventory",
+            "Rorschach Inkblot Test",
+            "TAT",
+            "HTP",
+            "APS",
+          ],
+        },
+        {
+          title: "Adult Mental Health",
+          tools: [
+            "BDI-II",
+            "BAI",
+            "PHQ-9",
+            "GAD-7",
+            "PSS",
+            "CAPS-5",
+            "TSI-2",
+            "DES-II",
+            "GHQ-28",
+            "Hamilton Rating Scales",
+            "MoCA",
+            "MMSE",
+          ],
+        },
+        {
+          title: "Career & Aptitude",
+          tools: [
+            "DMIT",
+            "Multiple Intelligence Assessment",
+            "Differential Aptitude Tests",
+            "Career Interest Inventories",
+          ],
+        },
+      ],
+
       items: [
-        { title: "WISC-V" },
-        { title: "WPPSI-IV" },
-        { title: "WAIS-IV" },
-        { title: "Stanford-Binet-5" },
-        { title: "Raven’s Progressive Matrices" },
-        { title: "CAS-2" },
-        { title: "KABC-II" },
-        { title: "NEPSY-II" },
-        { title: "D-KEFS" },
-        { title: "CANTAB" },
-        { title: "CVLT-C" },
-        { title: "Rey Complex Figure Test" },
-        { title: "Trail Making Test" },
-        { title: "Wisconsin Card Sorting Test" },
-        { title: "Bayley-III" },
-        { title: "DAYC-2" },
-        { title: "Vineland-3" },
-        { title: "Sensory Profile-2" },
-        { title: "ADOS-2" },
-        { title: "ADI-R" },
-        { title: "CARS-2" },
-        { title: "GARS-3" },
-        { title: "M-CHAT-R/F" },
-        { title: "ISAA" },
-        { title: "SCQ" },
-        { title: "SRS-2" },
-        { title: "Conners-3" },
-        { title: "BASC-3" },
-        { title: "CBCL" },
-        { title: "Vanderbilt" },
-        { title: "Brown ADD Scales" },
-        { title: "TOVA" },
-        { title: "IVA-2" },
-        { title: "WIAT-III" },
-        { title: "KTEA-3" },
-        { title: "WRAT-5" },
-        { title: "GORT-5" },
-        { title: "CTOPP-2" },
-        { title: "NIMHANS SLD Battery" },
-        { title: "DALI" },
-        { title: "MMPI-2" },
-        { title: "MCMI-IV" },
-        { title: "NEO-PI-R" },
-        { title: "BDI-II" },
-        { title: "BAI" },
-        { title: "PHQ-9" },
-        { title: "GAD-7" },
-        { title: "PCL-5" },
+        { title: "WISC-V", category: "Cognitive & IQ" },
+        { title: "WPPSI-IV", category: "Cognitive & IQ" },
+        { title: "WAIS-IV", category: "Cognitive & IQ" },
+        { title: "Stanford-Binet-5", category: "Cognitive & IQ" },
+        { title: "Raven's Progressive Matrices", category: "Cognitive & IQ" },
+        {
+          title: "Cattell Culture Fair Intelligence Test",
+          category: "Cognitive & IQ",
+        },
+        { title: "CAS-2", category: "Cognitive & IQ" },
+        { title: "KABC-II", category: "Cognitive & IQ" },
+
+        { title: "NEPSY-II", category: "Neuropsychological" },
+        { title: "D-KEFS", category: "Neuropsychological" },
+        { title: "CANTAB", category: "Neuropsychological" },
+        { title: "CVLT-C", category: "Neuropsychological" },
+        { title: "Rey Complex Figure Test", category: "Neuropsychological" },
+        { title: "Trail Making Test", category: "Neuropsychological" },
+        {
+          title: "Wisconsin Card Sorting Test",
+          category: "Neuropsychological",
+        },
+        { title: "Stroop Test", category: "Neuropsychological" },
+        { title: "Digit Span", category: "Neuropsychological" },
+        { title: "RBANS", category: "Neuropsychological" },
+
+        { title: "Bayley-III", category: "Developmental" },
+        { title: "DAYC-2", category: "Developmental" },
+        {
+          title: "Griffiths Mental Development Scales",
+          category: "Developmental",
+        },
+        {
+          title: "Denver Developmental Screening Test-II",
+          category: "Developmental",
+        },
+        {
+          title: "Vineland Adaptive Behaviour Scales-3",
+          category: "Developmental",
+        },
+        { title: "Sensory Profile-2", category: "Developmental" },
+
+        { title: "ADOS-2", category: "ASD" },
+        { title: "ADI-R", category: "ASD" },
+        { title: "CARS-2", category: "ASD" },
+        { title: "GARS-3", category: "ASD" },
+        { title: "M-CHAT-R/F", category: "ASD" },
+        { title: "ISAA", category: "ASD" },
+        { title: "SCQ", category: "ASD" },
+        { title: "SRS-2", category: "ASD" },
+
+        { title: "Conners-3", category: "ADHD" },
+        { title: "BASC-3", category: "ADHD" },
+        { title: "CBCL", category: "ADHD" },
+        { title: "Vanderbilt", category: "ADHD" },
+        { title: "Brown ADD Scales", category: "ADHD" },
+        { title: "ADHD-RS-5", category: "ADHD" },
+        { title: "TOVA", category: "ADHD" },
+        { title: "IVA-2", category: "ADHD" },
+        { title: "AIIMS ADHD Toolkit", category: "ADHD" },
+
+        { title: "WIAT-III", category: "Psychoeducational & SLD" },
+        { title: "KTEA-3", category: "Psychoeducational & SLD" },
+        { title: "WRAT-5", category: "Psychoeducational & SLD" },
+        { title: "GORT-5", category: "Psychoeducational & SLD" },
+        { title: "CTOPP-2", category: "Psychoeducational & SLD" },
+        { title: "TOWL-4", category: "Psychoeducational & SLD" },
+        {
+          title: "Woodcock Reading Mastery Tests",
+          category: "Psychoeducational & SLD",
+        },
+        { title: "NIMHANS SLD Battery", category: "Psychoeducational & SLD" },
+        { title: "DALI", category: "Psychoeducational & SLD" },
+
+        { title: "CDI-2", category: "Behavioural & Emotional" },
+        { title: "MASC-2", category: "Behavioural & Emotional" },
+        { title: "SCARED", category: "Behavioural & Emotional" },
+        { title: "RCMAS-2", category: "Behavioural & Emotional" },
+        {
+          title: "Beck Youth Inventories",
+          category: "Behavioural & Emotional",
+        },
+        { title: "TSCC", category: "Behavioural & Emotional" },
+        { title: "PCL-5", category: "Behavioural & Emotional" },
+
+        { title: "MMPI-2", category: "Personality" },
+        { title: "MCMI-IV", category: "Personality" },
+        { title: "MACI", category: "Personality" },
+        { title: "NEO-PI-R", category: "Personality" },
+        { title: "Big Five Inventory", category: "Personality" },
+        { title: "Rorschach Inkblot Test", category: "Personality" },
+        { title: "TAT", category: "Personality" },
+        { title: "HTP", category: "Personality" },
+        { title: "APS", category: "Personality" },
+
+        { title: "BDI-II", category: "Adult Mental Health" },
+        { title: "BAI", category: "Adult Mental Health" },
+        { title: "PHQ-9", category: "Adult Mental Health" },
+        { title: "GAD-7", category: "Adult Mental Health" },
+        { title: "PSS", category: "Adult Mental Health" },
+        { title: "CAPS-5", category: "Adult Mental Health" },
+        { title: "TSI-2", category: "Adult Mental Health" },
+        { title: "DES-II", category: "Adult Mental Health" },
+        { title: "GHQ-28", category: "Adult Mental Health" },
+        { title: "Hamilton Rating Scales", category: "Adult Mental Health" },
+        { title: "MoCA", category: "Adult Mental Health" },
+        { title: "MMSE", category: "Adult Mental Health" },
+
+        { title: "DMIT", category: "Career & Aptitude" },
+        {
+          title: "Multiple Intelligence Assessment",
+          category: "Career & Aptitude",
+        },
+        { title: "Differential Aptitude Tests", category: "Career & Aptitude" },
+        { title: "Career Interest Inventories", category: "Career & Aptitude" },
       ],
     },
 
     {
-      title: "What the assessment process looks like.",
+      title: "What happens during a psychological assessment at Urjasvini CDC.",
+      subtitle:
+        "Many parents and adults feel uncertain about the assessment process. Here is exactly what to expect — step by step.",
       type: "steps",
       order: 6,
       items: [
         {
           title: "Initial Consultation",
           description:
-            "Dr. Vini Jhariya understands the concern, history, previous reports, school or family context, and the specific questions the assessment needs to answer.",
-        },
-        {
-          title: "Tool Selection",
-          description:
-            "Assessment tools are selected based on the individual — never one-size-fits-all.",
+            "Dr. Vini Jhariya meets with you first — understanding the history, the concerns, what has been tried before, and what you need from the assessment. No assessment begins without this conversation. This is where Dr. Vini Jhariya decides which assessment tools are most appropriate for your specific situation.",
         },
         {
           title: "Assessment Sessions",
           description:
-            "Standardised tools, clinical observation, interviews and inputs from parents, teachers or family members are used as needed.",
+            "The assessment takes place over one or more sessions — depending on the type and scope. Sessions are designed to be warm, comfortable, and paced to your child's needs. For children, sessions are engaging and child-friendly — never rushed. For adults, sessions are private, professional, and respectful. Parent and teacher input is gathered through standardised rating scales where applicable.",
         },
         {
-          title: "Report Preparation",
+          title: "Report Discussion",
           description:
-            "A detailed report is prepared with findings, interpretation, diagnosis where applicable, and clear recommendations.",
-        },
-        {
-          title: "Feedback & Plan",
-          description:
-            "Findings are explained in plain language and a clear intervention, therapy, school support or referral plan is discussed.",
+            "Dr. Vini Jhariya prepares a comprehensive written report covering all findings, clinical diagnosis where applicable, and specific recommendations. A detailed feedback session is then held — explaining every finding in plain language and answering every question. You leave with complete clarity — not just a document.",
         },
       ],
     },
 
     {
-      title: "Assessment is not the end. It is the beginning.",
-      type: "quote",
+      title: "A report that gives you everything you need.",
+      type: "text",
       order: 7,
       content:
-        "A diagnosis without a plan is not enough.\n\nAt Urjasvini CDC, every assessment is designed to give clarity — and then direction.",
+        "Every psychological assessment at Urjasvini CDC produces a comprehensive written report that includes:\n\n- Background and developmental or personal history\n- Assessment tools used and clinical rationale\n- Detailed findings across all assessed domains\n- Clinical diagnosis where applicable\n- Specific, actionable recommendations for home, school, therapy, or workplace\n- School accommodation recommendations where relevant\n- Board exam exemption documentation where applicable\n- Disability certification documentation where required\n\nThe report is prepared by Dr. Vini Jhariya — RCI Registered Clinical Psychologist — and is recognised and accepted by:\n\n- Schools across India — government and private\n- CBSE, ICSE, MP Board, and other state examination boards\n- Hospitals and specialist clinics\n- Courts and legal proceedings\n- Disability certification authorities across India",
     },
 
     {
-      title: "The right assessment changed the whole story.",
-      type: "story",
+      title: "Stop guessing. Start knowing.",
+      type: "cta",
       order: 8,
       content:
-        "A child who had been called lazy for years was finally assessed properly. The report showed a Specific Learning Disability and attention difficulties that had been missed repeatedly.\n\nFor the first time, the family understood that the child was not refusing to learn — the child had never been taught in the way their brain needed.\n\nThe assessment did not label the child. It protected the child from the wrong label.\n\nThat is what proper assessment does.",
-      items: [
+        "A proper psychological assessment gives you something no amount of waiting, worrying, or well-meaning advice ever can — the truth. What is happening. Why it is happening. And exactly what to do next.\n\nDr. Vini Jhariya and the Urjasvini CDC team are here for families and individuals in Indore, across Madhya Pradesh, and online across India.",
+      contactLine:
+        "+91 7999215093 | Mon-Fri: 11 AM - 7 PM | Saturday: By appointment | thechildpsychologistvini@gmail.com",
+      buttons: [
         {
-          buttonText: "Book an Assessment",
-          buttonLink: "/contact",
+          text: "Book a Psychological Assessment",
+          link: "/contact-us",
+          type: "primary",
+        },
+        {
+          text: "WhatsApp Us",
+          link: "https://wa.me/917999215093",
+          type: "secondary",
         },
       ],
     },
@@ -2477,31 +2682,62 @@ const psychologicalAssessmentsService = {
 
   faqs: [
     {
-      question: "Is psychological assessment only for children?",
+      question:
+        "Do I need a referral from a doctor to get a psychological assessment?",
       answer:
-        "No. Dr. Vini Jhariya conducts assessments for children, adolescents and adults, depending on the concern and clinical need.",
+        "No. You can contact Urjasvini CDC directly. A referral from a paediatrician or school is welcome but not required.",
     },
     {
-      question: "Will the report be recognised by schools and boards?",
+      question: "How many sessions does an assessment take?",
       answer:
-        "Reports for learning disability and related concerns are prepared in a clinically precise format and can support school accommodations and board examination needs where applicable.",
+        "It depends on the type and scope. A focused assessment typically takes 2 sessions. A comprehensive multi-domain assessment may require 3-4 sessions. Dr. Vini Jhariya will give you a clear timeframe at the initial consultation.",
     },
     {
-      question: "How do I know which assessment is needed?",
+      question: "At what age can a child be assessed?",
       answer:
-        "You do not need to know before reaching out. The first consultation helps identify which assessment or combination of tools is appropriate.",
+        "Developmental assessments can be conducted from as early as 12 months. Cognitive and educational assessments are typically from age 4-5 onwards. There is no upper age limit.",
     },
     {
-      question: "Is assessment the same as diagnosis?",
+      question: "Will the assessment label my child?",
       answer:
-        "Assessment is the process of understanding the full picture. Diagnosis may be one part of the outcome where clinically applicable.",
+        "A diagnosis is not a label — it is an explanation. Understanding what is happening is what allows us to help effectively. Dr. Vini Jhariya always explains findings in context — what they mean for your child specifically, and equally importantly, what they do not mean.",
     },
     {
-      question: "Do you provide adult assessments?",
+      question:
+        "Is the assessment report valid for school and board examinations?",
       answer:
-        "Yes. Adult assessments include cognitive, neuropsychological, personality, emotional, trauma, relationship, parenting and disability-related evaluations.",
+        "Yes. Reports prepared by Dr. Vini Jhariya are recognised by schools, CBSE, ICSE, MP Board, and other state examination boards across India.",
+    },
+    {
+      question: "Can adults get assessed at Urjasvini CDC?",
+      answer:
+        "Yes. Dr. Vini Jhariya conducts a full range of adult assessments — personality, neuropsychological, emotional, trauma, relationship, and disability certification.",
+    },
+    {
+      question: "We are not in Indore. Can we still get assessed?",
+      answer:
+        "Families and individuals from across Madhya Pradesh and India come to Urjasvini CDC in Indore for assessments. For those who cannot travel, Dr. Vini Jhariya offers online consultation and where possible, remote assessment support.",
     },
   ],
+
+  finalCta: {
+    heading: "Stop guessing. Start knowing.",
+    body: "A proper psychological assessment gives you something no amount of waiting, worrying, or well-meaning advice ever can — the truth. What is happening. Why it is happening. And exactly what to do next.\n\nDr. Vini Jhariya and the Urjasvini CDC team are here for families and individuals in Indore, across Madhya Pradesh, and online across India.",
+    buttons: [
+      {
+        text: "Book a Psychological Assessment",
+        link: "/contact-us",
+        type: "primary",
+      },
+      {
+        text: "WhatsApp Us",
+        link: "https://wa.me/917999215093",
+        type: "secondary",
+      },
+    ],
+    contactLine:
+      "+91 7999215093 | Mon-Fri: 11 AM - 7 PM | Saturday: By appointment | thechildpsychologistvini@gmail.com",
+  },
 
   isFeatured: true,
   isActive: true,
@@ -3676,17 +3912,17 @@ const familyTherapyService = {
 };
 
 export const services = [
-  autismService,
-  adhdService,
-  dyslexiaService,
-  earlyInterventionService,
-  childCounsellingService,
-  adolescentCounsellingService,
+  // autismService,
+  // adhdService,
+  // dyslexiaService,
+  // earlyInterventionService,
+  // childCounsellingService,
+  // adolescentCounsellingService,
   psychologicalAssessmentsService,
-  adultCounsellingService,
-  onlineConsultationService,
-  coupleCounsellingService,
-  familyTherapyService,
+  // adultCounsellingService,
+  // onlineConsultationService,
+  // coupleCounsellingService,
+  // familyTherapyService,
 ];
 
 const seedServices = async () => {
@@ -3717,6 +3953,7 @@ const seedServices = async () => {
   }
 };
 
+seedServices();
 // seedServices();
 
 // seedServices();

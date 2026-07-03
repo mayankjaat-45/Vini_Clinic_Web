@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
+import dns from "node:dns";
+
+dns.setDefaultResultOrder("ipv4first");
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 dotenv.config();
 
