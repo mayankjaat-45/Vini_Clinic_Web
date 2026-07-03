@@ -1513,7 +1513,7 @@ const childCounsellingService = {
     buttons: [
       {
         text: "Book a Consultation",
-        link: "/contact",
+        link: "/contact-us",
         type: "primary",
       },
       {
@@ -1769,10 +1769,12 @@ const childCounsellingService = {
       order: 7,
       content:
         "Whatever your child is going through — there is support available. And the earlier that support begins, the easier the journey.\n\nDr. Vini Jhariya and the Urjasvini CDC team are here for families in Indore, across Madhya Pradesh, and online across India.",
+      contactLine:
+        "+91 7999215093 | Mon-Fri: 11 AM - 7 PM | Saturday: By appointment | thechildpsychologistvini@gmail.com",
       items: [
         {
           buttonText: "Book a Consultation",
-          buttonLink: "/contact",
+          buttonLink: "/contact-us",
         },
         {
           buttonText: "WhatsApp Us",
@@ -3916,9 +3918,9 @@ export const services = [
   // adhdService,
   // dyslexiaService,
   // earlyInterventionService,
-  // childCounsellingService,
+   childCounsellingService,
   // adolescentCounsellingService,
-  psychologicalAssessmentsService,
+  //psychologicalAssessmentsService,
   // adultCounsellingService,
   // onlineConsultationService,
   // coupleCounsellingService,
