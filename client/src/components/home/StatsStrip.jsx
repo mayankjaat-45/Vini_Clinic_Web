@@ -10,6 +10,10 @@ import {
   Sparkles,
   Star,
   Users,
+  Brain,
+  ClipboardCheck,
+  MessageCircleHeart,
+  SmilePlus,
 } from "lucide-react";
 
 const stats = [
@@ -20,6 +24,7 @@ const stats = [
     label: "Trusted since",
     displayValue: "2013",
     description: "Consistent care for children, teens, and parents",
+    noFormat: true,
   },
   {
     icon: HeartHandshake,
@@ -49,23 +54,63 @@ const stats = [
 ];
 
 const trustNotes = [
-  "RCI Registered",
-  "TEDx Speaker",
-  "Published Researcher",
-  "Parent-first approach",
+  {
+    icon: ShieldCheck,
+    title: "RCI Registered",
+    text: "Qualified clinical guidance",
+  },
+  {
+    icon: Sparkles,
+    title: "TEDx Speaker",
+    text: "Trusted public voice",
+  },
+  {
+    icon: ClipboardCheck,
+    title: "Published Researcher",
+    text: "Evidence-informed care",
+  },
+  {
+    icon: HeartHandshake,
+    title: "Parent-first Approach",
+    text: "Simple and supportive",
+  },
 ];
 
-const formatNumber = (value) => {
+const visualTrustFlow = [
+  {
+    icon: MessageCircleHeart,
+    title: "Parents share concern",
+    text: "Behaviour, emotions, speech, attention or learning",
+  },
+  {
+    icon: Brain,
+    title: "Child is understood",
+    text: "The reason behind the concern is explored",
+  },
+  {
+    icon: ClipboardCheck,
+    title: "Clear plan is made",
+    text: "Assessment, therapy or parent guidance",
+  },
+  {
+    icon: SmilePlus,
+    title: "Support continues",
+    text: "Progress is reviewed step by step",
+  },
+];
+
+const formatNumber = (value, noFormat = false) => {
+  if (noFormat) return String(value);
   return Number(value).toLocaleString("en-IN");
 };
 
 const CountUp = ({
   end,
   suffix = "",
-  prefix = "",
   decimal = false,
   start = false,
-  fallback,
+  displayValue,
+  noFormat = false,
 }) => {
   const [count, setCount] = useState(decimal ? "0.0" : "0");
   const frameRef = useRef(null);
@@ -87,19 +132,13 @@ const CountUp = ({
       if (decimal) {
         setCount(currentValue.toFixed(1));
       } else {
-        setCount(
-          fallback === "2013"
-            ? String(Math.floor(currentValue))
-            : formatNumber(Math.floor(currentValue))
-        );
+        setCount(formatNumber(Math.floor(currentValue), noFormat));
       }
 
       if (progress < 1) {
         frameRef.current = requestAnimationFrame(animate);
       } else {
-        setCount(
-          decimal ? end.toFixed(1) : fallback ? fallback : formatNumber(end)
-        );
+        setCount(decimal ? end.toFixed(1) : formatNumber(end, noFormat));
       }
     };
 
@@ -110,12 +149,15 @@ const CountUp = ({
         cancelAnimationFrame(frameRef.current);
       }
     };
-  }, [start, end, decimal, fallback]);
+  }, [start, end, decimal, noFormat]);
+
+  if (!start && displayValue) {
+    return <span>{displayValue}</span>;
+  }
 
   return (
     <span>
-      {prefix}
-      {start ? count : fallback || count}
+      {count}
       {suffix}
     </span>
   );
@@ -134,9 +176,9 @@ const StatsStrip = () => {
       ref={sectionRef}
       className="relative z-20 -mt-8 px-4 sm:px-5 md:-mt-12"
     >
-      <div className="mx-auto max-w-7xl overflow-hidden rounded-4xl border border-white/80 bg-white/90 p-3 shadow-2xl shadow-slate-900/10 backdrop-blur-xl sm:p-4 md:rounded-[2.5rem]">
-        {/* Creative Top Intro */}
-        <div className="grid gap-4 rounded-[1.7rem] bg-[#0F3D5E] p-5 text-white sm:p-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+      <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-white/80 bg-white/90 p-3 shadow-2xl shadow-slate-900/10 backdrop-blur-xl sm:p-4 md:rounded-[2.5rem]">
+        {/* Top Visual Intro */}
+        <div className="grid gap-6 rounded-[1.7rem] bg-[#0F3D5E] p-5 text-white sm:p-6 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
           <div>
             <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-black text-[#F4B183]">
               <Sparkles size={15} />
@@ -146,13 +188,38 @@ const StatsStrip = () => {
             <h2 className="mt-4 text-2xl font-black leading-tight sm:text-3xl">
               Care that begins with listening, not labelling.
             </h2>
+
+            <p className="mt-3 text-sm font-semibold leading-6 text-white/70">
+              A simple process helps parents move from confusion to clarity.
+            </p>
           </div>
 
-          <p className="text-sm font-semibold leading-7 text-white/75 sm:text-base">
-            Every child’s concern is different. Some families come for therapy,
-            some for assessments, and some simply need clarity about what their
-            child is going through.
-          </p>
+          {/* Visual Flow */}
+          <div className="grid gap-3 sm:grid-cols-4">
+            {visualTrustFlow.map((item, index) => {
+              const Icon = item.icon;
+
+              return (
+                <div key={item.title} className="relative">
+                  {index !== visualTrustFlow.length - 1 && (
+                    <div className="absolute -right-2 top-8 hidden h-px w-4 bg-white/30 sm:block" />
+                  )}
+
+                  <div className="h-full rounded-3xl border border-white/10 bg-white/10 p-4 text-center backdrop-blur">
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[#0F3D5E]">
+                      <Icon size={22} />
+                    </div>
+
+                    <p className="mt-3 text-sm font-black">{item.title}</p>
+
+                    <p className="mt-1 text-xs font-semibold leading-5 text-white/65">
+                      {item.text}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* Stats Cards */}
@@ -191,7 +258,8 @@ const StatsStrip = () => {
                         end={item.value}
                         suffix={item.suffix}
                         decimal={item.decimal}
-                        fallback={item.displayValue}
+                        displayValue={item.displayValue}
+                        noFormat={item.noFormat}
                       />
                     </h3>
 
@@ -211,15 +279,31 @@ const StatsStrip = () => {
 
         {/* Bottom Trust Notes */}
         <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {trustNotes.map((note) => (
-            <div
-              key={note}
-              className="flex items-center justify-center gap-2 rounded-2xl border border-[#2CB1A6]/15 bg-white px-4 py-3 text-sm font-black text-[#0F3D5E]"
-            >
-              <ShieldCheck size={17} className="text-[#2CB1A6]" />
-              {note}
-            </div>
-          ))}
+          {trustNotes.map((note) => {
+            const Icon = note.icon;
+
+            return (
+              <div
+                key={note.title}
+                className="group rounded-2xl border border-[#2CB1A6]/15 bg-white px-4 py-4 text-center transition hover:-translate-y-1 hover:bg-[#F7FBFC] hover:shadow-lg hover:shadow-slate-900/5 sm:text-left"
+              >
+                <div className="flex flex-col items-center gap-3 sm:flex-row">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#2CB1A6] transition group-hover:bg-[#2CB1A6] group-hover:text-white">
+                    <Icon size={20} />
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-black text-[#0F3D5E]">
+                      {note.title}
+                    </p>
+                    <p className="mt-1 text-xs font-semibold leading-5 text-slate-500">
+                      {note.text}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

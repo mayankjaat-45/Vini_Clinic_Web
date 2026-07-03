@@ -3918,7 +3918,7 @@ export const services = [
   // adhdService,
   // dyslexiaService,
   // earlyInterventionService,
-   childCounsellingService,
+   //childCounsellingService,
   // adolescentCounsellingService,
   //psychologicalAssessmentsService,
   // adultCounsellingService,
