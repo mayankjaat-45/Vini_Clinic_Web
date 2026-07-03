@@ -19,6 +19,7 @@ import {
   Route,
   ShieldCheck,
   Sparkles,
+  Star,
 } from "lucide-react";
 
 const fadeUp = {
@@ -42,7 +43,7 @@ const fadeRight = {
 const staggerContainer = {
   hidden: {},
   show: {
-    transition: { staggerChildren: 0.07 },
+    transition: { staggerChildren: 0.08 },
   },
 };
 
@@ -62,10 +63,10 @@ const isExternalLink = (link = "") => {
   return link.startsWith("http") || link.startsWith("https://wa.me");
 };
 
+const normalizeText = (value = "") => String(value).toLowerCase().trim();
+
 const isImportantNote = (item = {}) => {
-  const title = String(item.title || "")
-    .toLowerCase()
-    .trim();
+  const title = normalizeText(item.title || "");
   return title.includes("important note") || title.startsWith("important:");
 };
 
@@ -99,45 +100,93 @@ const getPointText = (point) => {
   );
 };
 
-const getSectionLabel = (type = "text") => {
+const isProcessSection = (section = {}) => {
+  const title = normalizeText(section.title);
+  const type = normalizeText(section.type);
+
+  return (
+    type === "steps" ||
+    title.includes("process") ||
+    title.includes("how it works") ||
+    title.includes("approach") ||
+    title.includes("journey") ||
+    title.includes("what happens")
+  );
+};
+
+const isSignsSection = (section = {}) => {
+  const title = normalizeText(section.title);
+  const type = normalizeText(section.type);
+
+  return (
+    title.includes("sign") ||
+    title.includes("symptom") ||
+    title.includes("look for") ||
+    title.includes("red flag") ||
+    title.includes("may need") ||
+    title.includes("when to seek") ||
+    type === "signs"
+  );
+};
+
+const isStorySection = (section = {}) => {
+  const title = normalizeText(section.title);
+  const type = normalizeText(section.type);
+
+  return (
+    type === "story" ||
+    title.includes("story") ||
+    title.includes("success") ||
+    title.includes("family") ||
+    title.includes("parent experience")
+  );
+};
+
+const getSectionEyebrow = (section = {}) => {
+  if (isProcessSection(section)) return "How it works";
+  if (isSignsSection(section)) return "Signs to look for";
+  if (isStorySection(section)) return "A family story";
+
+  const type = normalizeText(section.type);
+
   const labels = {
-    text: "Detailed Guide",
-    cards: "Key Points",
-    steps: "Process",
-    tools: "Tools & Support",
+    text: "Details",
+    cards: "Key points",
+    tools: "Tools & support",
     badges: "Highlights",
-    story: "Story",
-    quote: "Expert Note",
-    cta: "Action",
+    quote: "Expert note",
+    cta: "Next step",
     "two-column": "Comparison",
     faq: "Questions",
   };
 
-  return labels[type] || "Details";
+  return labels[type] || "Service details";
 };
 
-const getSectionIcon = (type = "text") => {
+const getSectionIcon = (section = {}) => {
+  if (isProcessSection(section)) return Route;
+  if (isSignsSection(section)) return AlertTriangle;
+  if (isStorySection(section)) return Quote;
+
   const icons = {
     text: ClipboardCheck,
     cards: CheckCircle2,
-    steps: Route,
     tools: Brain,
     badges: ShieldCheck,
-    story: Quote,
     quote: Quote,
     cta: CalendarCheck,
     "two-column": ClipboardCheck,
     faq: HelpCircle,
   };
 
-  return icons[type] || ClipboardCheck;
+  return icons[section.type] || ClipboardCheck;
 };
 
-function SmartButton({ href, children, variant = "primary" }) {
+function SmartButton({ href, children, variant = "primary", className = "" }) {
   const classes =
     variant === "secondary"
-      ? "inline-flex items-center justify-center gap-2 rounded-full border border-[#0F3D5E]/15 bg-white px-5 py-3 text-sm font-black text-[#0F3D5E] shadow-sm transition hover:-translate-y-1 hover:border-[#2CB1A6] hover:bg-[#E9F8F6] hover:text-[#0F766E]"
-      : "inline-flex items-center justify-center gap-2 rounded-full bg-[#0F3D5E] px-5 py-3 text-sm font-black text-white shadow-xl shadow-blue-950/15 transition hover:-translate-y-1 hover:bg-[#102A43]";
+      ? `inline-flex items-center justify-center gap-2 rounded-full border border-[#0F3D5E]/15 bg-white px-5 py-3 text-sm font-black text-[#0F3D5E] shadow-sm transition hover:-translate-y-1 hover:border-[#2CB1A6] hover:bg-[#E9F8F6] hover:text-[#0F766E] ${className}`
+      : `inline-flex items-center justify-center gap-2 rounded-full bg-[#0F3D5E] px-5 py-3 text-sm font-black text-white shadow-xl shadow-blue-950/15 transition hover:-translate-y-1 hover:bg-[#102A43] ${className}`;
 
   if (isExternalLink(href)) {
     return (
@@ -159,20 +208,21 @@ function SmartButton({ href, children, variant = "primary" }) {
   );
 }
 
-function ReadMoreText({ text, limit = 220, className = "" }) {
+function ReadMoreText({ text, limit = 260, className = "" }) {
   const [open, setOpen] = useState(false);
 
   const lines = getTextLines(text);
   if (lines.length === 0) return null;
 
   const fullText = lines.join("\n");
+  const shouldShorten = fullText.length > limit || lines.length > 2;
+
   const previewText =
     fullText.length > limit
       ? `${fullText.slice(0, limit).trim()}...`
       : fullText;
 
-  const hasMore = fullText.length > limit || lines.length > 2;
-  const visibleLines = open || !hasMore ? lines : [previewText];
+  const visibleLines = open || !shouldShorten ? lines : [previewText];
 
   return (
     <div className={className}>
@@ -184,7 +234,7 @@ function ReadMoreText({ text, limit = 220, className = "" }) {
         ))}
       </div>
 
-      {hasMore && (
+      {shouldShorten && (
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
@@ -249,6 +299,55 @@ function ExpandablePointList({ items = [], limit = 4 }) {
 }
 
 export default function ServiceDetailClient({ service }) {
+  const hero = service?.hero || {};
+
+  const sortedSections = useMemo(() => {
+    return Array.isArray(service?.sections)
+      ? [...service.sections].sort((a, b) => (a.order || 0) - (b.order || 0))
+      : [];
+  }, [service?.sections]);
+
+  const fallbackPoints = useMemo(() => {
+    return Array.isArray(service?.points) ? service.points : [];
+  }, [service?.points]);
+
+  const fallbackProcess = useMemo(() => {
+    return Array.isArray(service?.process) ? service.process : [];
+  }, [service?.process]);
+
+  const sections = useMemo(() => {
+    if (sortedSections.length > 0) return sortedSections;
+
+    const fallbackSections = [];
+
+    if (fallbackPoints.length > 0) {
+      fallbackSections.push({
+        type: "cards",
+        title: "How this service can help",
+        subtitle:
+          "Support designed around the real needs of the child, adult, couple or family.",
+        items: fallbackPoints.map((point) => ({
+          title: point,
+        })),
+      });
+    }
+
+    if (fallbackProcess.length > 0) {
+      fallbackSections.push({
+        type: "steps",
+        title: "How it works",
+        subtitle:
+          "A clear, supportive and clinically grounded process from the first consultation.",
+        items: fallbackProcess.map((step, index) => ({
+          title: `Step ${index + 1}`,
+          description: step,
+        })),
+      });
+    }
+
+    return fallbackSections;
+  }, [sortedSections, fallbackPoints, fallbackProcess]);
+
   if (!service) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#F7FBFC] px-5">
@@ -282,50 +381,6 @@ export default function ServiceDetailClient({ service }) {
     );
   }
 
-  const hero = service.hero || {};
-
-  const sortedSections = useMemo(() => {
-    return Array.isArray(service.sections)
-      ? [...service.sections].sort((a, b) => (a.order || 0) - (b.order || 0))
-      : [];
-  }, [service.sections]);
-
-  const fallbackPoints = Array.isArray(service.points) ? service.points : [];
-  const fallbackProcess = Array.isArray(service.process) ? service.process : [];
-
-  const sections = useMemo(() => {
-    if (sortedSections.length > 0) return sortedSections;
-
-    const fallbackSections = [];
-
-    if (fallbackPoints.length > 0) {
-      fallbackSections.push({
-        type: "cards",
-        title: "How this service can help",
-        subtitle:
-          "Support designed around the real needs of the child, adult, couple or family.",
-        items: fallbackPoints.map((point) => ({
-          title: point,
-        })),
-      });
-    }
-
-    if (fallbackProcess.length > 0) {
-      fallbackSections.push({
-        type: "steps",
-        title: "Our process",
-        subtitle:
-          "A clear, supportive and clinically grounded process from the first consultation.",
-        items: fallbackProcess.map((step, index) => ({
-          title: `Step ${index + 1}`,
-          description: step,
-        })),
-      });
-    }
-
-    return fallbackSections;
-  }, [sortedSections, fallbackPoints, fallbackProcess]);
-
   const faqs = Array.isArray(service.faqs) ? service.faqs : [];
 
   const heroTitle = hero.headline || service.title;
@@ -352,212 +407,251 @@ export default function ServiceDetailClient({ service }) {
 
   return (
     <main className="overflow-hidden bg-[#F7FBFC]">
-      <section className="relative px-4 pb-10 pt-16 sm:px-5 md:pb-14 md:pt-20">
-        <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[#2CB1A6]/20 blur-3xl" />
-        <div className="absolute -right-24 top-24 h-72 w-72 rounded-full bg-[#0F3D5E]/10 blur-3xl" />
+      <Breadcrumb title={service.title} />
 
-        <div className="relative mx-auto max-w-7xl">
-          <motion.div variants={fadeUp} initial="hidden" animate="show">
-            <Link
-              href="/services"
-              className="mb-7 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-[#0F3D5E] shadow-sm transition hover:text-[#2CB1A6]"
-            >
-              <ArrowLeft size={16} />
-              Back to Services
-            </Link>
-          </motion.div>
+      <HeroSection
+        service={service}
+        heroTitle={heroTitle}
+        heroSubtitle={heroSubtitle}
+        heroParagraph={heroParagraph}
+        heroButtons={heroButtons}
+        hero={hero}
+      />
 
-          <div className="grid gap-7 lg:grid-cols-[1fr_390px] lg:items-center">
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              animate="show"
-            >
-              <motion.div
-                variants={fadeUp}
-                className="mb-5 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm sm:text-sm"
-              >
-                <Sparkles size={16} className="text-[#2CB1A6]" />
-                {service.category || "Therapy & Counselling Service"}
-              </motion.div>
+      {sections.length > 0 && (
+        <section id="service-details" className="px-4 py-10 sm:px-5 md:py-14">
+          <div className="mx-auto max-w-7xl">
+            <SectionHeader
+              eyebrow="Complete Guide"
+              title="Everything you need to know"
+              subtitle="Important information is now visible directly on the page, so users do not miss key service details."
+            />
 
-              <motion.h1
-                variants={fadeUp}
-                className="max-w-4xl whitespace-pre-line text-3xl font-black leading-tight text-[#102A43] sm:text-5xl md:text-6xl"
-              >
-                {heroTitle}
-              </motion.h1>
-
-              {heroSubtitle && (
-                <motion.p
-                  variants={fadeUp}
-                  className="mt-5 max-w-3xl text-base font-black leading-7 text-[#0F3D5E] sm:text-xl sm:leading-8"
-                >
-                  {heroSubtitle}
-                </motion.p>
-              )}
-
-              {heroParagraph && (
-                <motion.div
-                  variants={fadeUp}
-                  className="mt-4 max-w-3xl text-sm font-semibold leading-7 text-slate-600 sm:text-base sm:leading-8"
-                >
-                  <ReadMoreText text={heroParagraph} limit={280} />
-                </motion.div>
-              )}
-
-              <motion.div
-                variants={fadeUp}
-                className="mt-6 flex flex-wrap gap-3"
-              >
-                {[
-                  "Clear guidance",
-                  "Personalised plan",
-                  "Online + Indore support",
-                ].map((point) => (
-                  <span
-                    key={point}
-                    className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm sm:text-sm"
-                  >
-                    <CheckCircle2 size={16} className="text-[#2CB1A6]" />
-                    {point}
-                  </span>
-                ))}
-              </motion.div>
-
-              {hero.trustLine && (
-                <motion.p
-                  variants={fadeUp}
-                  className="mt-5 max-w-3xl rounded-2xl border border-[#2CB1A6]/15 bg-white px-5 py-4 text-sm font-black leading-6 text-[#0F3D5E] shadow-sm"
-                >
-                  {hero.trustLine}
-                </motion.p>
-              )}
-
-              <motion.div
-                variants={fadeUp}
-                className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
-              >
-                {heroButtons.map((button, index) => (
-                  <SmartButton
-                    key={`${button.text}-${index}`}
-                    href={getButtonHref(button.link)}
-                    variant={index === 0 ? "primary" : "secondary"}
-                  >
-                    {index !== 0 && <MessageCircle size={18} />}
-                    {button.text ||
-                      (index === 0 ? "Book Consultation" : "Learn More")}
-                    {index === 0 && <ArrowRight size={18} />}
-                  </SmartButton>
-                ))}
-              </motion.div>
-            </motion.div>
-
-            <motion.div
-              variants={fadeRight}
-              initial="hidden"
-              animate="show"
-              className="mx-auto w-full max-w-md lg:max-w-none"
-            >
-              <div className="relative overflow-hidden rounded-4xl bg-linear-to-br from-[#0F3D5E] via-[#126071] to-[#168A83] p-5 text-white shadow-2xl shadow-blue-950/20 sm:p-6 md:rounded-[2.6rem]">
-                <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-white/10 blur-3xl" />
-                <div className="absolute -bottom-20 left-10 h-52 w-52 rounded-full bg-[#F4B183]/20 blur-3xl" />
-
-                <div className="relative">
-                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-3xl bg-white/15 text-[#F4B183]">
-                    <HeartHandshake size={30} />
-                  </div>
-
-                  <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/65">
-                    Guided Support
-                  </p>
-
-                  <h2 className="mt-3 text-2xl font-black leading-tight sm:text-3xl">
-                    Start with the right next step.
-                  </h2>
-
-                  <p className="mt-4 text-sm font-semibold leading-7 text-white/78">
-                    Share your concern and get clear guidance for consultation,
-                    assessment, therapy or parent support.
-                  </p>
-
-                  <div className="mt-6 grid gap-3">
-                    {[
-                      {
-                        icon: CalendarCheck,
-                        title: "Book a consultation",
-                      },
-                      {
-                        icon: Route,
-                        title: "Understand the concern",
-                      },
-                      {
-                        icon: ShieldCheck,
-                        title: "Get a clear support plan",
-                      },
-                    ].map((item) => {
-                      const Icon = item.icon;
-
-                      return (
-                        <div
-                          key={item.title}
-                          className="flex items-center gap-3 rounded-2xl bg-white/10 px-4 py-3 backdrop-blur"
-                        >
-                          <Icon size={18} className="text-[#F4B183]" />
-                          <span className="text-sm font-black">
-                            {item.title}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  <div className="mt-6 rounded-3xl bg-white/10 p-4 backdrop-blur">
-                    <p className="text-sm font-black text-[#F4B183]">
-                      Available in Indore & Online
-                    </p>
-                    <p className="mt-2 text-sm font-semibold leading-6 text-white/75">
-                      Support for children, adults, couples and families.
-                    </p>
-                  </div>
-
-                  <a
-                    href="#service-details"
-                    className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-[#102A43] transition hover:-translate-y-1 hover:bg-[#E9F8F6]"
-                  >
-                    View Service Details
-                    <ArrowRight size={17} />
-                  </a>
-                </div>
-              </div>
-            </motion.div>
+            <div className="mt-10 space-y-10 md:space-y-14">
+              {sections.map((section, index) => (
+                <VisibleServiceSection
+                  key={`${section.title || "section"}-${index}`}
+                  section={section}
+                  index={index}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
-
-      <section id="service-details" className="px-4 py-10 sm:px-5 md:py-14">
-        <div className="mx-auto max-w-7xl">
-          <SectionHeader
-            eyebrow="Service Details"
-            title="Explore the complete service guide"
-          />
-
-          <div className="mt-8 space-y-4">
-            {sections.map((section, index) => (
-              <ServiceAccordion
-                key={`${section.title || "section"}-${index}`}
-                section={section}
-                index={index}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {faqs.length > 0 && <FaqSection faqs={faqs} />}
 
       <BottomCTA service={service} />
     </main>
+  );
+}
+
+function Breadcrumb({ title }) {
+  return (
+    <div className="border-b border-[#DDEDEA] bg-white/80 px-4 py-4 backdrop-blur sm:px-5">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-2 text-sm font-bold text-slate-500">
+        <Link
+          href="/"
+          className="text-[#0F766E] transition hover:text-[#0F3D5E]"
+        >
+          Home
+        </Link>
+        <span>›</span>
+        <Link
+          href="/services"
+          className="text-[#0F766E] transition hover:text-[#0F3D5E]"
+        >
+          Services
+        </Link>
+        <span>›</span>
+        <span className="text-[#102A43]">{title}</span>
+      </div>
+    </div>
+  );
+}
+
+function HeroSection({
+  service,
+  heroTitle,
+  heroSubtitle,
+  heroParagraph,
+  heroButtons,
+  hero,
+}) {
+  return (
+    <section className="relative overflow-hidden bg-linear-to-br from-[#08384D] via-[#10616A] to-[#168A83] px-4 py-14 text-white sm:px-5 md:py-20">
+      <div className="absolute -right-20 -top-24 h-96 w-96 rounded-full bg-white/10 blur-3xl" />
+      <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-[#F4B183]/15 blur-3xl" />
+      <div className="absolute right-8 top-10 hidden h-72 w-72 rounded-full border border-white/10 bg-white/5 lg:block" />
+
+      <div className="relative mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_390px] lg:items-center">
+        <motion.div variants={staggerContainer} initial="hidden" animate="show">
+          <motion.div
+            variants={fadeUp}
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/12 px-5 py-2.5 text-xs font-black uppercase tracking-[0.13em] text-white shadow-sm backdrop-blur sm:text-sm"
+          >
+            <Sparkles size={16} className="text-[#F4B183]" />
+            {service.category || "Therapy & Counselling Service"}
+          </motion.div>
+
+          <motion.h1
+            variants={fadeUp}
+            className="max-w-4xl whitespace-pre-line text-4xl font-black leading-[1.05] text-white sm:text-6xl md:text-7xl"
+          >
+            {heroTitle}
+          </motion.h1>
+
+          {heroSubtitle && (
+            <motion.p
+              variants={fadeUp}
+              className="mt-5 max-w-3xl text-lg font-black leading-8 text-white/90 sm:text-2xl sm:leading-9"
+            >
+              {heroSubtitle}
+            </motion.p>
+          )}
+
+          {heroParagraph && (
+            <motion.div
+              variants={fadeUp}
+              className="mt-5 max-w-3xl text-base font-semibold leading-8 text-white/78 sm:text-lg"
+            >
+              <ReadMoreText text={heroParagraph} limit={330} />
+            </motion.div>
+          )}
+
+          <motion.div
+            variants={fadeUp}
+            className="mt-7 flex flex-wrap gap-3 text-sm font-bold text-white/88"
+          >
+            <span className="inline-flex items-center gap-2">
+              <Star size={17} className="fill-white text-white" />
+              4.9 Google Rating
+            </span>
+            <span className="hidden sm:inline">•</span>
+            <span>Families across India & worldwide</span>
+            <span className="hidden sm:inline">•</span>
+            <span>Trusted since 2013</span>
+          </motion.div>
+
+          <motion.div variants={fadeUp} className="mt-7 flex flex-wrap gap-3">
+            {[
+              "Clear guidance",
+              "Personalised plan",
+              "Online + Indore support",
+            ].map((point) => (
+              <span
+                key={point}
+                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/12 px-4 py-2 text-xs font-black text-white backdrop-blur sm:text-sm"
+              >
+                <CheckCircle2 size={16} className="text-[#F4B183]" />
+                {point}
+              </span>
+            ))}
+          </motion.div>
+
+          {hero.trustLine && (
+            <motion.p
+              variants={fadeUp}
+              className="mt-5 max-w-3xl rounded-3xl border border-white/15 bg-white/10 px-5 py-4 text-sm font-black leading-6 text-white/85 backdrop-blur"
+            >
+              {hero.trustLine}
+            </motion.p>
+          )}
+
+          <motion.div
+            variants={fadeUp}
+            className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
+          >
+            {heroButtons.map((button, index) => (
+              <SmartButton
+                key={`${button.text}-${index}`}
+                href={getButtonHref(button.link)}
+                variant={index === 0 ? "secondary" : "primary"}
+                className={
+                  index === 0
+                    ? "border-white bg-white text-[#102A43] hover:bg-[#F4B183] hover:text-[#102A43]"
+                    : "bg-[#F4B183] text-[#102A43] hover:bg-white"
+                }
+              >
+                {index !== 0 && <MessageCircle size={18} />}
+                {button.text ||
+                  (index === 0 ? "Book Consultation" : "Learn More")}
+                {index === 0 && <ArrowRight size={18} />}
+              </SmartButton>
+            ))}
+          </motion.div>
+        </motion.div>
+
+        <motion.div
+          variants={fadeRight}
+          initial="hidden"
+          animate="show"
+          className="mx-auto w-full max-w-md lg:max-w-none"
+        >
+          <div className="relative overflow-hidden rounded-4xl border border-white/15 bg-white/12 p-5 text-white shadow-2xl shadow-blue-950/25 backdrop-blur sm:p-6 md:rounded-[2.6rem]">
+            <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-white/10 blur-3xl" />
+            <div className="absolute -bottom-20 left-10 h-52 w-52 rounded-full bg-[#F4B183]/20 blur-3xl" />
+
+            <div className="relative">
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-3xl bg-white/15 text-[#F4B183]">
+                <HeartHandshake size={30} />
+              </div>
+
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/65">
+                Guided Support
+              </p>
+
+              <h2 className="mt-3 text-2xl font-black leading-tight sm:text-3xl">
+                Start with the right next step.
+              </h2>
+
+              <p className="mt-4 text-sm font-semibold leading-7 text-white/78">
+                Share your concern and get clear guidance for consultation,
+                assessment, therapy or parent support.
+              </p>
+
+              <div className="mt-6 grid gap-3">
+                {[
+                  {
+                    icon: CalendarCheck,
+                    title: "Book a consultation",
+                  },
+                  {
+                    icon: Route,
+                    title: "Understand the concern",
+                  },
+                  {
+                    icon: ShieldCheck,
+                    title: "Get a clear support plan",
+                  },
+                ].map((item) => {
+                  const Icon = item.icon;
+
+                  return (
+                    <div
+                      key={item.title}
+                      className="flex items-center gap-3 rounded-2xl bg-white/10 px-4 py-3 backdrop-blur"
+                    >
+                      <Icon size={18} className="text-[#F4B183]" />
+                      <span className="text-sm font-black">{item.title}</span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <a
+                href="#service-details"
+                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-[#102A43] transition hover:-translate-y-1 hover:bg-[#F4B183]"
+              >
+                View Service Details
+                <ArrowRight size={17} />
+              </a>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
   );
 }
 
@@ -570,17 +664,17 @@ function SectionHeader({ eyebrow, title, subtitle }) {
       viewport={{ once: true, amount: 0.2 }}
       className="mx-auto max-w-3xl text-center"
     >
-      <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm">
+      <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-[#0F766E] shadow-sm">
         <Sparkles size={15} className="text-[#2CB1A6]" />
         {eyebrow}
       </div>
 
-      <h2 className="text-2xl font-black leading-tight text-[#102A43] sm:text-4xl">
+      <h2 className="text-3xl font-black leading-tight text-[#102A43] sm:text-5xl">
         {title}
       </h2>
 
       {subtitle && (
-        <p className="mt-3 text-sm font-semibold leading-7 text-slate-600 sm:text-base">
+        <p className="mt-4 text-sm font-semibold leading-7 text-slate-600 sm:text-base">
           {subtitle}
         </p>
       )}
@@ -588,170 +682,100 @@ function SectionHeader({ eyebrow, title, subtitle }) {
   );
 }
 
-function ServiceAccordion({ section, index }) {
+function VisibleServiceSection({ section, index }) {
   const type = section.type || "text";
-  const Icon = getSectionIcon(type);
-  const itemsCount = Array.isArray(section.items) ? section.items.length : 0;
+
+  if (type === "cta") {
+    return <CTASection section={section} index={index} />;
+  }
+
+  if (isStorySection(section)) {
+    return <StorySection section={section} index={index} />;
+  }
+
+  if (isProcessSection(section)) {
+    return <ProcessSection section={section} index={index} />;
+  }
+
+  if (isSignsSection(section)) {
+    return <SignsSection section={section} index={index} />;
+  }
+
+  if (type === "quote") {
+    return <QuoteSection section={section} index={index} />;
+  }
+
+  return <GenericSection section={section} index={index} />;
+}
+
+function SectionTitleRow({ section, index, align = "left" }) {
+  const Icon = getSectionIcon(section);
 
   return (
-    <motion.details
+    <motion.div
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.18 }}
+      className={
+        align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-4xl"
+      }
+    >
+      <div
+        className={`mb-4 inline-flex items-center gap-2 rounded-full bg-[#E9F8F6] px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-[#0F766E] ${
+          align === "center" ? "mx-auto" : ""
+        }`}
+      >
+        <Icon size={15} />
+        {getSectionEyebrow(section)}
+      </div>
+
+      <h2 className="text-3xl font-black leading-tight text-[#102A43] sm:text-5xl">
+        {section.title || `Section ${index + 1}`}
+      </h2>
+
+      {section.subtitle && (
+        <div className="mt-4 text-base font-semibold leading-8 text-slate-600 sm:text-lg">
+          <ReadMoreText text={section.subtitle} limit={280} />
+        </div>
+      )}
+
+      {section.content &&
+        !isStorySection(section) &&
+        section.type !== "quote" && (
+          <div className="mt-4 text-sm font-semibold leading-7 text-slate-600 sm:text-base sm:leading-8">
+            <ReadMoreText text={section.content} limit={360} />
+          </div>
+        )}
+    </motion.div>
+  );
+}
+
+function ProcessSection({ section, index }) {
+  const items = Array.isArray(section.items) ? section.items : [];
+
+  return (
+    <motion.section
       variants={fadeUp}
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.12 }}
-      className="group overflow-hidden rounded-[1.6rem] border border-[#DDEDEA] bg-white shadow-[0_18px_45px_rgba(15,61,94,0.08)] transition-all duration-300 open:border-[#2CB1A6]/25 open:shadow-[0_24px_70px_rgba(15,61,94,0.14)] sm:rounded-[2rem] md:rounded-[2.5rem]"
+      className="rounded-[2rem] bg-white px-5 py-8 shadow-[0_18px_45px_rgba(15,61,94,0.08)] sm:px-7 md:rounded-[3rem] md:px-9 md:py-11"
     >
-      <summary className="cursor-pointer list-none p-4 sm:p-5 md:p-6">
-        <div className="flex items-start gap-3 sm:gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#0F766E] transition group-open:bg-[#0F3D5E] group-open:text-white sm:h-14 sm:w-14 sm:rounded-3xl">
-            <Icon size={22} />
-          </div>
+      <SectionTitleRow section={section} index={index} />
 
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-[#F7FBFC] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-[#0F3D5E] sm:text-[11px]">
-                {getSectionLabel(type)}
-              </span>
-
-              {itemsCount > 0 && (
-                <span className="rounded-full bg-[#E9F8F6] px-3 py-1.5 text-[10px] font-black text-[#0F766E] sm:text-[11px]">
-                  {itemsCount} item{itemsCount > 1 ? "s" : ""}
-                </span>
-              )}
-            </div>
-
-            <h3 className="mt-3 text-[1.35rem] font-black leading-tight text-[#102A43] sm:text-2xl md:text-3xl">
-              {section.title || `Section ${index + 1}`}
-            </h3>
-
-            {section.subtitle && (
-              <p className="mt-2 line-clamp-2 text-sm font-semibold leading-6 text-slate-600 sm:text-base sm:leading-7">
-                {section.subtitle}
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className="mt-4 flex items-center justify-between rounded-2xl bg-[#F7FBFC] px-4 py-3 text-sm font-black text-[#0F3D5E] transition group-open:bg-[#E9F8F6] group-open:text-[#0F766E] sm:ml-[4.5rem] sm:mt-5 sm:inline-flex sm:gap-2">
-          <span className="sm:hidden">Tap to view details</span>
-          <span className="hidden sm:inline">Learn more</span>
-
-          <ChevronDown size={19} className="transition group-open:rotate-180" />
-        </div>
-      </summary>
-
-      <div className="border-t border-slate-100 px-4 pb-5 sm:px-5 sm:pb-6 md:px-6 md:pb-7">
-        <SectionContent section={section} />
-      </div>
-    </motion.details>
-  );
-}
-
-function SectionContent({ section }) {
-  const type = section.type || "text";
-  const items = Array.isArray(section.items) ? section.items : [];
-
-  return (
-    <div className="pt-5">
-      {section.subtitle && (
-        <div className="mb-4 rounded-3xl border border-[#2CB1A6]/10 bg-[#E9F8F6]/60 p-4 text-sm font-bold leading-7 text-[#0F3D5E] sm:p-5 sm:text-base">
-          <ReadMoreText text={section.subtitle} limit={260} />
-        </div>
-      )}
-
-      {section.content && (
-        <div className="mb-5 rounded-3xl bg-[#F7FBFC] p-4 text-sm font-semibold leading-7 text-slate-600 sm:p-5 sm:text-base sm:leading-8">
-          <ReadMoreText text={section.content} limit={320} />
-        </div>
-      )}
-
-      {type === "story" && (
-        <div className="rounded-[1.6rem] bg-[#0F3D5E] p-5 text-white sm:rounded-[2rem] sm:p-6">
-          <Quote size={34} className="text-[#F4B183]" />
-
-          {section.content && (
-            <div className="mt-4 text-sm font-semibold leading-7 text-white/80 sm:text-base">
-              <ReadMoreText text={section.content} limit={360} />
-            </div>
-          )}
-
-          <SectionButtons items={items} />
-        </div>
-      )}
-
-      {type === "quote" && (
-        <div className="rounded-[1.6rem] border border-[#0F3D5E]/10 bg-[#F7FBFC] p-5 sm:rounded-[2rem] sm:p-6">
-          <Quote size={36} className="text-[#2CB1A6]" />
-
-          {section.content && (
-            <div className="mt-4 text-sm font-semibold leading-7 text-slate-600 sm:text-base">
-              <ReadMoreText text={section.content} limit={360} />
-            </div>
-          )}
-        </div>
-      )}
-
-      {type === "steps" && items.length > 0 && (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {items.map((item, index) => (
-            <StepCard key={index} item={item} index={index} />
+      {items.length > 0 && (
+        <div className="mt-9 grid gap-5 lg:grid-cols-3">
+          {items.map((item, itemIndex) => (
+            <ProcessCard key={itemIndex} item={item} index={itemIndex} />
           ))}
         </div>
       )}
-
-      {(type === "cards" ||
-        type === "text" ||
-        type === "tools" ||
-        type === "badges" ||
-        type === "two-column" ||
-        type === "faq" ||
-        !type) &&
-        items.length > 0 && (
-          <div
-            className={
-              type === "badges"
-                ? "flex flex-wrap gap-3"
-                : "grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
-            }
-          >
-            {items.map((item, index) =>
-              type === "badges" ? (
-                <BadgeItem key={index} item={item} />
-              ) : (
-                <ContentCard key={index} item={item} />
-              ),
-            )}
-          </div>
-        )}
-
-      {type === "cta" && (
-        <div className="rounded-[1.6rem] bg-linear-to-br from-[#0F3D5E] to-[#168A83] p-5 text-center text-white sm:rounded-[2rem] sm:p-6">
-          <h3 className="text-2xl font-black leading-tight">{section.title}</h3>
-
-          {section.content && (
-            <div className="mx-auto mt-4 max-w-3xl text-sm font-semibold leading-7 text-white/80 sm:text-base">
-              <ReadMoreText text={section.content} limit={280} />
-            </div>
-          )}
-
-          <SectionButtons items={items} />
-        </div>
-      )}
-
-      {items.length === 0 &&
-        !section.content &&
-        type !== "story" &&
-        type !== "quote" &&
-        type !== "cta" && (
-          <p className="rounded-3xl bg-[#F7FBFC] p-5 text-sm font-semibold leading-7 text-slate-600">
-            Details for this section will be available soon.
-          </p>
-        )}
-    </div>
+    </motion.section>
   );
 }
 
-function StepCard({ item, index }) {
+function ProcessCard({ item, index }) {
   const title =
     typeof item === "string"
       ? `Step ${index + 1}`
@@ -759,24 +783,21 @@ function StepCard({ item, index }) {
 
   const description =
     typeof item === "string" ? item : getItemDescription(item);
-
   const nestedItems = Array.isArray(item?.items) ? item.items : [];
 
   return (
-    <div className="rounded-[1.5rem] border border-[#DDEDEA] bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:rounded-[1.8rem] sm:p-5">
-      <div className="flex items-start gap-3">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#0F3D5E] text-sm font-black text-white">
-          {index + 1}
-        </div>
-
-        <h4 className="min-w-0 flex-1 text-lg font-black leading-snug text-[#102A43] sm:text-xl">
-          {title}
-        </h4>
+    <div className="relative rounded-[1.7rem] border border-[#DDEDEA] bg-[#F7FBFC] p-5 transition hover:-translate-y-1 hover:bg-white hover:shadow-xl">
+      <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#13756F] text-2xl font-black text-white shadow-lg shadow-teal-900/15">
+        {index + 1}
       </div>
 
+      <h3 className="text-xl font-black leading-tight text-[#102A43]">
+        {title}
+      </h3>
+
       {description && (
-        <div className="mt-4 text-sm font-semibold leading-7 text-slate-600">
-          <ReadMoreText text={description} limit={180} />
+        <div className="mt-3 text-sm font-semibold leading-7 text-slate-600">
+          <ReadMoreText text={description} limit={210} />
         </div>
       )}
 
@@ -785,7 +806,196 @@ function StepCard({ item, index }) {
   );
 }
 
-function ContentCard({ item }) {
+function SignsSection({ section, index }) {
+  const items = Array.isArray(section.items) ? section.items : [];
+
+  return (
+    <motion.section
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.12 }}
+      className="rounded-[2rem] bg-[#E9F8F6] px-5 py-8 sm:px-7 md:rounded-[3rem] md:px-9 md:py-11"
+    >
+      <SectionTitleRow section={section} index={index} />
+
+      {items.length > 0 && (
+        <div className="mt-9 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {items.map((item, itemIndex) => {
+            const title = getItemTitle(item, `Point ${itemIndex + 1}`);
+            const description = getItemDescription(item);
+            const nestedItems = Array.isArray(item?.items) ? item.items : [];
+
+            return (
+              <div
+                key={itemIndex}
+                className="rounded-[1.4rem] border-l-4 border-[#2CB1A6] bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+              >
+                <div className="flex items-start gap-3">
+                  <span className="mt-1 h-3 w-3 shrink-0 rounded-full bg-[#2CB1A6]" />
+                  <div>
+                    <h3 className="text-base font-black leading-7 text-[#102A43]">
+                      {title}
+                    </h3>
+
+                    {description && (
+                      <div className="mt-2 text-sm font-semibold leading-7 text-slate-600">
+                        <ReadMoreText text={description} limit={170} />
+                      </div>
+                    )}
+
+                    <ExpandablePointList items={nestedItems} limit={3} />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </motion.section>
+  );
+}
+
+function StorySection({ section, index }) {
+  const items = Array.isArray(section.items) ? section.items : [];
+
+  return (
+    <motion.section
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.12 }}
+      className="grid gap-7 rounded-[2rem] bg-white px-5 py-8 shadow-[0_18px_45px_rgba(15,61,94,0.08)] sm:px-7 md:rounded-[3rem] md:px-9 md:py-11 lg:grid-cols-[0.8fr_1.2fr] lg:items-center"
+    >
+      <SectionTitleRow section={section} index={index} />
+
+      <div className="rounded-[1.8rem] border border-[#CFEDEA] bg-[#E9F8F6]/70 p-6 sm:p-8">
+        <Quote size={42} className="mb-5 text-[#A7DCD7]" />
+
+        {section.content && (
+          <div className="text-lg font-semibold italic leading-9 text-[#102A43]">
+            <ReadMoreText text={section.content} limit={520} />
+          </div>
+        )}
+
+        {items.length > 0 && (
+          <div className="mt-6 grid gap-3">
+            {items.map((item, itemIndex) => (
+              <ContentCard key={itemIndex} item={item} compact />
+            ))}
+          </div>
+        )}
+
+        <SectionButtons items={items} />
+      </div>
+    </motion.section>
+  );
+}
+
+function QuoteSection({ section, index }) {
+  return (
+    <motion.section
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.12 }}
+      className="rounded-[2rem] border border-[#DDEDEA] bg-white p-6 shadow-[0_18px_45px_rgba(15,61,94,0.08)] sm:p-8 md:rounded-[3rem]"
+    >
+      <SectionTitleRow section={section} index={index} />
+
+      {section.content && (
+        <div className="mt-7 rounded-[1.8rem] bg-[#F7FBFC] p-6">
+          <Quote size={38} className="mb-4 text-[#2CB1A6]" />
+          <div className="text-base font-semibold leading-8 text-slate-600">
+            <ReadMoreText text={section.content} limit={440} />
+          </div>
+        </div>
+      )}
+    </motion.section>
+  );
+}
+
+function GenericSection({ section, index }) {
+  const items = Array.isArray(section.items) ? section.items : [];
+  const type = section.type || "text";
+
+  return (
+    <motion.section
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.12 }}
+      className="rounded-[2rem] bg-white px-5 py-8 shadow-[0_18px_45px_rgba(15,61,94,0.08)] sm:px-7 md:rounded-[3rem] md:px-9 md:py-11"
+    >
+      <SectionTitleRow section={section} index={index} />
+
+      {items.length > 0 && (
+        <div
+          className={
+            type === "badges"
+              ? "mt-8 flex flex-wrap gap-3"
+              : "mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
+          }
+        >
+          {items.map((item, itemIndex) =>
+            type === "badges" ? (
+              <BadgeItem key={itemIndex} item={item} />
+            ) : (
+              <ContentCard key={itemIndex} item={item} />
+            ),
+          )}
+        </div>
+      )}
+
+      {items.length === 0 && !section.content && (
+        <div className="mt-6 rounded-3xl bg-[#F7FBFC] p-5 text-sm font-semibold leading-7 text-slate-600">
+          Details for this section will be available soon.
+        </div>
+      )}
+    </motion.section>
+  );
+}
+
+function CTASection({ section, index }) {
+  const items = Array.isArray(section.items) ? section.items : [];
+
+  return (
+    <motion.section
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.12 }}
+      className="relative overflow-hidden rounded-[2rem] bg-linear-to-br from-[#0F3D5E] to-[#168A83] px-5 py-9 text-center text-white shadow-2xl shadow-slate-900/15 sm:px-7 md:rounded-[3rem] md:px-9 md:py-12"
+    >
+      <div className="absolute -left-20 -top-20 h-60 w-60 rounded-full bg-white/10 blur-3xl" />
+      <div className="absolute -bottom-24 -right-20 h-72 w-72 rounded-full bg-[#F4B183]/20 blur-3xl" />
+
+      <div className="relative mx-auto max-w-3xl">
+        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-3xl bg-white/15 text-[#F4B183]">
+          <CalendarCheck size={28} />
+        </div>
+
+        <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-white/65">
+          {getSectionEyebrow(section)}
+        </p>
+
+        <h2 className="text-3xl font-black leading-tight sm:text-5xl">
+          {section.title || `Section ${index + 1}`}
+        </h2>
+
+        {section.content && (
+          <div className="mx-auto mt-5 max-w-2xl text-sm font-semibold leading-7 text-white/80 sm:text-base">
+            <ReadMoreText text={section.content} limit={340} />
+          </div>
+        )}
+
+        <SectionButtons items={items} />
+      </div>
+    </motion.section>
+  );
+}
+
+function ContentCard({ item, compact = false }) {
   const important = isImportantNote(item);
   const title = getItemTitle(item);
   const subtitle = typeof item === "string" ? "" : item?.subtitle;
@@ -794,7 +1004,9 @@ function ContentCard({ item }) {
 
   return (
     <div
-      className={`rounded-[1.5rem] p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:rounded-[1.8rem] sm:p-5 ${
+      className={`rounded-[1.5rem] p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl ${
+        compact ? "sm:p-5" : "sm:p-6"
+      } ${
         important
           ? "border border-[#F4B183]/35 bg-[#FFF8ED]"
           : "border border-[#DDEDEA] bg-white"
@@ -813,9 +1025,9 @@ function ContentCard({ item }) {
 
         <div className="min-w-0 flex-1">
           {title && (
-            <h4 className="text-lg font-black leading-snug text-[#102A43] sm:text-xl">
+            <h3 className="text-lg font-black leading-snug text-[#102A43] sm:text-xl">
               {important ? "Important Note" : title}
-            </h4>
+            </h3>
           )}
 
           {subtitle && !important && (
@@ -826,7 +1038,7 @@ function ContentCard({ item }) {
 
       {description && (
         <div className="mt-4 text-sm font-semibold leading-7 text-slate-600">
-          <ReadMoreText text={description} limit={180} />
+          <ReadMoreText text={description} limit={220} />
         </div>
       )}
 
@@ -850,24 +1062,19 @@ function BadgeItem({ item }) {
   const nestedItems = Array.isArray(item?.items) ? item.items : [];
 
   return (
-    <div className="rounded-full border border-[#0F3D5E]/10 bg-[#F7FBFC] px-5 py-3 text-sm font-black leading-6 text-[#0F3D5E] shadow-sm">
-      {title}
+    <div className="rounded-[1.4rem] border border-[#0F3D5E]/10 bg-[#F7FBFC] px-5 py-4 text-sm font-black leading-6 text-[#0F3D5E] shadow-sm">
+      <div className="flex items-start gap-2">
+        <CheckCircle2 size={17} className="mt-0.5 shrink-0 text-[#2CB1A6]" />
+        <span>{title}</span>
+      </div>
 
-      {(description || nestedItems.length > 0) && (
-        <details className="group mt-2">
-          <summary className="cursor-pointer list-none text-xs font-black text-[#0F766E]">
-            Read more
-          </summary>
-
-          {description && (
-            <p className="mt-2 max-w-sm text-xs font-semibold leading-6 text-slate-600">
-              {description}
-            </p>
-          )}
-
-          <ExpandablePointList items={nestedItems} limit={3} />
-        </details>
+      {description && (
+        <div className="mt-3 text-xs font-semibold leading-6 text-slate-600">
+          <ReadMoreText text={description} limit={150} />
+        </div>
       )}
+
+      <ExpandablePointList items={nestedItems} limit={3} />
     </div>
   );
 }
@@ -878,7 +1085,7 @@ function SectionButtons({ items = [] }) {
   if (buttons.length === 0) return null;
 
   return (
-    <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
+    <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
       {buttons.map((item, index) => (
         <SmartButton
           key={`${item.buttonText}-${index}`}
@@ -894,43 +1101,68 @@ function SectionButtons({ items = [] }) {
 }
 
 function FaqSection({ faqs }) {
+  const [openIndex, setOpenIndex] = useState(0);
+
   return (
-    <section className="bg-white/55 px-4 py-10 sm:px-5 md:py-14">
-      <div className="mx-auto max-w-5xl">
-        <SectionHeader eyebrow="Questions" title="Frequently Asked Questions" />
+    <section className="bg-white/65 px-4 py-10 sm:px-5 md:py-16">
+      <div className="mx-auto max-w-6xl">
+        <SectionHeader
+          eyebrow="Common Questions"
+          title="Frequently Asked Questions"
+          subtitle="These answers stay clean, readable and openable on all screen sizes."
+        />
 
-        <div className="mt-8 space-y-3">
-          {faqs.map((faq, index) => (
-            <motion.details
-              key={index}
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, amount: 0.2 }}
-              className="group rounded-3xl bg-white p-5 shadow-sm open:shadow-lg open:shadow-slate-900/5"
-            >
-              <summary className="flex cursor-pointer list-none items-start justify-between gap-4">
-                <span className="flex gap-3">
-                  <HelpCircle
-                    size={21}
-                    className="mt-0.5 shrink-0 text-[#2CB1A6]"
-                  />
-                  <span className="text-base font-black leading-6 text-[#102A43]">
-                    {faq.question}
+        <div className="mt-9 space-y-4">
+          {faqs.map((faq, index) => {
+            const open = openIndex === index;
+
+            return (
+              <motion.div
+                key={index}
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.16 }}
+                className={`overflow-hidden rounded-[1.5rem] border bg-white shadow-sm transition ${
+                  open
+                    ? "border-[#2CB1A6]/25 shadow-lg shadow-slate-900/5"
+                    : "border-[#DDEDEA]"
+                }`}
+              >
+                <button
+                  type="button"
+                  onClick={() => setOpenIndex(open ? -1 : index)}
+                  className="flex w-full items-start justify-between gap-4 px-5 py-5 text-left sm:px-7"
+                  aria-expanded={open}
+                >
+                  <span className="flex gap-3">
+                    <HelpCircle
+                      size={22}
+                      className="mt-0.5 shrink-0 text-[#2CB1A6]"
+                    />
+                    <span className="text-base font-black leading-6 text-[#102A43] sm:text-lg">
+                      {faq.question}
+                    </span>
                   </span>
-                </span>
 
-                <ChevronDown
-                  size={20}
-                  className="shrink-0 text-[#0F3D5E] transition group-open:rotate-180"
-                />
-              </summary>
+                  <ChevronDown
+                    size={22}
+                    className={`shrink-0 text-[#0F3D5E] transition ${
+                      open ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
 
-              <div className="mt-4 pl-9 text-sm font-semibold leading-7 text-slate-600 sm:text-base">
-                <ReadMoreText text={faq.answer} limit={260} />
-              </div>
-            </motion.details>
-          ))}
+                {open && (
+                  <div className="border-t border-slate-100 px-5 pb-5 pt-1 sm:px-7 sm:pb-6">
+                    <div className="pl-9 text-sm font-semibold leading-7 text-slate-600 sm:text-base">
+                      <ReadMoreText text={faq.answer} limit={360} />
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
