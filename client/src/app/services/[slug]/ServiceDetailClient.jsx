@@ -870,7 +870,7 @@ function QuickClarityCards({ service }) {
               whileInView="show"
               viewport={{ once: true, amount: 0.2 }}
               transition={{ delay: index * 0.04 }}
-              className="rounded-[1.5rem] border border-[#DDEDEA] bg-white p-5 shadow-[0_18px_45px_rgba(15,61,94,0.08)] transition hover:-translate-y-1 hover:shadow-xl"
+              className="rounded-3xl border border-[#DDEDEA] bg-white p-5 shadow-[0_18px_45px_rgba(15,61,94,0.08)] transition hover:-translate-y-1 hover:shadow-xl"
             >
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#0F766E]">
                 <Icon size={23} />
@@ -1020,7 +1020,7 @@ function ProcessSection({ section, index }) {
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.12 }}
-      className="rounded-[2rem] bg-white px-5 py-8 shadow-[0_18px_45px_rgba(15,61,94,0.08)] sm:px-7 md:rounded-[3rem] md:px-9 md:py-11"
+      className="rounded-4xl bg-white px-5 py-8 shadow-[0_18px_45px_rgba(15,61,94,0.08)] sm:px-7 md:rounded-[3rem] md:px-9 md:py-11"
     >
       <SectionTitleRow section={section} index={index} />
 
@@ -1098,7 +1098,7 @@ function ConcernTabsSection({ section, index, service }) {
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.12 }}
-      className="overflow-hidden rounded-[2rem] bg-white shadow-[0_18px_45px_rgba(15,61,94,0.08)] md:rounded-[3rem]"
+      className="overflow-hidden rounded-4xl bg-white shadow-[0_18px_45px_rgba(15,61,94,0.08)] md:rounded-[3rem]"
     >
       <div className="grid gap-0 lg:grid-cols-[0.85fr_1.15fr]">
         <div className="bg-[#E9F8F6] p-5 sm:p-7 md:p-9">
@@ -1177,7 +1177,7 @@ function SignsSection({ section, index }) {
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.12 }}
-      className="rounded-[2rem] bg-[#E9F8F6] px-5 py-8 sm:px-7 md:rounded-[3rem] md:px-9 md:py-11"
+      className="rounded-4xl bg-[#E9F8F6] px-5 py-8 sm:px-7 md:rounded-[3rem] md:px-9 md:py-11"
     >
       <SectionTitleRow section={section} index={index} />
 
@@ -1227,7 +1227,7 @@ function MethodsSection({ section, index }) {
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.12 }}
-      className="rounded-[2rem] bg-linear-to-br from-[#102A43] via-[#0F3D5E] to-[#168A83] px-5 py-8 text-white shadow-2xl shadow-slate-900/15 sm:px-7 md:rounded-[3rem] md:px-9 md:py-11"
+      className="rounded-4xl bg-linear-to-br from-[#102A43] via-[#0F3D5E] to-[#168A83] px-5 py-8 text-white shadow-2xl shadow-slate-900/15 sm:px-7 md:rounded-[3rem] md:px-9 md:py-11"
     >
       <SectionTitleRow section={section} index={index} light />
 
@@ -1241,7 +1241,7 @@ function MethodsSection({ section, index }) {
             return (
               <div
                 key={itemIndex}
-                className="rounded-[1.5rem] border border-white/15 bg-white/10 p-5 backdrop-blur transition hover:-translate-y-1 hover:bg-white/15"
+                className="rounded-3xl border border-white/15 bg-white/10 p-5 backdrop-blur transition hover:-translate-y-1 hover:bg-white/15"
               >
                 <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-white/15 text-[#F4B183]">
                   <Brain size={22} />
@@ -1289,7 +1289,7 @@ function ReaderNoteSection({ section, index }) {
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.12 }}
-      className="grid gap-7 rounded-[2rem] border border-[#DDEDEA] bg-white p-5 shadow-[0_18px_45px_rgba(15,61,94,0.08)] sm:p-7 md:rounded-[3rem] md:p-9 lg:grid-cols-[0.85fr_1.15fr] lg:items-center"
+      className="grid gap-7 rounded-4xl border border-[#DDEDEA] bg-white p-5 shadow-[0_18px_45px_rgba(15,61,94,0.08)] sm:p-7 md:rounded-[3rem] md:p-9 lg:grid-cols-[0.85fr_1.15fr] lg:items-center"
     >
       <div>
         <SectionTitleRow section={section} index={index} />
@@ -1327,7 +1327,7 @@ function StorySection({ section, index }) {
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.12 }}
-      className="grid gap-7 rounded-[2rem] bg-white px-5 py-8 shadow-[0_18px_45px_rgba(15,61,94,0.08)] sm:px-7 md:rounded-[3rem] md:px-9 md:py-11 lg:grid-cols-[0.8fr_1.2fr] lg:items-center"
+      className="grid gap-7 rounded-4xl bg-white px-5 py-8 shadow-[0_18px_45px_rgba(15,61,94,0.08)] sm:px-7 md:rounded-[3rem] md:px-9 md:py-11 lg:grid-cols-[0.8fr_1.2fr] lg:items-center"
     >
       <SectionTitleRow section={section} index={index} />
 
@@ -1361,7 +1361,7 @@ function QuoteSection({ section, index }) {
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.12 }}
-      className="rounded-[2rem] border border-[#DDEDEA] bg-white p-6 shadow-[0_18px_45px_rgba(15,61,94,0.08)] sm:p-8 md:rounded-[3rem]"
+      className="rounded-4xl border border-[#DDEDEA] bg-white p-6 shadow-[0_18px_45px_rgba(15,61,94,0.08)] sm:p-8 md:rounded-[3rem]"
     >
       <SectionTitleRow section={section} index={index} />
 
@@ -1387,7 +1387,7 @@ function GenericSection({ section, index }) {
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.12 }}
-      className="rounded-[2rem] bg-white px-5 py-8 shadow-[0_18px_45px_rgba(15,61,94,0.08)] sm:px-7 md:rounded-[3rem] md:px-9 md:py-11"
+      className="rounded-4xl bg-white px-5 py-8 shadow-[0_18px_45px_rgba(15,61,94,0.08)] sm:px-7 md:rounded-[3rem] md:px-9 md:py-11"
     >
       <div
         className={
@@ -1447,7 +1447,7 @@ function CTASection({ section, index }) {
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.12 }}
-      className="relative overflow-hidden rounded-[2rem] bg-linear-to-br from-[#0F3D5E] to-[#168A83] px-5 py-9 text-center text-white shadow-2xl shadow-slate-900/15 sm:px-7 md:rounded-[3rem] md:px-9 md:py-12"
+      className="relative overflow-hidden rounded-4xl bg-linear-to-br from-[#0F3D5E] to-[#168A83] px-5 py-9 text-center text-white shadow-2xl shadow-slate-900/15 sm:px-7 md:rounded-[3rem] md:px-9 md:py-12"
     >
       <div className="absolute -left-20 -top-20 h-60 w-60 rounded-full bg-white/10 blur-3xl" />
       <div className="absolute -bottom-24 -right-20 h-72 w-72 rounded-full bg-[#F4B183]/20 blur-3xl" />
@@ -1486,7 +1486,7 @@ function ContentCard({ item, compact = false }) {
 
   return (
     <div
-      className={`rounded-[1.5rem] p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl ${
+      className={`rounded-3xl p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl ${
         compact ? "sm:p-5" : "sm:p-6"
       } ${
         important
@@ -1605,7 +1605,7 @@ function FaqSection({ faqs }) {
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true, amount: 0.16 }}
-                className={`overflow-hidden rounded-[1.5rem] border bg-white shadow-sm transition ${
+                className={`overflow-hidden rounded-3xl border bg-white shadow-sm transition ${
                   open
                     ? "border-[#2CB1A6]/25 shadow-lg shadow-slate-900/5"
                     : "border-[#DDEDEA]"
