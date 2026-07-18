@@ -1,313 +1,313 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   Award,
-  CalendarDays,
+  BadgeCheck,
   HeartHandshake,
   ShieldCheck,
-  Sparkles,
   Star,
   Users,
-  Brain,
-  ClipboardCheck,
-  MessageCircleHeart,
-  SmilePlus,
 } from "lucide-react";
 
 const stats = [
   {
-    icon: CalendarDays,
-    value: 2013,
-    suffix: "",
-    label: "Trusted since",
-    displayValue: "2013",
-    description: "Consistent care for children, teens, and parents",
-    noFormat: true,
-  },
-  {
-    icon: HeartHandshake,
-    value: 5000,
-    suffix: "+",
-    label: "Families supported",
-    displayValue: "5,000+",
-    description: "Through counselling, therapy, and guidance",
-  },
-  {
     icon: Award,
-    value: 10,
+    value: 2013,
+    prefix: "",
+    suffix: "",
+    label: "Trusted Since",
+    description: "Supporting children and families for over a decade",
+  },
+  {
+    icon: Users,
+    value: 5000,
+    prefix: "",
     suffix: "+",
-    label: "Years of experience",
-    displayValue: "10+",
-    description: "Clinical experience with child development concerns",
+    label: "Families Supported",
+    description: "Children, adolescents, parents and caregivers",
   },
   {
     icon: Star,
     value: 4.9,
+    prefix: "",
     suffix: "★",
-    label: "Google rating",
-    displayValue: "4.9★",
-    description: "Trusted by parents looking for clear guidance",
-    decimal: true,
-  },
-];
-
-const trustNotes = [
-  {
-    icon: ShieldCheck,
-    title: "RCI Registered",
-    text: "Qualified clinical guidance",
-  },
-  {
-    icon: Sparkles,
-    title: "TEDx Speaker",
-    text: "Trusted public voice",
-  },
-  {
-    icon: ClipboardCheck,
-    title: "Published Researcher",
-    text: "Evidence-informed care",
+    decimals: 1,
+    label: "Google Rating",
+    description: "Based on parent and family experiences",
   },
   {
     icon: HeartHandshake,
-    title: "Parent-first Approach",
-    text: "Simple and supportive",
+    value: 237,
+    prefix: "",
+    suffix: "+",
+    label: "Parent Reviews",
+    description: "Real experiences shared by families",
   },
 ];
 
-const visualTrustFlow = [
-  {
-    icon: MessageCircleHeart,
-    title: "Parents share concern",
-    text: "Behaviour, emotions, speech, attention or learning",
-  },
-  {
-    icon: Brain,
-    title: "Child is understood",
-    text: "The reason behind the concern is explored",
-  },
-  {
-    icon: ClipboardCheck,
-    title: "Clear plan is made",
-    text: "Assessment, therapy or parent guidance",
-  },
-  {
-    icon: SmilePlus,
-    title: "Support continues",
-    text: "Progress is reviewed step by step",
-  },
-];
-
-const formatNumber = (value, noFormat = false) => {
-  if (noFormat) return String(value);
-  return Number(value).toLocaleString("en-IN");
-};
-
-const CountUp = ({
-  end,
+function AnimatedNumber({
+  value,
+  prefix = "",
   suffix = "",
-  decimal = false,
-  start = false,
-  displayValue,
-  noFormat = false,
-}) => {
-  const [count, setCount] = useState(decimal ? "0.0" : "0");
-  const frameRef = useRef(null);
+  decimals = 0,
+  start,
+}) {
+  const [displayValue, setDisplayValue] = useState(0);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    if (!start) {
-      setCount(decimal ? "0.0" : "0");
+    if (!start) return;
+
+    if (reduceMotion) {
+      setDisplayValue(value);
       return;
     }
 
-    const duration = 1500;
+    const duration = 1400;
     const startTime = performance.now();
 
     const animate = (currentTime) => {
-      const progress = Math.min((currentTime - startTime) / duration, 1);
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
       const easedProgress = 1 - Math.pow(1 - progress, 3);
-      const currentValue = end * easedProgress;
 
-      if (decimal) {
-        setCount(currentValue.toFixed(1));
-      } else {
-        setCount(formatNumber(Math.floor(currentValue), noFormat));
-      }
+      setDisplayValue(value * easedProgress);
 
       if (progress < 1) {
-        frameRef.current = requestAnimationFrame(animate);
-      } else {
-        setCount(decimal ? end.toFixed(1) : formatNumber(end, noFormat));
+        requestAnimationFrame(animate);
       }
     };
 
-    frameRef.current = requestAnimationFrame(animate);
+    const animationFrame = requestAnimationFrame(animate);
 
-    return () => {
-      if (frameRef.current) {
-        cancelAnimationFrame(frameRef.current);
-      }
-    };
-  }, [start, end, decimal, noFormat]);
+    return () => cancelAnimationFrame(animationFrame);
+  }, [value, start, reduceMotion]);
 
-  if (!start && displayValue) {
-    return <span>{displayValue}</span>;
-  }
+  const formattedValue =
+    decimals > 0
+      ? displayValue.toFixed(decimals)
+      : Math.round(displayValue).toLocaleString("en-IN");
 
   return (
-    <span>
-      {count}
+    <>
+      {prefix}
+      {formattedValue}
       {suffix}
-    </span>
+    </>
   );
-};
+}
 
-const StatsStrip = () => {
+export default function StatsStrip() {
   const sectionRef = useRef(null);
+  const [hasEnteredView, setHasEnteredView] = useState(false);
 
-  const isInView = useInView(sectionRef, {
-    once: true,
-    amount: 0.2,
-  });
+  useEffect(() => {
+    const section = sectionRef.current;
+
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHasEnteredView(true);
+          observer.disconnect();
+        }
+      },
+      {
+        threshold: 0.25,
+      },
+    );
+
+    observer.observe(section);
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section
       ref={sectionRef}
-      className="relative z-20 -mt-8 px-4 sm:px-5 md:-mt-12"
+      className="relative overflow-hidden bg-white py-16 sm:py-20 lg:py-24"
     >
-      <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-white/80 bg-white/90 p-3 shadow-2xl shadow-slate-900/10 backdrop-blur-xl sm:p-4 md:rounded-[2.5rem]">
-        {/* Top Visual Intro */}
-        <div className="grid gap-6 rounded-[1.7rem] bg-[#0F3D5E] p-5 text-white sm:p-6 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
-          <div>
-            <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-black text-[#F4B183]">
-              <Sparkles size={15} />
-              Why parents feel safe here
-            </p>
+      {/* Background decoration */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute -left-36 top-10 h-80 w-80 rounded-full bg-[#2CB1A6]/8 blur-3xl" />
 
-            <h2 className="mt-4 text-2xl font-black leading-tight sm:text-3xl">
-              Care that begins with listening, not labelling.
-            </h2>
+        <div className="absolute -right-36 bottom-0 h-96 w-96 rounded-full bg-[#F4B183]/10 blur-3xl" />
+      </div>
 
-            <p className="mt-3 text-sm font-semibold leading-6 text-white/70">
-              A simple process helps parents move from confusion to clarity.
-            </p>
-          </div>
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+        <div className="overflow-hidden rounded-[2.5rem] bg-[#0F3D5E] shadow-[0_30px_90px_rgba(15,61,94,0.2)]">
+          <div className="relative">
+            {/* Decorative shapes */}
+            <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[#2CB1A6]/20 blur-3xl" />
 
-          {/* Visual Flow */}
-          <div className="grid gap-3 sm:grid-cols-4">
-            {visualTrustFlow.map((item, index) => {
-              const Icon = item.icon;
+            <div className="absolute -right-24 bottom-0 h-80 w-80 rounded-full bg-[#F4B183]/12 blur-3xl" />
 
-              return (
-                <div key={item.title} className="relative">
-                  {index !== visualTrustFlow.length - 1 && (
-                    <div className="absolute -right-2 top-8 hidden h-px w-4 bg-white/30 sm:block" />
-                  )}
+            <ShieldCheck
+              aria-hidden="true"
+              size={360}
+              strokeWidth={0.55}
+              className="absolute -bottom-20 -right-12 text-white/[0.035]"
+            />
 
-                  <div className="h-full rounded-3xl border border-white/10 bg-white/10 p-4 text-center backdrop-blur">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[#0F3D5E]">
-                      <Icon size={22} />
-                    </div>
-
-                    <p className="mt-3 text-sm font-black">{item.title}</p>
-
-                    <p className="mt-1 text-xs font-semibold leading-5 text-white/65">
-                      {item.text}
-                    </p>
-                  </div>
+            <div className="relative grid lg:grid-cols-[0.9fr_1.1fr]">
+              {/* Left content */}
+              <div className="flex flex-col justify-center border-b border-white/10 p-7 text-white sm:p-10 lg:border-b-0 lg:border-r lg:p-12">
+                <div className="inline-flex w-fit items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-black text-[#7DE0D6] backdrop-blur sm:text-sm">
+                  <BadgeCheck size={16} />
+                  Trusted psychological support
                 </div>
-              );
-            })}
-          </div>
-        </div>
 
-        {/* Stats Cards */}
-        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((item, index) => {
-            const Icon = item.icon;
-            const isRating = item.label.toLowerCase().includes("rating");
+                <h2 className="mt-6 text-3xl font-black leading-tight tracking-[-0.03em] sm:text-4xl lg:text-5xl">
+                  Experience that helps families move from worry to clarity.
+                </h2>
 
-            return (
-              <motion.div
-                key={item.label}
-                initial={{ opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.25 }}
-                transition={{
-                  duration: 0.45,
-                  delay: index * 0.08,
-                  ease: "easeOut",
-                }}
-                className="group relative overflow-hidden rounded-[1.6rem] border border-[#0F3D5E]/5 bg-[#F7FBFC] p-5 transition duration-300 hover:-translate-y-1 hover:bg-[#E9F8F6] hover:shadow-xl hover:shadow-slate-900/10 sm:p-6"
-              >
-                <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#2CB1A6]/10 transition group-hover:bg-[#2CB1A6]/20" />
+                <p className="mt-5 max-w-xl text-sm font-semibold leading-7 text-white/70 sm:text-base sm:leading-8">
+                  Families receive professional assessment, counselling,
+                  developmental support and practical parent guidance in a calm,
+                  respectful and child-centred environment.
+                </p>
 
-                <div className="relative flex items-start gap-4 sm:block">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-[#0F3D5E] shadow-lg shadow-slate-900/5 ring-1 ring-[#0F3D5E]/10 transition duration-300 group-hover:bg-[#2CB1A6] group-hover:text-white sm:mb-5">
-                    <Icon
-                      size={22}
-                      className={isRating ? "fill-current" : ""}
-                    />
-                  </div>
-
-                  <div>
-                    <h3 className="text-3xl font-black leading-none text-[#102A43] sm:text-4xl">
-                      <CountUp
-                        start={isInView}
-                        end={item.value}
-                        suffix={item.suffix}
-                        decimal={item.decimal}
-                        displayValue={item.displayValue}
-                        noFormat={item.noFormat}
-                      />
-                    </h3>
-
-                    <p className="mt-2 text-sm font-black leading-5 text-[#0F3D5E]">
-                      {item.label}
-                    </p>
-
-                    <p className="mt-2 text-xs font-semibold leading-5 text-slate-500 sm:text-sm">
-                      {item.description}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {/* Bottom Trust Notes */}
-        <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {trustNotes.map((note) => {
-            const Icon = note.icon;
-
-            return (
-              <div
-                key={note.title}
-                className="group rounded-2xl border border-[#2CB1A6]/15 bg-white px-4 py-4 text-center transition hover:-translate-y-1 hover:bg-[#F7FBFC] hover:shadow-lg hover:shadow-slate-900/5 sm:text-left"
-              >
-                <div className="flex flex-col items-center gap-3 sm:flex-row">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#2CB1A6] transition group-hover:bg-[#2CB1A6] group-hover:text-white">
-                    <Icon size={20} />
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-black text-[#0F3D5E]">
-                      {note.title}
-                    </p>
-                    <p className="mt-1 text-xs font-semibold leading-5 text-slate-500">
-                      {note.text}
-                    </p>
-                  </div>
+                <div className="mt-7 flex flex-wrap gap-3">
+                  {[
+                    "RCI Registered",
+                    "Assessment-led approach",
+                    "Parent involvement",
+                  ].map((item) => (
+                    <span
+                      key={item}
+                      className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/8 px-4 py-2 text-xs font-bold text-white/85"
+                    >
+                      <BadgeCheck size={14} className="text-[#7DE0D6]" />
+                      {item}
+                    </span>
+                  ))}
                 </div>
               </div>
-            );
-          })}
+
+              {/* Statistics */}
+              <div className="grid sm:grid-cols-2">
+                {stats.map((stat, index) => {
+                  const Icon = stat.icon;
+
+                  return (
+                    <motion.article
+                      key={stat.label}
+                      initial={{ opacity: 0, y: 24 }}
+                      animate={
+                        hasEnteredView
+                          ? {
+                              opacity: 1,
+                              y: 0,
+                            }
+                          : {}
+                      }
+                      transition={{
+                        duration: 0.5,
+                        delay: index * 0.08,
+                      }}
+                      whileHover={{
+                        backgroundColor: "rgba(255,255,255,0.12)",
+                      }}
+                      className={`group relative min-h-60 overflow-hidden p-7 text-white transition sm:p-8 ${
+                        index === 0
+                          ? "border-b border-white/10 sm:border-r"
+                          : ""
+                      } ${index === 1 ? "border-b border-white/10" : ""} ${
+                        index === 2
+                          ? "border-b border-white/10 sm:border-b-0 sm:border-r"
+                          : ""
+                      }`}
+                    >
+                      <div className="absolute right-5 top-5 text-6xl font-black text-white/[0.035] transition duration-300 group-hover:text-white/6">
+                        {String(index + 1).padStart(2, "0")}
+                      </div>
+
+                      <div className="relative flex h-full flex-col">
+                        <div className="flex h-13 w-13 items-center justify-center rounded-2xl bg-white/10 text-[#7DE0D6] transition duration-300 group-hover:scale-105 group-hover:bg-white">
+                          <Icon
+                            size={23}
+                            className="transition group-hover:text-[#168F87]"
+                          />
+                        </div>
+
+                        <div className="mt-auto pt-10">
+                          <p className="text-4xl font-black tracking-tight text-white sm:text-5xl">
+                            <AnimatedNumber
+                              value={stat.value}
+                              prefix={stat.prefix}
+                              suffix={stat.suffix}
+                              decimals={stat.decimals}
+                              start={hasEnteredView}
+                            />
+                          </p>
+
+                          <h3 className="mt-3 text-base font-black text-[#7DE0D6]">
+                            {stat.label}
+                          </h3>
+
+                          <p className="mt-2 max-w-xs text-sm font-semibold leading-6 text-white/60">
+                            {stat.description}
+                          </p>
+                        </div>
+                      </div>
+
+                      <span className="absolute bottom-0 left-0 h-1 w-0 bg-[#2CB1A6] transition-all duration-500 group-hover:w-full" />
+                    </motion.article>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Supporting trust line */}
+        <div className="mx-auto -mt-5 grid max-w-5xl gap-3 px-4 sm:grid-cols-3 sm:px-8">
+          {[
+            {
+              title: "Professional clarity",
+              description: "Understand what may be behind the concern",
+            },
+            {
+              title: "Practical direction",
+              description: "Know the most suitable next support step",
+            },
+            {
+              title: "Family involvement",
+              description: "Parents remain part of the complete process",
+            },
+          ].map((item, index) => (
+            <motion.div
+              key={item.title}
+              initial={{
+                opacity: 0,
+                y: 18,
+              }}
+              animate={
+                hasEnteredView
+                  ? {
+                      opacity: 1,
+                      y: 0,
+                    }
+                  : {}
+              }
+              transition={{
+                duration: 0.45,
+                delay: 0.25 + index * 0.08,
+              }}
+              className="rounded-2xl border border-[#0F3D5E]/10 bg-white p-4 text-center shadow-[0_16px_40px_rgba(15,61,94,0.09)]"
+            >
+              <p className="text-sm font-black text-[#102A43]">{item.title}</p>
+
+              <p className="mt-1 text-xs font-semibold leading-5 text-slate-500">
+                {item.description}
+              </p>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
   );
-};
-
-export default StatsStrip;
+}

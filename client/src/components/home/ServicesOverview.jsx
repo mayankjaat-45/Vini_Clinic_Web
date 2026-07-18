@@ -1,563 +1,559 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo } from "react";
-import { motion } from "framer-motion";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import {
+  Activity,
   ArrowRight,
   Baby,
   Brain,
-  CheckCircle2,
+  CalendarCheck,
+  ChevronRight,
   ClipboardCheck,
-  Eye,
-  FileSearch,
   Globe2,
-  GraduationCap,
   HeartHandshake,
-  HelpCircle,
   MessageCircle,
-  Puzzle,
-  Route,
-  SearchCheck,
   Sparkles,
-  Target,
   Users,
-  Volume2,
-  Zap,
 } from "lucide-react";
 
-const categoryIcons = {
-  Children: Baby,
-  Adults: Users,
-  "Online Consultation": Globe2,
-};
-
-const parentConcerns = [
-  {
-    icon: Zap,
-    title: "Hyperactive / Not Listening",
-    text: "Restless, distracted, impulsive or difficult to manage",
-    href: "/services/adhd-assessment-therapy-indore",
-  },
-  {
-    icon: Volume2,
-    title: "Speech or Milestone Delay",
-    text: "Delayed speech, play, social response or early development",
-    href: "/services/early-intervention",
-  },
-  {
-    icon: GraduationCap,
-    title: "Learning Difficulty",
-    text: "Reading, writing, spelling, school or exam struggle",
-    href: "/services/dyslexia-support-indore",
-  },
-  {
-    icon: Eye,
-    title: "Autism Signs",
-    text: "Eye contact, social play, routine, sensory or communication concerns",
-    href: "/services/autism-therapy-indore",
-  },
-];
-
-const supportJourney = [
-  {
-    icon: MessageCircle,
-    title: "You share concern",
-    text: "Tell us what you notice",
-  },
-  {
-    icon: FileSearch,
-    title: "We understand",
-    text: "History, behaviour and needs",
-  },
-  {
-    icon: ClipboardCheck,
-    title: "Plan is created",
-    text: "Assessment, therapy or guidance",
-  },
-  {
-    icon: Target,
-    title: "Progress begins",
-    text: "Follow-up and home support",
-  },
-];
-
-const supportTypes = [
-  {
-    icon: Brain,
-    title: "Assessment-led",
-    text: "We first understand the reason behind the concern.",
-  },
-  {
-    icon: HeartHandshake,
-    title: "Parent-guided",
-    text: "Parents receive simple strategies for daily situations.",
-  },
-  {
-    icon: Route,
-    title: "Step-by-step",
-    text: "Support is planned clearly instead of confusing families.",
-  },
-];
-
-const serviceFallbacks = [
+const serviceVisuals = [
   {
     keywords: ["autism", "asd"],
-    icon: Puzzle,
-    signs: ["Eye contact", "Social play", "Sensory needs"],
-    visualLabel: "Development Support",
+    icon: Brain,
+    label: "Developmental Support",
   },
   {
-    keywords: ["adhd", "attention", "hyper"],
-    icon: Zap,
-    signs: ["Attention", "Restlessness", "Impulsivity"],
-    visualLabel: "Attention Support",
+    keywords: ["adhd", "attention", "hyperactivity"],
+    icon: Activity,
+    label: "Attention & Behaviour",
   },
   {
-    keywords: ["dyslexia", "learning", "school"],
-    icon: GraduationCap,
-    signs: ["Reading", "Writing", "Spelling"],
-    visualLabel: "Learning Support",
-  },
-  {
-    keywords: ["assessment", "psychological"],
+    keywords: ["dyslexia", "learning", "remedial"],
     icon: ClipboardCheck,
-    signs: ["Testing", "Report", "Clear guidance"],
-    visualLabel: "Assessment",
+    label: "Learning Support",
   },
   {
-    keywords: ["early", "speech", "intervention"],
+    keywords: ["assessment", "psychological", "iq", "sld"],
+    icon: ClipboardCheck,
+    label: "Psychological Assessment",
+  },
+  {
+    keywords: ["early", "speech", "milestone", "development"],
     icon: Baby,
-    signs: ["Speech", "Milestones", "Play skills"],
-    visualLabel: "Early Years",
+    label: "Early Intervention",
+  },
+  {
+    keywords: ["adolescent", "teen"],
+    icon: Users,
+    label: "Adolescent Support",
   },
   {
     keywords: ["online"],
     icon: Globe2,
-    signs: ["Video consult", "Parent guidance", "Follow-up"],
-    visualLabel: "Online Support",
+    label: "Online Consultation",
+  },
+  {
+    keywords: ["child counselling", "counselling"],
+    icon: HeartHandshake,
+    label: "Counselling",
   },
 ];
 
-const defaultServiceVisual = {
+const defaultVisual = {
   icon: HeartHandshake,
-  signs: ["Counselling", "Guidance", "Care plan"],
-  visualLabel: "Therapy Support",
+  label: "Psychological Support",
 };
 
-const getServiceVisual = (service) => {
-  const searchableText = `${service?.title || ""} ${
-    service?.slug || ""
-  } ${service?.category || ""} ${service?.shortDescription || ""}`.toLowerCase();
+const fallbackServices = [
+  {
+    title: "Autism Therapy",
+    slug: "autism-therapy-indore",
+    category: "Children",
+    shortDescription:
+      "Assessment-led developmental support designed around communication, behaviour, social interaction and sensory needs.",
+  },
+  {
+    title: "ADHD Assessment & Therapy",
+    slug: "adhd-assessment-therapy-indore",
+    category: "Children",
+    shortDescription:
+      "Structured assessment and intervention for attention, restlessness, impulsivity, behaviour and emotional regulation.",
+  },
+  {
+    title: "Dyslexia Support",
+    slug: "dyslexia-specialist-indore",
+    category: "Children",
+    shortDescription:
+      "Learning assessment and individualised remedial support for reading, writing, spelling and school difficulties.",
+  },
+  {
+    title: "Psychological Assessments",
+    slug: "psychological-assessments-indore",
+    category: "Assessment",
+    shortDescription:
+      "Comprehensive assessments that provide clarity, documentation and practical recommendations for parents and schools.",
+  },
+  {
+    title: "Child Counselling",
+    slug: "child-counselling-indore",
+    category: "Children",
+    shortDescription:
+      "A supportive space for emotional, behavioural, confidence, social and school-related concerns.",
+  },
+  {
+    title: "Adolescent Counselling",
+    slug: "adolescent-counselling-indore",
+    category: "Adolescents",
+    shortDescription:
+      "Confidential counselling for anxiety, mood, confidence, relationships, academic pressure and career confusion.",
+  },
+];
+
+const getVisual = (service = {}) => {
+  const searchableText = [
+    service.title,
+    service.slug,
+    service.category,
+    service.shortDescription,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
 
   return (
-    serviceFallbacks.find((item) =>
-      item.keywords.some((keyword) => searchableText.includes(keyword)),
-    ) || defaultServiceVisual
+    serviceVisuals.find((visual) =>
+      visual.keywords.some((keyword) => searchableText.includes(keyword)),
+    ) || defaultVisual
   );
 };
 
-const ServicesOverview = ({ initialServices = [] }) => {
-  const featuredServices = useMemo(() => {
-    const activeServices = initialServices.filter(
-      (service) => service?.isActive !== false,
-    );
-
-    const featured = activeServices.filter((service) => service?.isFeatured);
-
-    if (featured.length) {
-      return featured.slice(0, 6);
-    }
-
-    return activeServices.slice(0, 6);
-  }, [initialServices]);
-
-  const activeServicesCount = useMemo(() => {
-    return initialServices.filter((service) => service?.isActive !== false)
-      .length;
-  }, [initialServices]);
+const getImageUrl = (service = {}) => {
+  if (typeof service.image === "string") {
+    return service.image;
+  }
 
   return (
-    <section className="relative overflow-hidden bg-[#F7FBFC] px-5 py-16 sm:py-20">
-      <div className="absolute -left-28 top-20 h-80 w-80 rounded-full bg-[#2CB1A6]/10 blur-3xl" />
-      <div className="absolute -right-28 bottom-20 h-80 w-80 rounded-full bg-[#0F3D5E]/10 blur-3xl" />
+    service.image?.url ||
+    service.image?.secure_url ||
+    service.thumbnail?.url ||
+    service.thumbnail ||
+    ""
+  );
+};
 
-      <div className="relative mx-auto max-w-7xl">
-        {/* Section Header */}
-        <div className="mb-10 grid gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-end">
-          <div>
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-[#0F3D5E] shadow-sm">
-              <HeartHandshake size={16} className="text-[#2CB1A6]" />
-              Visual Support Guide
+const getDescription = (service = {}) => {
+  return (
+    service.shortDescription ||
+    service.metaDescription ||
+    service.description ||
+    "Professional assessment, counselling and personalised psychological support for children, adolescents and families."
+  );
+};
+
+const getServiceHref = (service = {}) => {
+  return service.slug ? `/services/${service.slug}` : "/contact-us";
+};
+
+const prepareServices = (services = []) => {
+  const source =
+    Array.isArray(services) && services.length ? services : fallbackServices;
+
+  return source
+    .filter((service) => service?.isActive !== false)
+    .sort((first, second) => {
+      if (first?.isFeatured && !second?.isFeatured) return -1;
+      if (!first?.isFeatured && second?.isFeatured) return 1;
+
+      return (
+        Number(first?.displayOrder ?? 999) - Number(second?.displayOrder ?? 999)
+      );
+    })
+    .slice(0, 6);
+};
+
+export default function ServicesOverview({ initialServices = [] }) {
+  const services = useMemo(
+    () => prepareServices(initialServices),
+    [initialServices],
+  );
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    if (activeIndex >= services.length) {
+      setActiveIndex(0);
+    }
+  }, [activeIndex, services.length]);
+
+  if (!services.length) {
+    return null;
+  }
+
+  const activeService = services[activeIndex];
+  const activeVisual = getVisual(activeService);
+  const ActiveIcon = activeVisual.icon;
+  const activeImage = getImageUrl(activeService);
+
+  return (
+    <section
+      id="services"
+      className="relative overflow-hidden bg-white py-16 sm:py-20 lg:py-24"
+    >
+      {/* Background */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute -left-32 top-28 h-80 w-80 rounded-full bg-[#2CB1A6]/10 blur-3xl" />
+
+        <div className="absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-[#F4B183]/10 blur-3xl" />
+
+        <div className="absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-[#0F3D5E]/5 blur-3xl" />
+      </div>
+
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="flex flex-col gap-7 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 rounded-full bg-[#E9F8F6] px-4 py-2 text-xs font-bold text-[#168F87] sm:text-sm">
+              <Sparkles size={16} />
+              Explore our services
             </div>
 
-            <h2 className="max-w-4xl text-4xl font-black leading-tight text-[#102A43] md:text-6xl">
-              Find the right support by{" "}
-              <span className="bg-gradient-to-r from-[#0F3D5E] to-[#2CB1A6] bg-clip-text text-transparent">
-                looking at the concern.
-              </span>
+            <h2 className="mt-5 text-3xl font-black leading-tight tracking-[-0.03em] text-[#102A43] sm:text-4xl lg:text-5xl">
+              Select a concern to discover the{" "}
+              <span className="text-[#168F87]">right support.</span>
             </h2>
 
-            <p className="mt-5 max-w-3xl text-base font-semibold leading-8 text-slate-600 sm:text-lg">
-              Parents do not always know the service name. This section helps
-              them visually understand the concern first, then choose the right
-              next step.
+            <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base sm:leading-8">
+              Hover over or tap a service to explore how Dr. Vini supports
+              children, adolescents and families.
             </p>
           </div>
 
-          {/* Help Box */}
-          <div className="rounded-[2rem] border border-[#2CB1A6]/15 bg-white p-5 shadow-xl shadow-slate-900/5">
-            <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#2CB1A6]">
-                <HelpCircle size={24} />
-              </div>
+          <Link
+            href="/services"
+            className="group inline-flex w-fit items-center gap-2 rounded-full border border-[#0F3D5E]/15 bg-white px-6 py-3.5 text-sm font-black text-[#0F3D5E] transition duration-300 hover:-translate-y-1 hover:border-[#2CB1A6]/40 hover:bg-[#E9F8F6]"
+          >
+            View All Services
+            <ArrowRight
+              size={17}
+              className="transition-transform group-hover:translate-x-1"
+            />
+          </Link>
+        </div>
 
+        {/* Interactive explorer */}
+        <div className="mt-12 grid gap-6 lg:grid-cols-[0.82fr_1.18fr]">
+          {/* Service navigation */}
+          <div className="rounded-4xl border border-[#0F3D5E]/10 bg-[#F7FBFC] p-3 sm:p-4">
+            <div className="mb-3 flex items-center justify-between px-3 py-2">
               <div>
-                <h3 className="text-lg font-black text-[#102A43]">
-                  Not sure which service to choose?
-                </h3>
-
-                <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
-                  Start with what you are noticing. We will guide you toward
-                  counselling, assessment, therapy or parent guidance.
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#168F87]">
+                  Choose a service
                 </p>
 
-                <a
-                  href="/contact-us"
-                  className="mt-4 inline-flex items-center gap-2 text-sm font-black text-[#0F3D5E]"
-                >
-                  Ask for guidance
-                  <ArrowRight size={15} />
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Concern Cards */}
-        <div className="mb-8 rounded-[2rem] border border-white bg-white/85 p-4 shadow-2xl shadow-slate-900/5 backdrop-blur-xl sm:p-6">
-          <div className="mb-6 flex flex-col gap-3 text-center sm:flex-row sm:items-end sm:justify-between sm:text-left">
-            <div>
-              <p className="text-sm font-black uppercase tracking-[0.2em] text-[#2CB1A6]">
-                Start here
-              </p>
-              <h3 className="mt-2 text-2xl font-black text-[#102A43] sm:text-3xl">
-                What are you noticing?
-              </h3>
-            </div>
-
-            <p className="mx-auto max-w-xl text-sm font-semibold leading-6 text-slate-500 sm:mx-0">
-              Click a concern to explore the most relevant support page.
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {parentConcerns.map((item, index) => {
-              const Icon = item.icon;
-
-              return (
-                <motion.a
-                  key={item.title}
-                  href={item.href}
-                  initial={{ opacity: 0, y: 18 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.25 }}
-                  transition={{ duration: 0.45, delay: index * 0.05 }}
-                  className="group rounded-[1.75rem] border border-[#0F3D5E]/10 bg-[#F7FBFC] p-5 text-left transition hover:-translate-y-1 hover:border-[#2CB1A6]/40 hover:bg-white hover:shadow-xl hover:shadow-slate-900/8"
-                >
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[#2CB1A6] shadow-sm transition group-hover:bg-[#2CB1A6] group-hover:text-white">
-                    <Icon size={22} />
-                  </div>
-
-                  <h4 className="text-base font-black leading-6 text-[#102A43]">
-                    {item.title}
-                  </h4>
-
-                  <p className="mt-2 text-sm font-semibold leading-6 text-slate-500">
-                    {item.text}
-                  </p>
-
-                  <div className="mt-4 inline-flex items-center gap-2 text-xs font-black text-[#0F3D5E]">
-                    View related support
-                    <ArrowRight
-                      size={14}
-                      className="transition group-hover:translate-x-1"
-                    />
-                  </div>
-                </motion.a>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Visual Journey */}
-        <div className="mb-12 rounded-[2rem] bg-[#0F3D5E] p-5 text-white shadow-2xl shadow-blue-950/15 sm:p-6 lg:p-8">
-          <div className="mb-6 flex flex-col gap-3 text-center lg:flex-row lg:items-end lg:justify-between lg:text-left">
-            <div>
-              <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-black text-[#F4B183]">
-                <Sparkles size={14} />
-                Simple process
-              </p>
-
-              <h3 className="mt-4 text-2xl font-black sm:text-3xl">
-                How support usually begins
-              </h3>
-            </div>
-
-            <p className="mx-auto max-w-xl text-sm font-semibold leading-6 text-white/70 lg:mx-0">
-              This visual flow helps parents understand the process before they
-              book a consultation.
-            </p>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {supportJourney.map((item, index) => {
-              const Icon = item.icon;
-
-              return (
-                <div key={item.title} className="relative">
-                  {index !== supportJourney.length - 1 && (
-                    <ArrowRight
-                      size={18}
-                      className="absolute -right-3 top-10 z-10 hidden text-white/45 lg:block"
-                    />
-                  )}
-
-                  <div className="h-full rounded-[1.5rem] border border-white/10 bg-white/10 p-4 text-center backdrop-blur">
-                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-[#0F3D5E]">
-                      <Icon size={24} />
-                    </div>
-
-                    <p className="mt-3 text-sm font-black">
-                      {String(index + 1).padStart(2, "0")}. {item.title}
-                    </p>
-
-                    <p className="mt-1 text-xs font-semibold leading-5 text-white/65">
-                      {item.text}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {featuredServices.length === 0 ? (
-          <div className="rounded-[2rem] bg-white p-10 text-center shadow-xl">
-            <Brain className="mx-auto mb-4 text-[#0F3D5E]" size={38} />
-
-            <h3 className="text-2xl font-black text-[#102A43]">
-              Support is available
-            </h3>
-
-            <p className="mx-auto mt-2 max-w-xl text-slate-600">
-              Please contact us to understand the right counselling, assessment,
-              or therapy support for your child.
-            </p>
-
-            <a
-              href="/contact-us"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#0F3D5E] px-6 py-3 text-sm font-black text-white transition hover:-translate-y-1"
-            >
-              Contact Us
-              <ArrowRight size={16} />
-            </a>
-          </div>
-        ) : (
-          <>
-            {/* Services */}
-            <div className="mb-6 flex flex-col gap-3 text-center sm:flex-row sm:items-end sm:justify-between sm:text-left">
-              <div>
-                <p className="text-sm font-black uppercase tracking-[0.2em] text-[#2CB1A6]">
-                  Services
+                <p className="mt-1 text-sm font-semibold text-slate-500">
+                  Tap any option to explore
                 </p>
-                <h3 className="mt-2 text-3xl font-black text-[#102A43] sm:text-4xl">
-                  Choose support by need
-                </h3>
               </div>
 
-              <a
-                href="/services"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-[#0F3D5E]/15 bg-white px-5 py-3 text-sm font-black text-[#0F3D5E] shadow-sm transition hover:-translate-y-1 hover:border-[#2CB1A6] hover:bg-[#E9F8F6]"
-              >
-                View All Services
-                <ArrowRight size={16} />
-              </a>
+              <span className="rounded-full bg-white px-3 py-1.5 text-xs font-black text-[#0F3D5E] shadow-sm">
+                {String(activeIndex + 1).padStart(2, "0")} /{" "}
+                {String(services.length).padStart(2, "0")}
+              </span>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {featuredServices.map((service, index) => {
-                const visual = getServiceVisual(service);
-                const Icon =
-                  visual.icon ||
-                  categoryIcons[service.category] ||
-                  HeartHandshake;
-
-                const signs =
-                  service.primaryKeywords?.length > 0
-                    ? service.primaryKeywords.slice(0, 3)
-                    : visual.signs;
+            <div className="space-y-2">
+              {services.map((service, index) => {
+                const visual = getVisual(service);
+                const Icon = visual.icon;
+                const isActive = activeIndex === index;
 
                 return (
-                  <motion.a
+                  <motion.button
                     key={service._id || service.slug || service.title}
-                    href={`/services/${service.slug}`}
-                    initial={{ opacity: 0, y: 24 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-80px" }}
-                    transition={{ duration: 0.45, delay: index * 0.04 }}
-                    className="group relative overflow-hidden rounded-[2rem] border border-white bg-white p-4 shadow-xl shadow-slate-900/5 transition duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-slate-900/10 sm:p-5"
+                    type="button"
+                    onClick={() => setActiveIndex(index)}
+                    onMouseEnter={() => setActiveIndex(index)}
+                    onFocus={() => setActiveIndex(index)}
+                    whileHover={{ x: 4 }}
+                    whileTap={{ scale: 0.99 }}
+                    aria-pressed={isActive}
+                    className={`relative flex w-full items-center gap-4 overflow-hidden rounded-[1.4rem] p-4 text-left transition duration-300 ${
+                      isActive
+                        ? "bg-[#0F3D5E] text-white shadow-xl shadow-[#0F3D5E]/18"
+                        : "bg-white text-[#102A43] hover:shadow-md"
+                    }`}
                   >
-                    <div className="absolute right-0 top-0 h-32 w-32 rounded-bl-full bg-[#2CB1A6]/10 transition group-hover:bg-[#2CB1A6]/15" />
-                    <div className="absolute -bottom-10 -left-10 h-28 w-28 rounded-full bg-[#F4B183]/10" />
+                    {isActive && (
+                      <motion.span
+                        layoutId="active-service-line"
+                        className="absolute bottom-0 left-0 top-0 w-1.5 bg-[#2CB1A6]"
+                      />
+                    )}
 
-                    <div className="relative">
-                      <div className="relative mb-5 overflow-hidden rounded-[1.5rem] bg-[#E9F8F6]">
-                        {service.image?.url ? (
-                          <div className="relative h-52 w-full">
-                            <Image
-                              src={service.image.url}
-                              alt={service.title || "Therapy service"}
-                              fill
-                              sizes="(max-width: 768px) 100vw, 420px"
-                              className="object-cover transition duration-500 group-hover:scale-105"
-                            />
-                          </div>
-                        ) : (
-                          <div className="flex h-52 items-center justify-center bg-gradient-to-br from-[#E9F8F6] to-[#FFF3E8]">
-                            <div className="text-center">
-                              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[1.7rem] bg-white text-[#2CB1A6] shadow-lg shadow-slate-900/10">
-                                <Icon size={34} />
-                              </div>
+                    <div
+                      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl transition ${
+                        isActive
+                          ? "bg-white/12 text-[#7DE0D6]"
+                          : "bg-[#E9F8F6] text-[#168F87]"
+                      }`}
+                    >
+                      <Icon size={22} />
+                    </div>
 
-                              <p className="mt-4 text-sm font-black text-[#0F3D5E]">
-                                {visual.visualLabel}
-                              </p>
-                            </div>
-                          </div>
-                        )}
-
-                        <div className="absolute left-4 top-4 inline-flex rounded-full bg-white/92 px-4 py-2 text-xs font-black text-[#0F3D5E] shadow-sm backdrop-blur">
-                          {service.category || visual.visualLabel}
-                        </div>
-
-                        {service.isFeatured && (
-                          <div className="absolute bottom-4 left-4 inline-flex items-center gap-1 rounded-full bg-[#FFF4EA]/95 px-3 py-2 text-xs font-black text-[#9A5A22] shadow-sm backdrop-blur">
-                            <Sparkles size={12} />
-                            Parent Choice
-                          </div>
-                        )}
-                      </div>
-
-                      <h3 className="text-2xl font-black leading-tight text-[#102A43]">
-                        {service.title}
-                      </h3>
-
-                      <p className="mt-4 line-clamp-3 min-h-18 text-sm font-semibold leading-6 text-slate-600">
-                        {service.shortDescription ||
-                          service.metaDescription ||
-                          "Personalised counselling, assessment, and therapy guidance for children, teens, adults, and families."}
-                      </p>
-
-                      <div className="mt-5 rounded-3xl bg-[#F7FBFC] p-4">
-                        <p className="mb-3 text-xs font-black uppercase tracking-[0.16em] text-slate-400">
-                          Common signs
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <p
+                          className={`truncate text-sm font-black sm:text-base ${
+                            isActive ? "text-white" : "text-[#102A43]"
+                          }`}
+                        >
+                          {service.title}
                         </p>
 
-                        <div className="flex flex-wrap gap-2">
-                          {signs.map((keyword) => (
-                            <span
-                              key={keyword}
-                              className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-2 text-xs font-bold text-[#0F766E] shadow-sm"
-                            >
-                              <CheckCircle2 size={12} />
-                              {keyword}
-                            </span>
-                          ))}
-                        </div>
+                        {service.isFeatured && (
+                          <span
+                            className={`hidden rounded-full px-2 py-1 text-[10px] font-black sm:inline-flex ${
+                              isActive
+                                ? "bg-white/10 text-[#F4B183]"
+                                : "bg-[#FFF3E8] text-[#B96A24]"
+                            }`}
+                          >
+                            Popular
+                          </span>
+                        )}
                       </div>
 
-                      <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-5">
-                        <span className="text-sm font-black text-[#0F3D5E]">
-                          See process
-                        </span>
-
-                        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0F3D5E] text-white transition group-hover:translate-x-1 group-hover:bg-[#2CB1A6]">
-                          <ArrowRight size={16} />
-                        </span>
-                      </div>
+                      <p
+                        className={`mt-1 truncate text-xs font-semibold ${
+                          isActive ? "text-white/60" : "text-slate-500"
+                        }`}
+                      >
+                        {service.category || visual.label}
+                      </p>
                     </div>
-                  </motion.a>
+
+                    <ChevronRight
+                      size={19}
+                      className={`shrink-0 transition duration-300 ${
+                        isActive
+                          ? "translate-x-1 text-[#7DE0D6]"
+                          : "text-slate-400"
+                      }`}
+                    />
+                  </motion.button>
                 );
               })}
             </div>
+          </div>
 
-            {activeServicesCount > featuredServices.length && (
-              <p className="mt-5 text-center text-xs font-bold text-slate-500">
-                Explore all {activeServicesCount} services for children, teens,
-                adults, and families.
-              </p>
-            )}
-          </>
-        )}
+          {/* Dynamic preview */}
+          <div className="relative min-h-137.5 overflow-hidden rounded-[2.5rem] bg-[#0F3D5E] shadow-[0_30px_80px_rgba(15,61,94,0.2)]">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeService._id || activeService.slug || activeIndex}
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.02 }}
+                transition={{ duration: 0.35 }}
+                className="absolute inset-0"
+              >
+                {activeImage ? (
+                  <>
+                    <Image
+                      src={activeImage}
+                      alt={activeService.title || "Psychological service"}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 760px"
+                      className="object-cover"
+                    />
 
-        {/* Support Type Cards */}
-        <div className="mt-12 grid gap-4 md:grid-cols-3">
-          {supportTypes.map((item, index) => {
-            const Icon = item.icon;
+                    <div className="absolute inset-0 bg-linear-to-t from-[#071F33] via-[#071F33]/75 to-[#071F33]/15" />
+                  </>
+                ) : (
+                  <>
+                    <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-[#2CB1A6]/30 blur-3xl" />
+
+                    <div className="absolute -bottom-24 -left-20 h-80 w-80 rounded-full bg-[#F4B183]/15 blur-3xl" />
+
+                    <motion.div
+                      initial={{ rotate: -8, scale: 0.9 }}
+                      animate={{ rotate: 0, scale: 1 }}
+                      transition={{ duration: 0.5 }}
+                      className="absolute right-8 top-20 text-white/5 sm:right-14"
+                    >
+                      <ActiveIcon size={300} strokeWidth={0.65} />
+                    </motion.div>
+                  </>
+                )}
+
+                <div className="relative flex min-h-137.5 h-full flex-col justify-between p-7 text-white sm:p-9 lg:p-11">
+                  <div className="flex items-start justify-between gap-4">
+                    <motion.div
+                      initial={{ y: -10, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      className="flex h-16 w-16 items-center justify-center rounded-[1.4rem] bg-white/12 text-[#7DE0D6] backdrop-blur"
+                    >
+                      <ActiveIcon size={29} />
+                    </motion.div>
+
+                    <motion.span
+                      initial={{ y: -10, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      className="rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-black text-[#7DE0D6] backdrop-blur"
+                    >
+                      {activeService.category || activeVisual.label}
+                    </motion.span>
+                  </div>
+
+                  <div className="max-w-2xl">
+                    <motion.p
+                      initial={{ y: 12, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.05 }}
+                      className="text-xs font-black uppercase tracking-[0.2em] text-[#7DE0D6]"
+                    >
+                      Service {String(activeIndex + 1).padStart(2, "0")}
+                    </motion.p>
+
+                    <motion.h3
+                      initial={{ y: 18, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.1 }}
+                      className="mt-3 text-3xl font-black leading-tight sm:text-4xl lg:text-5xl"
+                    >
+                      {activeService.title}
+                    </motion.h3>
+
+                    <motion.p
+                      initial={{ y: 18, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.15 }}
+                      className="mt-5 max-w-xl text-sm font-semibold leading-7 text-white/75 sm:text-base sm:leading-8"
+                    >
+                      {getDescription(activeService)}
+                    </motion.p>
+
+                    <motion.div
+                      initial={{ y: 18, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.2 }}
+                      className="mt-8 flex flex-col gap-3 sm:flex-row"
+                    >
+                      <Link
+                        href={getServiceHref(activeService)}
+                        className="group inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-black text-[#0F3D5E] transition hover:-translate-y-1 hover:bg-[#E9F8F6]"
+                      >
+                        Explore Service
+                        <ArrowRight
+                          size={17}
+                          className="transition-transform group-hover:translate-x-1"
+                        />
+                      </Link>
+
+                      <Link
+                        href="/contact-us"
+                        className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3.5 text-sm font-black text-white backdrop-blur transition hover:-translate-y-1 hover:bg-white/15"
+                      >
+                        <CalendarCheck size={17} />
+                        Book Consultation
+                      </Link>
+                    </motion.div>
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Progress indicators */}
+            <div className="absolute bottom-5 right-5 z-20 hidden items-center gap-2 sm:flex">
+              {services.map((service, index) => (
+                <button
+                  key={`indicator-${service._id || service.slug || index}`}
+                  type="button"
+                  onClick={() => setActiveIndex(index)}
+                  aria-label={`Show ${service.title}`}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    activeIndex === index
+                      ? "w-8 bg-[#7DE0D6]"
+                      : "w-2 bg-white/35 hover:bg-white/60"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile quick service links */}
+        <div className="mt-6 flex gap-3 overflow-x-auto pb-2 lg:hidden">
+          {services.map((service, index) => {
+            const visual = getVisual(service);
+            const Icon = visual.icon;
 
             return (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.25 }}
-                transition={{ duration: 0.45, delay: index * 0.06 }}
-                className="rounded-[1.75rem] border border-white bg-white/85 p-5 shadow-sm backdrop-blur"
+              <button
+                key={`mobile-${service._id || service.slug || index}`}
+                type="button"
+                onClick={() => setActiveIndex(index)}
+                className={`flex min-w-42.5 items-center gap-3 rounded-2xl border p-3 text-left transition ${
+                  activeIndex === index
+                    ? "border-[#2CB1A6] bg-[#E9F8F6]"
+                    : "border-[#0F3D5E]/10 bg-white"
+                }`}
               >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E9F8F6] text-[#2CB1A6]">
-                  <Icon size={23} />
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#168F87] shadow-sm">
+                  <Icon size={19} />
                 </div>
 
-                <h4 className="text-lg font-black text-[#102A43]">
-                  {item.title}
-                </h4>
-
-                <p className="mt-2 text-sm font-semibold leading-6 text-slate-500">
-                  {item.text}
+                <p className="line-clamp-2 text-xs font-black leading-5 text-[#102A43]">
+                  {service.title}
                 </p>
-              </motion.div>
+              </button>
             );
           })}
         </div>
 
-        {/* Bottom CTA */}
-        <div className="mt-12 rounded-[2rem] bg-gradient-to-br from-[#0F3D5E] to-[#2CB1A6] p-6 text-center text-white shadow-2xl shadow-blue-950/15 md:p-8">
-          <p className="text-sm font-black uppercase tracking-[0.2em] text-[#F4B183]">
-            First step
-          </p>
+        {/* Guidance CTA */}
+        <div className="mt-10 grid items-center gap-6 rounded-4xl border border-[#2CB1A6]/15 bg-[#E9F8F6]/65 p-6 sm:p-8 lg:grid-cols-[1fr_auto]">
+          <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white text-[#168F87] shadow-sm">
+              <HeartHandshake size={25} />
+            </div>
 
-          <h3 className="mx-auto mt-3 max-w-3xl text-2xl font-black leading-tight md:text-4xl">
-            You do not need to know the exact diagnosis before reaching out.
-          </h3>
+            <div>
+              <h3 className="text-xl font-black text-[#102A43]">
+                Still unsure which service is suitable?
+              </h3>
 
-          <p className="mx-auto mt-4 max-w-2xl text-sm font-semibold leading-7 text-white/75 md:text-base">
-            Tell us what you are noticing. We will help you understand whether
-            counselling, assessment, therapy, or parent guidance is the right
-            next step.
-          </p>
+              <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-600">
+                Share what you are noticing. The clinic will guide you toward
+                consultation, assessment, counselling or therapy.
+              </p>
+            </div>
+          </div>
 
-          <a
-            href="/contact-us"
-            className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-4 text-sm font-black text-[#0F3D5E] transition hover:-translate-y-1 hover:bg-[#E9F8F6]"
-          >
-            Start with a consultation
-            <ArrowRight size={17} />
-          </a>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="/contact-us"
+              className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[#0F3D5E] px-6 py-3.5 text-sm font-black text-white shadow-lg shadow-[#0F3D5E]/15 transition hover:-translate-y-1 hover:bg-[#102A43]"
+            >
+              <CalendarCheck size={18} />
+              Get Guidance
+            </Link>
+
+            <a
+              href="https://wa.me/917999215093?text=Hello%20Dr.%20Vini%2C%20I%20am%20not%20sure%20which%20service%20is%20suitable."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border border-[#0F3D5E]/15 bg-white px-6 py-3.5 text-sm font-black text-[#0F3D5E] transition hover:-translate-y-1 hover:border-[#2CB1A6]/40"
+            >
+              <MessageCircle size={18} />
+              WhatsApp
+            </a>
+          </div>
         </div>
       </div>
     </section>
   );
-};
-
-export default ServicesOverview;
+}

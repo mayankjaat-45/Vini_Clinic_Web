@@ -1,3 +1,4 @@
+import ConcernsSection from "@/components/home/ConcernsSection";
 import CoursesPreview from "@/components/home/CoursesPreview";
 import CTASection from "@/components/home/CTASection";
 import GalleryPreview from "@/components/home/GalleryPreview";
@@ -9,7 +10,8 @@ import ServicesOverview from "@/components/home/ServicesOverview";
 import StatsStrip from "@/components/home/StatsStrip";
 import Testimonials from "@/components/home/Testimonials";
 import JsonLd from "@/components/seo/JsonLd";
-import SuccessStoriesPage from "./success-stories/page";
+import SuccessStoriesPreview from "@/components/home/SuccessStoriesPreview";
+import MeetDrVini from "@/components/home/MeetDrVini";
 
 export const revalidate = 60;
 
@@ -141,16 +143,21 @@ const normalizeApiData = (json) => {
 const fetchCollection = async (endpoint) => {
   try {
     const res = await fetch(`${apiUrl}${endpoint}`, {
-      next: { revalidate: 60 },
+      next: {
+        revalidate: 60,
+      },
     });
 
     if (!res.ok) {
+      console.error(`Failed to fetch ${endpoint}: ${res.status}`);
       return [];
     }
 
     const json = await res.json();
+
     return normalizeApiData(json);
   } catch (error) {
+    console.error(`Error fetching ${endpoint}:`, error);
     return [];
   }
 };
@@ -182,19 +189,42 @@ export default async function Home() {
       <JsonLd data={medicalBusinessSchema} />
       <JsonLd data={localBusinessSchema} />
 
+      {/* 1. Main introduction */}
       <Hero />
-      <StatsStrip />
 
+      {/* 2. Parent concerns */}
+      <ConcernsSection />
+
+      <MeetDrVini />
+
+      {/* 3. Main clinic services */}
       <ServicesOverview initialServices={services} />
 
+      {/* 4. Assessment and support process */}
       <HowWeWork />
+
+      {/* 5. Clinic credibility statistics */}
+      <StatsStrip />
+
+      {/* 6. Parent reviews */}
       <Testimonials />
-      <SuccessStoriesPage />
+
+      {/* 7. Selected outcomes and stories */}
+      <SuccessStoriesPreview />
+
+      {/* 8. Courses and professional programs */}
       <CoursesPreview initialCourses={courses} />
+
+      {/* 9. Free parent resources */}
       <ResourcesPreview initialResources={resources} />
+
+      {/* 10. Clinic and activity photographs */}
       <GalleryPreview initialGallery={gallery} />
+
+      {/* 11. Educational content */}
       <LatestBlogs initialBlogs={blogs} />
 
+      {/* 12. Final booking action */}
       <CTASection />
     </>
   );
